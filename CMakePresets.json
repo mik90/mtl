@@ -1,0 +1,43 @@
+{
+    "version": 2,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 15,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "withTests",
+            "displayName": "Default Test Config",
+            "description": "Build with testing enabled and Ninja",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CONAN_PROFILE": {
+                    "type": "STRING",
+                    "value": "default"
+                },
+                "ENABLE_TESTING": "ON"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "withTests",
+            "configurePreset": "withTests"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "withTests",
+            "configurePreset": "withTests",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": false
+            }
+        }
+    ]
+}
