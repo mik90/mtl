@@ -9,29 +9,29 @@
 
 #include "WrappedVar.hpp"
 
-using namespace mik;
+using namespace mtl;
 
 // Check that it even compiles
-TEST(MtlMutexTest, int_constructor) {
+TEST(WrappedVarTest, int_constructor) {
   wrapped_var<int> wrapped_int{3};
   auto var_with_lock = wrapped_int.get();
   ASSERT_EQ(var_with_lock.get_ref(), 3);
 }
 
-TEST(MtlMutexTest, const_ref) {
+TEST(WrappedVarTest, const_ref) {
   wrapped_var<int> wrapped_int{3};
   const auto var_with_lock = wrapped_int.get();
   const auto cref = var_with_lock.get_cref();
   ASSERT_EQ(cref, 3);
 }
 
-TEST(MtlMutexTest, unique_lock) {
+TEST(WrappedVarTest, unique_lock) {
   wrapped_var<int> wrapped_int{3};
   const auto var_with_lock = wrapped_int.get();
   ASSERT_EQ(var_with_lock.get_cref(), 3);
 }
 
-TEST(MtlMutexTest, user_defined_type) {
+TEST(WrappedVarTest, user_defined_type) {
   struct user_defined_struct {
     int value_0;
     float value_1;
@@ -42,7 +42,7 @@ TEST(MtlMutexTest, user_defined_type) {
   wrapped_var<user_defined_struct> wrapped_udt{udt};
 }
 
-TEST(MtlMutexTest, explicit_type_deduction) {
+TEST(WrappedVarTest, explicit_type_deduction) {
   // Compiles
   std::string a_string{"hello"};
   wrapped_var<std::string> wrapped_string{a_string};
@@ -52,7 +52,7 @@ TEST(MtlMutexTest, explicit_type_deduction) {
    */
 }
 
-TEST(MtlMutexTest, modify_var) {
+TEST(WrappedVarTest, modify_var) {
   wrapped_var<std::string> wrapped_string{"modify me"};
   {
     auto string_accessor = wrapped_string.get();
@@ -63,7 +63,7 @@ TEST(MtlMutexTest, modify_var) {
   ASSERT_EQ(const_string_accessor.get_cref(), "you are modified");
 }
 
-TEST(MtlMutexTest, forward_args) {
+TEST(WrappedVarTest, forward_args) {
   // Similar to vector::emplace_back
   using vector_type = std::vector<int>;
   constexpr vector_type::size_type size = 5;
@@ -71,7 +71,7 @@ TEST(MtlMutexTest, forward_args) {
   wrapped_var<vector_type> wrapped_string(size, value);
 }
 
-TEST(MtlMutexTest, access_from_other_thread) {
+TEST(WrappedVarTest, access_from_other_thread) {
   wrapped_var<int> wrapped_int{15};
   auto owned_var = wrapped_int.get();
   std::atomic<uint32_t> try_lock_attempts{0};
