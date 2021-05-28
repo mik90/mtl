@@ -7,7 +7,6 @@
 #include <string>
 #include <thread>
 
-#include "result.hpp"
 #include "wrapped_var.hpp"
 
 using namespace mtl;

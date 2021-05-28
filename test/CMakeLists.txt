@@ -2,6 +2,7 @@ include(GoogleTest)
 
 add_executable(UnitTest 
   main.cpp
+  result_test.cpp
   wrapped_var_test.cpp
 )
 
