@@ -7,58 +7,36 @@
     },
     "configurePresets": [
         {
-            "name": "unitTestsRelease",
-            "displayName": "Unit test release",
-            "description": "Unit tests optimized",
+            "name": "unitTests",
+            "displayName": "Unit test, default config",
+            "description": "Unit test",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
                 "CONAN_PROFILE": {
                     "type": "STRING",
-                    "value": "gcc-release"
+                    "value": "default"
                 },
-                "ENABLE_TESTING": "ON",
-                "CMAKE_BUILD_TYPE": "Release"
-            }
-        },
-        {
-            "name": "unitTestsDebug",
-            "displayName": "Unit test debug",
-            "description": "Unit tests unoptimized",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build",
-            "cacheVariables": {
-                "CONAN_PROFILE": {
-                    "type": "STRING",
-                    "value": "gcc-debug"
-                },
-                "ENABLE_TESTING": "ON",
-                "CMAKE_BUILD_TYPE": "Debug"
+                "ENABLE_TESTING": "ON"
             }
         }
     ],
-    "buildPresets": [],
+    "buildPresets": [
+        {
+            "name": "unitTests",
+            "configurePreset": "unitTests"
+        }
+    ],
     "testPresets": [
         {
-            "name": "unitTestsDebug",
-            "configurePreset": "unitTestsDebug",
+            "name": "unitTests",
+            "configurePreset": "unitTests",
             "output": {
                 "outputOnFailure": true
             },
             "execution": {
                 "noTestsAction": "error",
-                "stopOnFailure": false
-            }
-        },
-        {
-            "name": "unitTestsRelease",
-            "configurePreset": "unitTestsRelease",
-            "output": {
-                "outputOnFailure": true
-            },
-            "execution": {
-                "noTestsAction": "error",
-                "stopOnFailure": false
+                "stopOnFailure": true
             }
         }
     ]
