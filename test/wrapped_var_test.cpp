@@ -80,8 +80,8 @@ TEST(WrappedVarTest, access_from_other_thread) {
   auto thread_without_lock = std::thread([&wrapped_int, &try_lock_attempts] {
     // Try to get the lock 5 times
     while (try_lock_attempts < 5) {
-      ASSERT_EQ(wrapped_int.try_lock(), false)
-          /*<< "Mutex is already locked so it should not able to be unlocked"*/;
+      ASSERT_FALSE(wrapped_int.try_lock())
+          << "Mutex is already locked so it should not able to be unlocked";
       std::this_thread::sleep_for(std::chrono::milliseconds(2));
       ++try_lock_attempts;
     }
