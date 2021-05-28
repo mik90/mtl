@@ -2,7 +2,7 @@ include(GoogleTest)
 
 add_executable(UnitTest 
   main.cpp
-  WrappedVarTest.cpp
+  wrapped_var_test.cpp
 )
 
 target_link_libraries(UnitTest PRIVATE

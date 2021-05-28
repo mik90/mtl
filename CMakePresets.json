@@ -7,30 +7,52 @@
     },
     "configurePresets": [
         {
-            "name": "withTests",
-            "displayName": "Default Test Config",
-            "description": "Build with testing enabled and Ninja",
+            "name": "unitTestsRelease",
+            "displayName": "Unit test release",
+            "description": "Unit tests optimized",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
                 "CONAN_PROFILE": {
                     "type": "STRING",
-                    "value": "default"
+                    "value": "gcc-release"
                 },
-                "ENABLE_TESTING": "ON"
+                "ENABLE_TESTING": "ON",
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "unitTestsDebug",
+            "displayName": "Unit test debug",
+            "description": "Unit tests unoptimized",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CONAN_PROFILE": {
+                    "type": "STRING",
+                    "value": "gcc-debug"
+                },
+                "ENABLE_TESTING": "ON",
+                "CMAKE_BUILD_TYPE": "Debug"
             }
         }
     ],
-    "buildPresets": [
-        {
-            "name": "withTests",
-            "configurePreset": "withTests"
-        }
-    ],
+    "buildPresets": [],
     "testPresets": [
         {
-            "name": "withTests",
-            "configurePreset": "withTests",
+            "name": "unitTestsDebug",
+            "configurePreset": "unitTestsDebug",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": false
+            }
+        },
+        {
+            "name": "unitTestsRelease",
+            "configurePreset": "unitTestsRelease",
             "output": {
                 "outputOnFailure": true
             },
