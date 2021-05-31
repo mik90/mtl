@@ -1,6 +1,5 @@
 #pragma once
 
-#include "either.hpp"
 #include <string>
 #include <utility>
 
@@ -9,9 +8,19 @@ namespace mtl {
 template <typename OkType, typename ErrorType>
 class result {
   private:
-    mtl::either<OkType, ErrorType> either_;
     struct ok_tag {};
     struct err_tag {};
+    union {
+        OkType ok_;
+        ErrorType err_;
+    };
+    enum class tag { OK, ERR, NONE } tag_;
+
+    // Ctors with tags so they know which type to construct in-place
+    template <class... Args>
+    result(ok_tag, Args&&... args) : ok_(std::forward<Args>(args)...), tag_(tag::OK) {}
+    template <class... Args>
+    result(err_tag, Args&&... args) : err_(std::forward<Args>(args)...), tag_(tag::ERR) {}
 
   public:
     template <class... Args>
@@ -24,40 +33,31 @@ class result {
         return result(err_tag{}, std::forward<Args>(args)...);
     }
 
-    template <class... Args>
-    result(ok_tag, Args&&... args) {
-        either_ = either::first_emplace(std::forward<Args>(args)...);
+    /// @todo This should only be defined if either the OkType or ErrorType are non-trivial
+    ~result() {}
+
+    // Observers
+    bool is_ok() const { return tag_ == tag::OK; }
+    bool is_err() const { return !is_ok(); }
+    /// @todo These return types should be wrapped in mtl::maybe
+    /// @todo Allow for default values
+
+    const OkType& get_ok() const { return ok_; }
+    const ErrorType& get_err() const { return err_; }
+
+    // Modifiers
+    OkType& get_ok() { return ok_; }
+    ErrorType& get_err() { return err_; }
+
+    // Ownership modifiers
+    OkType&& release_ok() {
+        tag_ = tag::NONE;
+        return std::move(ok_);
     }
-
-    template <class... Args>
-    result(err_tag, Args&&... args) {
-        either_ = either::second_emplace(std::forward<Args>(args)...);
+    ErrorType&& release_err() {
+        tag_ = tag::NONE;
+        return std::move(err_);
     }
-
-    bool is_ok() const {
-        if (either_.has_none()) {
-            // If valueless, then it's not ok
-            return false;
-        } else if (either_.has_first()) {
-            // An OkType is held
-            return true;
-        }
-        // An OkType is not held
-        return false;
-    }
-    bool is_err() const { return !this->is_ok(); }
-
-    OkType& get_ok() { return either_.get_first(); }
-
-    const OkType& get_ok() const { return either_.get_first(); }
-
-    ErrorType& get_err() { return either_.get_second(); }
-
-    const ErrorType& get_err() const { return either_.get_second(); }
-
-    OkType&& release_ok() { return either_.release_first(); }
-
-    ErrorType&& release_err() { return either_.release_second(); }
 };
 
 enum class error_kind {
@@ -79,12 +79,12 @@ class error {
             return "parse_error";
         }
         default: {
-            return "Unknown error";
+            return "unknown";
         }
         }
     }
     std::string to_string() const {
-        return "error: " + stringify(kind_) + " Details: " + error_info_;
+        return "Error(" + stringify(kind_) + ") Details: " + error_info_;
     }
 };
 } // namespace mtl

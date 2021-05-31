@@ -10,8 +10,7 @@ TEST(ResultTest, get_ok) {
 }
 
 TEST(ResultTest, get_err) {
-    mtl::error err("Error");
-    const auto res = mtl::result<int, mtl::error>::ok(err);
+    const auto res = mtl::result<int, mtl::error>::err("Error message");
     ASSERT_TRUE(res.is_err());
-    ASSERT_EQ(res.get_err().to_string(), "Error");
+    ASSERT_EQ(res.get_err().to_string(), "Error(unknown) Details: Error message");
 }
