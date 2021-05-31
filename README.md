@@ -23,6 +23,7 @@ Includes fork of https://github.com/mik90/wrapped_var
 [build] ../test/either_test.cpp:71:59: error: cannot bind rvalue reference of type ‘int&&’ to lvalue of type ‘CopyableType’ {aka ‘int’}
 [build]    71 |     auto either = mtl::either<CopyableType, MoveOnlyType>(dummy_copyable_value);
     ```
+    - [ ] allow for get/release from type like `std::get`
 * `maybe`
     - make `mtl::maybe` (similar to `std::optional`) 
 * `containers`

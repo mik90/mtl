@@ -3,6 +3,7 @@
 /**
  * @brief Similar to std::variant but only for two types. More generic than mtl::result
  * Uses a tagged union internally. Not thread-safe.
+ * Undefined behavior if a value that isn't available is retrieved.
  */
 
 namespace mtl {
@@ -18,6 +19,14 @@ class either {
     void clear_tag() noexcept { tag_ = tag::NONE; };
 
   public:
+    template <class... Args>
+    static either first_emplace(Args&&... args)
+        : tag_(tag::FIRST), first_(std::forward<Args>(args)...) {}
+
+    template <class... Args>
+    static either second_emplace(Args&&... args)
+        : tag_(tag::SECOND), second_(std::forward<Args>(args)...) {}
+
     explicit either(FirstType&& first) : tag_(tag::FIRST), first_(std::forward<FirstType>(first)) {}
 
     explicit either(SecondType&& second)
@@ -34,6 +43,7 @@ class either {
     bool has_second() const noexcept { return tag_ == tag::SECOND; }
 
     bool has_any() const noexcept { return tag_ != tag::NONE; }
+    bool has_none() const noexcept { return !has_any(); }
 
     // Borrowers
     FirstType& get_first() { return first_; }
