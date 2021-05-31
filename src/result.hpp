@@ -3,6 +3,8 @@
 #include <string>
 #include <utility>
 
+#include "maybe.hpp"
+
 namespace mtl {
 
 template <typename OkType, typename ErrorType>
@@ -39,7 +41,6 @@ class result {
     // Observers
     bool is_ok() const { return tag_ == tag::OK; }
     bool is_err() const { return !is_ok(); }
-    /// @todo These return types should be wrapped in mtl::maybe
     /// @todo Allow for default values
 
     const OkType& get_ok() const { return ok_; }
@@ -48,7 +49,6 @@ class result {
     // Modifiers
     OkType& get_ok() { return ok_; }
     ErrorType& get_err() { return err_; }
-
     // Ownership modifiers
     OkType&& release_ok() {
         tag_ = tag::NONE;
@@ -58,6 +58,54 @@ class result {
         tag_ = tag::NONE;
         return std::move(err_);
     }
+
+    // Maybe-wrapped observers and modifiers
+    /*
+    maybe<const OkType&> maybe_get_ok() const {
+        if (is_ok()) {
+            return ok_;
+        } else {
+            return maybe<const OkType&>::none();
+        }
+    }
+    maybe<const ErrorType&> maybe_get_err() const {
+        if (is_err()) {
+            return err_;
+        } else {
+            return maybe<const OkType&>::none();
+        }
+    }
+    maybe<OkType&> maybe_get_ok() {
+        if (is_ok()) {
+            return ok_;
+        } else {
+            return maybe<OkType&>::none();
+        }
+    }
+    maybe<ErrorType&> maybe_get_err() {
+        if (is_err()) {
+            return err_;
+        } else {
+            return maybe<ErrorType&>::none();
+        }
+    }
+    maybe<OkType&&> maybe_release_ok() {
+        if (is_ok()) {
+            tag_ = tag::NONE;
+            return std::move(ok_);
+        } else {
+            return maybe<OkType&&>::none();
+        }
+    }
+    maybe<ErrorType&&> maybe_release_err() {
+        if (is_err()) {
+            tag_ = tag::NONE;
+            return std::move(err_);
+        } else {
+            return maybe<ErrorType&&>::none();
+        }
+    }
+    */
 };
 
 enum class error_kind {

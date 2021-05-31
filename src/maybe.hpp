@@ -16,6 +16,7 @@ class maybe {
     maybe(tag tag_override) : tag_(tag_override) {}
 
   public:
+    /// @todo There should be an easier way to return none
     static maybe none() { return maybe(tag::NONE); }
 
     /// @brief default ctor will default construct T
