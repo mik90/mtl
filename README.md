@@ -11,21 +11,16 @@ Includes fork of https://github.com/mik90/wrapped_var
 # Tasklist
 * `result`
     - [ ] Allow for move-only types
-    - [ ] Impl `mtl::variant` that avoids throwing
+    - [x] impl rough minimal variant
+        - used union and tagging, may not be sufficient
+            -this wont handle reference types
+        - `https://ojdip.net/2013/10/implementing-a-variant-type-in-cpp/`
+            - should i go for even even lower layer?
 * `memoize`
     - [ ] memoization wrapper that stores results of a function
-* `either`
-    - like std::variant but only for two types
-    - it'll make `result` implementation easier
-    - [ ] `~either` should only be explicitly defined if either FirstType or SecondType are non-trivially destructable
-    - [ ] `either` should be constructable from non-rvalue types, especially if it's a primative
-    ```
-[build] ../test/either_test.cpp:71:59: error: cannot bind rvalue reference of type ‘int&&’ to lvalue of type ‘CopyableType’ {aka ‘int’}
-[build]    71 |     auto either = mtl::either<CopyableType, MoveOnlyType>(dummy_copyable_value);
-    ```
-    - [ ] allow for get/release from type like `std::get`
 * `maybe`
-    - make `mtl::maybe` (similar to `std::optional`) 
+    - [x] make `mtl::maybe` (similar to `std::optional`) 
+    - has the same issues as `result` although less numerous
 * `containers`
     - static array
     - dynamic array
@@ -40,5 +35,5 @@ Includes fork of https://github.com/mik90/wrapped_var
             - cyclic
 * `string`
     - utf8 text
-    - null terminated, i guess
+    - no null termination
 * benchmarks that compare against performance of std:: and other libraries

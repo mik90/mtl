@@ -11,16 +11,21 @@ template <typename T>
 class maybe {
   private:
     // What if `T` doesn't have a default constructor?
-    T some_;
+    struct None {};
+    // Unions cannot have data members of reference types
+    union {
+        T some_;
+        None none_;
+    };
     enum class tag { SOME, NONE } tag_;
-    maybe(tag tag_override) : tag_(tag_override) {}
+    maybe(tag tag_override) : none_(None{}), tag_(tag_override) {}
 
   public:
     /// @todo There should be an easier way to return none
     static maybe none() { return maybe(tag::NONE); }
 
     /// @brief default ctor will default construct T
-    maybe() : tag_(tag::SOME) {}
+    maybe() : some_(T{}), tag_(tag::SOME) {}
 
     // The member function itself must be templated for it to be a universal reference
     // https://stackoverflow.com/a/30569606/15827495

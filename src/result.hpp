@@ -60,7 +60,6 @@ class result {
     }
 
     // Maybe-wrapped observers and modifiers
-    /*
     maybe<const OkType&> maybe_get_ok() const {
         if (is_ok()) {
             return ok_;
@@ -68,6 +67,7 @@ class result {
             return maybe<const OkType&>::none();
         }
     }
+    /*
     maybe<const ErrorType&> maybe_get_err() const {
         if (is_err()) {
             return err_;
