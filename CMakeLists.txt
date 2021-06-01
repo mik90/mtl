@@ -29,7 +29,4 @@ if(ENABLE_TESTING)
   enable_testing()
   message("Building Tests.")
   add_subdirectory(test)
-  add_test(NAME UnitTest
-          WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-          COMMAND UnitTest)
 endif()
