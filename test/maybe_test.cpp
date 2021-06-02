@@ -33,3 +33,10 @@ TEST(MaybeTest, release_move_only_default) {
     auto value = mtl::maybe<test_utils::MoveOnlyInt>::none();
     ASSERT_EQ(value.release_or(5), 5);
 }
+/*
+Don't allow this yet
+TEST(MaybeTest, store_reference) {
+    auto value = mtl::maybe<const int&>(5);
+    ASSERT_TRUE(value.is_some());
+}
+*/

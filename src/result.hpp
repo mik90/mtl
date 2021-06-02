@@ -41,14 +41,15 @@ class result {
     // Observers
     bool is_ok() const { return tag_ == tag::OK; }
     bool is_err() const { return !is_ok(); }
-    /// @todo Allow for default values
 
+    /// @todo Allow for default values if the err state is present
     const OkType& get_ok() const { return ok_; }
     const ErrorType& get_err() const { return err_; }
 
     // Modifiers
     OkType& get_ok() { return ok_; }
     ErrorType& get_err() { return err_; }
+
     // Ownership modifiers
     OkType&& release_ok() {
         tag_ = tag::NONE;
@@ -59,53 +60,37 @@ class result {
         return std::move(err_);
     }
 
-    // Maybe-wrapped observers and modifiers
-    maybe<const OkType&> maybe_get_ok() const {
+    // mtl::maybe-wrapped observers and modifiers
+    maybe<OkType> maybe_copy_ok() const {
         if (is_ok()) {
             return ok_;
         } else {
-            return maybe<const OkType&>::none();
+            return maybe<OkType>::none();
         }
     }
-    /*
-    maybe<const ErrorType&> maybe_get_err() const {
+    maybe<ErrorType> maybe_copy_err() const {
         if (is_err()) {
             return err_;
         } else {
-            return maybe<const OkType&>::none();
+            return maybe<ErrorType>::none();
         }
     }
-    maybe<OkType&> maybe_get_ok() {
-        if (is_ok()) {
-            return ok_;
-        } else {
-            return maybe<OkType&>::none();
-        }
-    }
-    maybe<ErrorType&> maybe_get_err() {
-        if (is_err()) {
-            return err_;
-        } else {
-            return maybe<ErrorType&>::none();
-        }
-    }
-    maybe<OkType&&> maybe_release_ok() {
+    maybe<OkType> maybe_release_ok() {
         if (is_ok()) {
             tag_ = tag::NONE;
             return std::move(ok_);
         } else {
-            return maybe<OkType&&>::none();
+            return maybe<OkType>::none();
         }
     }
-    maybe<ErrorType&&> maybe_release_err() {
+    maybe<ErrorType> maybe_release_err() {
         if (is_err()) {
             tag_ = tag::NONE;
             return std::move(err_);
         } else {
-            return maybe<ErrorType&&>::none();
+            return maybe<ErrorType>::none();
         }
     }
-    */
 };
 
 enum class error_kind {

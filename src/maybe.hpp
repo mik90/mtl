@@ -24,19 +24,13 @@ class maybe {
     /// @todo There should be an easier way to return none
     static maybe none() { return maybe(tag::NONE); }
 
-    /// @brief default ctor will default construct T
-    maybe() : some_(T{}), tag_(tag::SOME) {}
-
     // The member function itself must be templated for it to be a universal reference
     // https://stackoverflow.com/a/30569606/15827495
     template <typename U>
-    maybe(U&& value) : some_(std::forward<U>(value)), tag_(tag::SOME) {
-        /// @todo What if T is constructable from U? That's desired in this situation
-        /*
-        static_assert(std::is_same<std::decay_t<U>, std::decay_t<T>>::value,
-                      "Constructor type U must be the same as class type T");
-        */
-    }
+    maybe(U&& value) : some_(std::forward<U>(value)), tag_(tag::SOME) {}
+
+    /// @todo only define this if T is not trivially destructable
+    ~maybe() {}
 
     // Observers
     bool is_some() const noexcept { return tag_ == tag::SOME; }
