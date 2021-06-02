@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "result.hpp"
-#include "test_utils.hpp"
+#include "utils.hpp"
 
 TEST(ResultTest, get_ok) {
     const auto res = mtl::result<int, mtl::error>::ok(5);
@@ -28,7 +28,7 @@ TEST(ResultTest, maybe_copy_err) {
     ASSERT_TRUE(maybe_err.is_some());
 }
 TEST(ResultTest, release_ok) {
-    auto res = mtl::result<test_utils::MoveOnlyInt, mtl::error>::ok(5);
+    auto res = mtl::result<test::MoveOnlyInt, mtl::error>::ok(5);
     auto maybe_ok = res.maybe_release_ok();
     ASSERT_TRUE(maybe_ok.is_some());
 }

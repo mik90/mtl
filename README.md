@@ -30,6 +30,7 @@ Includes fork of https://github.com/mik90/wrapped_var
     - static array
     - dynamic array
     - hash map
+    - tree-based map
     - set
     - linked list
     - tree

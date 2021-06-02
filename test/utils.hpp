@@ -4,7 +4,7 @@
  * @brief Unit test helpers
  */
 
-namespace test_utils {
+namespace test {
 
 struct MoveOnlyInt {
   private:
@@ -45,4 +45,4 @@ struct CopyableType {
     ~CopyableType() = default;
 };
 
-} // namespace test_utils
+} // namespace test

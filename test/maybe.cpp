@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "maybe.hpp"
-#include "test_utils.hpp"
+#include "utils.hpp"
 
 TEST(MaybeTest, is_some) {
     const auto value = mtl::maybe<int>(5);
@@ -25,12 +25,12 @@ TEST(MaybeTest, get_some_non_const_simple) {
 }
 
 TEST(MaybeTest, release_move_only) {
-    auto value = mtl::maybe<test_utils::MoveOnlyInt>(5);
+    auto value = mtl::maybe<test::MoveOnlyInt>(5);
     ASSERT_EQ(value.release(), 5);
 }
 
 TEST(MaybeTest, release_move_only_default) {
-    auto value = mtl::maybe<test_utils::MoveOnlyInt>::none();
+    auto value = mtl::maybe<test::MoveOnlyInt>::none();
     ASSERT_EQ(value.release_or(5), 5);
 }
 /*

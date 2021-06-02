@@ -2,9 +2,10 @@ include(GoogleTest)
 
 add_executable(UnitTest 
   main.cpp
-  maybe_test.cpp
-  result_test.cpp
-  wrapped_var_test.cpp
+  maybe.cpp
+  result.cpp
+  static_array.cpp
+  wrapped_var.cpp
 )
 
 target_include_directories(UnitTest PRIVATE
