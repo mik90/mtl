@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "maybe.hpp"
+#include "mtl/maybe.hpp"
 #include "utils.hpp"
 
 TEST(MaybeTest, is_some) {

@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "result.hpp"
+#include "mtl/result.hpp"
 #include "utils.hpp"
 
 TEST(ResultTest, get_ok) {

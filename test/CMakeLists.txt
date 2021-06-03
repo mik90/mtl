@@ -4,6 +4,7 @@ add_executable(UnitTest
   main.cpp
   maybe.cpp
   result.cpp
+  dyn_array.cpp
   static_array.cpp
   wrapped_var.cpp
 )

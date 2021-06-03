@@ -23,7 +23,7 @@ set(CONAN_PROFILE default CACHE STRING "Conan profile to use")
 include(cmake/Conan.cmake)
 run_conan()
 
-add_subdirectory(src)
+add_subdirectory(include)
 
 if(ENABLE_TESTING)
   enable_testing()

@@ -29,6 +29,7 @@ Includes fork of https://github.com/mik90/wrapped_var
 * `containers`
     - static array
     - dynamic array
+        - impl using a static array
     - hash map
     - tree-based map
     - set
