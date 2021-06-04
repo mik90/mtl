@@ -8,7 +8,7 @@ namespace mtl {
  * @brief similar to std::optional
  */
 template <typename T>
-class maybe {
+class Maybe {
   private:
     // What if `T` doesn't have a default constructor?
     struct None {};
@@ -18,19 +18,19 @@ class maybe {
         None none_;
     };
     enum class tag { SOME, NONE } tag_;
-    maybe(tag tag_override) : none_(None{}), tag_(tag_override) {}
+    Maybe(tag tag_override) : none_(None{}), tag_(tag_override) {}
 
   public:
     /// @todo There should be an easier way to return none
-    static maybe none() { return maybe(tag::NONE); }
+    static Maybe none() { return Maybe(tag::NONE); }
 
     // The member function itself must be templated for it to be a universal reference
     // https://stackoverflow.com/a/30569606/15827495
     template <typename U>
-    maybe(U&& value) : some_(std::forward<U>(value)), tag_(tag::SOME) {}
+    Maybe(U&& value) : some_(std::forward<U>(value)), tag_(tag::SOME) {}
 
     /// @todo only define this if T is not trivially destructable
-    ~maybe() {}
+    ~Maybe() {}
 
     // Observers
     bool is_some() const noexcept { return tag_ == tag::SOME; }

@@ -44,3 +44,4 @@ Includes fork of https://github.com/mik90/wrapped_var
     - utf8 text
     - no null termination
 * benchmarks that compare against performance of std:: and other libraries
+* Also add on a tiny neural net lib based on https://github.com/codeplea/genann because why not

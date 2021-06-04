@@ -7,9 +7,9 @@ namespace mtl {
  * @brief Array that can grow and shrink
  */
 template <typename ValueType>
-class dyn_array {
+class DynArray {
   private:
-    /// @todo use a static_array internally and resize it when needed
+    /// @todo use a StaticArray internally and resize it when needed
 
   public:
 };

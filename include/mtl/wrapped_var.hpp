@@ -7,16 +7,16 @@
 namespace mtl {
 
 /**
- * @brief RAII style accessor for a wrapped_var var
+ * @brief RAII style accessor for a WrappedVar var
  * @tparam UnderlyingVarType the variable type protected by the mutex
  * @tparam MutexType the mutex that protects UnderlyingType
  * @tparam LockType the type used for locking MutexType
  */
 template <class UnderlyingVarType, class LockType>
-class var_accessor {
+class VarAccessor {
   public:
     // General case
-    var_accessor(UnderlyingVarType& var, LockType&& lock) : var_(var), lock_(std::move(lock)) {}
+    VarAccessor(UnderlyingVarType& var, LockType&& lock) : var_(var), lock_(std::move(lock)) {}
 
     UnderlyingVarType& get_ref() noexcept { return var_; }
 
@@ -35,7 +35,7 @@ class var_accessor {
  * @tparam MutexType the mutex that protects UnderlyingType
  */
 template <class UnderlyingVarType>
-class wrapped_var {
+class WrappedVar {
   public:
     using MutexType = std::mutex;
     /**
@@ -43,13 +43,13 @@ class wrapped_var {
      *        std::vector::emplace_back.
      */
     template <class... Args>
-    explicit wrapped_var(Args&&... args) : var_(std::forward<Args>(args)...) {}
+    explicit WrappedVar(Args&&... args) : var_(std::forward<Args>(args)...) {}
 
     /**
      * @brief Getter that returns a variable accessor helper type
-     * @return var_accessor that can be locked for modifying the underlying variable
+     * @return VarAccessor that can be locked for modifying the underlying variable
      */
-    var_accessor<UnderlyingVarType, std::unique_lock<MutexType>> get() {
+    VarAccessor<UnderlyingVarType, std::unique_lock<MutexType>> get() {
         return {var_, std::unique_lock<MutexType>{mutex_}};
     }
 

@@ -9,10 +9,10 @@ namespace mtl {
  * @brief statically sized array
  */
 template <typename ValueType, size_t Capacity>
-class static_array {
+class StaticArray {
   public:
-    static_array() {}
-    static_array(std::initializer_list<ValueType> list) : size_(list.size()) {
+    StaticArray() {}
+    StaticArray(std::initializer_list<ValueType> list) : size_(list.size()) {
         for (size_t i = 0; i < list.size(); ++i) {
             data_[i] = *(list.begin() + i);
         }

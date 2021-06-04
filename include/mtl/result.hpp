@@ -8,7 +8,7 @@
 namespace mtl {
 
 template <typename OkType, typename ErrorType>
-class result {
+class Result {
   private:
     struct ok_tag {};
     struct err_tag {};
@@ -20,23 +20,23 @@ class result {
 
     // Ctors with tags so they know which type to construct in-place
     template <class... Args>
-    result(ok_tag, Args&&... args) : ok_(std::forward<Args>(args)...), tag_(tag::OK) {}
+    Result(ok_tag, Args&&... args) : ok_(std::forward<Args>(args)...), tag_(tag::OK) {}
     template <class... Args>
-    result(err_tag, Args&&... args) : err_(std::forward<Args>(args)...), tag_(tag::ERR) {}
+    Result(err_tag, Args&&... args) : err_(std::forward<Args>(args)...), tag_(tag::ERR) {}
 
   public:
     template <class... Args>
-    static result ok(Args&&... args) {
-        return result(ok_tag{}, std::forward<Args>(args)...);
+    static Result ok(Args&&... args) {
+        return Result(ok_tag{}, std::forward<Args>(args)...);
     }
 
     template <class... Args>
-    static result err(Args&&... args) {
-        return result(err_tag{}, std::forward<Args>(args)...);
+    static Result err(Args&&... args) {
+        return Result(err_tag{}, std::forward<Args>(args)...);
     }
 
     /// @todo This should only be defined if either the OkType or ErrorType are non-trivial
-    ~result() {}
+    ~Result() {}
 
     // Observers
     bool is_ok() const { return tag_ == tag::OK; }
@@ -60,55 +60,55 @@ class result {
         return std::move(err_);
     }
 
-    // mtl::maybe-wrapped observers and modifiers
-    maybe<OkType> maybe_copy_ok() const {
+    // mtl::Maybe-wrapped observers and modifiers
+    Maybe<OkType> maybe_copy_ok() const {
         if (is_ok()) {
             return ok_;
         } else {
-            return maybe<OkType>::none();
+            return Maybe<OkType>::none();
         }
     }
-    maybe<ErrorType> maybe_copy_err() const {
+    Maybe<ErrorType> maybe_copy_err() const {
         if (is_err()) {
             return err_;
         } else {
-            return maybe<ErrorType>::none();
+            return Maybe<ErrorType>::none();
         }
     }
-    maybe<OkType> maybe_release_ok() {
+    Maybe<OkType> maybe_release_ok() {
         if (is_ok()) {
             tag_ = tag::NONE;
             return std::move(ok_);
         } else {
-            return maybe<OkType>::none();
+            return Maybe<OkType>::none();
         }
     }
-    maybe<ErrorType> maybe_release_err() {
+    Maybe<ErrorType> maybe_release_err() {
         if (is_err()) {
             tag_ = tag::NONE;
             return std::move(err_);
         } else {
-            return maybe<ErrorType>::none();
+            return Maybe<ErrorType>::none();
         }
     }
 };
 
-enum class error_kind {
+enum class ErrorKind {
     parse_error,
     unknown,
 };
 
-class error {
+class Error {
   private:
-    error_kind kind_;
+    ErrorKind kind_;
     std::string error_info_;
 
   public:
-    error(error_kind kind, std::string info) : kind_(kind), error_info_(std::move(info)) {}
-    error(std::string info) : kind_(error_kind::unknown), error_info_(std::move(info)) {}
-    std::string stringify(error_kind kind) const {
+    Error(ErrorKind kind, std::string info) : kind_(kind), error_info_(std::move(info)) {}
+    Error(std::string info) : kind_(ErrorKind::unknown), error_info_(std::move(info)) {}
+    std::string stringify(ErrorKind kind) const {
         switch (kind) {
-        case error_kind::parse_error: {
+        case ErrorKind::parse_error: {
             return "parse_error";
         }
         default: {
