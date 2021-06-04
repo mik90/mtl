@@ -1,8 +1,11 @@
 #pragma once
 
+#include <cstring>
 #include <initializer_list>
 #include <iterator>
 #include <utility>
+
+#include "mtl/maybe.hpp"
 
 namespace mtl {
 /**
@@ -13,9 +16,7 @@ class StaticArray {
   public:
     StaticArray() {}
     StaticArray(std::initializer_list<ValueType> list) : size_(list.size()) {
-        for (size_t i = 0; i < list.size(); ++i) {
-            data_[i] = *(list.begin() + i);
-        }
+        std::memmove(data_, list.begin(), size_);
     }
     size_t size() const noexcept { return size_; }
     size_t capacity() const noexcept { return capacity_; }
@@ -31,7 +32,19 @@ class StaticArray {
             data_[size_++] = std::move(value);
         }
     }
-    // TODO operator[]
+
+    ValueType& operator[](size_t idx) { return data_[idx]; }
+
+    const ValueType& operator[](size_t idx) const noexcept { return data_[idx]; }
+
+    Maybe<ValueType> maybe_copy_at(size_t idx) const {
+        if (idx < size_) {
+            ValueType value = data_[idx];
+            return value;
+        } else {
+            return None{};
+        }
+    }
 
   private:
     const size_t capacity_ = Capacity;
