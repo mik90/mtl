@@ -17,7 +17,8 @@
                     "type": "STRING",
                     "value": "default"
                 },
-                "ENABLE_TESTING": "ON"
+                "ENABLE_TESTING": "ON",
+                "ENABLE_BENCHMARKS": "ON"
             }
         }
     ],

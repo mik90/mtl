@@ -14,6 +14,7 @@ set_project_warnings(project_warnings)
 include(cmake/StaticAnalyzers.cmake)
 
 option(ENABLE_TESTING "Enable Test Builds" OFF)
+option(ENABLE_BENCHMARKS "Enable Benchmarks" OFF)
 
 # Set up some extra Conan dependencies based on our needs before loading Conan
 set(CONAN_EXTRA_REQUIRES "")
@@ -23,10 +24,15 @@ set(CONAN_PROFILE default CACHE STRING "Conan profile to use")
 include(cmake/Conan.cmake)
 run_conan()
 
-add_subdirectory(include)
+add_subdirectory(include/mtl)
 
 if(ENABLE_TESTING)
   enable_testing()
-  message("Building Tests.")
+  message("Configuring tests...")
   add_subdirectory(test)
+endif()
+
+if(ENABLE_BENCHMARKS)
+  message("Configuring benchmarks...")
+  add_subdirectory(benchmark)
 endif()

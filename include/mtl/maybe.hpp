@@ -4,14 +4,14 @@
 #include <utility>
 
 namespace mtl {
+struct None {};
+
 /**
  * @brief similar to std::optional
  */
 template <typename T>
 class Maybe {
   private:
-    // What if `T` doesn't have a default constructor?
-    struct None {};
     // Unions cannot have data members of reference types
     union {
         T some_;
@@ -23,6 +23,7 @@ class Maybe {
   public:
     /// @todo There should be an easier way to return none
     static Maybe none() { return Maybe(tag::NONE); }
+    Maybe(None) : none_(None{}), tag_(tag::NONE) {}
 
     // The member function itself must be templated for it to be a universal reference
     // https://stackoverflow.com/a/30569606/15827495

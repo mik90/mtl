@@ -6,5 +6,5 @@ target_link_libraries(Mtl INTERFACE
 )
 
 target_include_directories(Mtl INTERFACE
-  ${CMAKE_CURRENT_LIST_DIR}
+  ${CMAKE_CURRENT_LIST_DIR}/..
 )

@@ -19,19 +19,19 @@ class StaticArray {
     }
     size_t size() const noexcept { return size_; }
     size_t capacity() const noexcept { return capacity_; }
-    // Only add an element if there's room
+
+    /// @brief Add an element if there's room, otherwise disregard it
     void push_back(const ValueType& value) {
         if (size_ < capacity_) {
-            data_[size_] = value;
+            data_[size_++] = value;
         }
-        size_++;
     }
     void push_back(ValueType&& value) {
         if (size_ < capacity_) {
-            data_[size_] = std::move(value);
+            data_[size_++] = std::move(value);
         }
-        size_++;
     }
+    // TODO operator[]
 
   private:
     const size_t capacity_ = Capacity;
