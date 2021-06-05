@@ -7,9 +7,9 @@
     },
     "configurePresets": [
         {
-            "name": "unitTests",
-            "displayName": "Unit test, default config",
-            "description": "Unit test",
+            "name": "allProjectsRelWithDebInfo",
+            "displayName": "allProjectsRelWithDebInfo",
+            "description": "Unit tests and benchmarks",
             "generator": "Ninja",
             "binaryDir": "./build",
             "cacheVariables": {
@@ -17,27 +17,63 @@
                     "type": "STRING",
                     "value": "default"
                 },
+                "CMAKE_BUILD_TYPE": {
+                    "value": "RelWithDebInfo"
+                },
                 "ENABLE_TESTING": "ON",
                 "ENABLE_BENCHMARKS": "ON"
+            }
+        },
+        {
+            "name": "unitTestsDebug",
+            "displayName": "unitTestsDebug",
+            "description": "Unit tests with debug config",
+            "generator": "Ninja",
+            "binaryDir": "./build",
+            "cacheVariables": {
+                "CONAN_PROFILE": {
+                    "type": "STRING",
+                    "value": "default"
+                },
+                "CMAKE_BUILD_TYPE": {
+                    "value": "Debug"
+                },
+                "ENABLE_TESTING": "ON",
+                "ENABLE_BENCHMARKS": "OFF"
             }
         }
     ],
     "buildPresets": [
         {
             "name": "unitTests",
-            "configurePreset": "unitTests"
+            "configurePreset": "unitTestsDebug"
+        },
+        {
+            "name": "unitTestsAndBenchmarks",
+            "configurePreset": "allProjectsRelWithDebInfo"
         }
     ],
     "testPresets": [
         {
-            "name": "unitTests",
-            "configurePreset": "unitTests",
+            "name": "unitTestDebug",
+            "configurePreset": "unitTestsDebug",
             "output": {
                 "outputOnFailure": true
             },
             "execution": {
                 "noTestsAction": "error",
-                "stopOnFailure": true
+                "stopOnFailure": false
+            }
+        },
+        {
+            "name": "unitTestRelease",
+            "configurePreset": "unitTestsAndBenchmarks",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": false
             }
         }
     ]
