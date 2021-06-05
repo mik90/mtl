@@ -17,7 +17,7 @@ target_link_libraries(UnitTest PRIVATE
   project_warnings
   project_options
   CONAN_PKG::gtest
-	Mtl
+	mtl
 )
 
 gtest_discover_tests(UnitTest)

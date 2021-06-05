@@ -1,10 +1,10 @@
-add_library(Mtl INTERFACE)
+add_library(mtl INTERFACE)
 
-target_link_libraries(Mtl INTERFACE
+target_link_libraries(mtl INTERFACE
   project_options
   project_warnings
 )
 
-target_include_directories(Mtl INTERFACE
+target_include_directories(mtl INTERFACE
   ${CMAKE_CURRENT_LIST_DIR}/..
 )

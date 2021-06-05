@@ -1,15 +1,15 @@
-add_executable(MtlBenchmark
+add_executable(Benchmark
   main.cpp
   array.cpp
 )
 
-target_include_directories(MtlBenchmark PRIVATE
+target_include_directories(Benchmark PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}
 )
 
-target_link_libraries(MtlBenchmark PRIVATE
+target_link_libraries(Benchmark PRIVATE
   project_warnings
   project_options
   CONAN_PKG::benchmark
-	Mtl
+	mtl
 )

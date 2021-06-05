@@ -11,7 +11,7 @@
             "displayName": "Unit test, default config",
             "description": "Unit test",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build",
+            "binaryDir": "./build",
             "cacheVariables": {
                 "CONAN_PROFILE": {
                     "type": "STRING",
