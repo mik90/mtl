@@ -14,6 +14,9 @@ Includes fork of https://github.com/mik90/wrapped_var
     - [x] impl rough minimal variant
 * `memoize`
     - [ ] memoization wrapper that stores results of a function
+* `algorithm`
+    - [ ] helpers like map, reduce, and fold
+        - [ ] possibly add parallelization?
 * `maybe`
     - [x] make `mtl::maybe` (similar to `std::optional`) 
     - has the same issues as `result` although less numerous
@@ -28,6 +31,8 @@ Includes fork of https://github.com/mik90/wrapped_var
             - std::aligned_storage or std::aligned_union
 * `containers`
     - static array
+      - started on this
+      - [x] helper like `std::make_array` that handles the size template parameter
     - dynamic array
         - impl using a static array
     - hash map
@@ -40,6 +45,8 @@ Includes fork of https://github.com/mik90/wrapped_var
             - acyclic
             - directed acyclic
             - cyclic
+    - iterator
+      - should be interchangeable with std iterators
 * `string`
     - utf8 text
     - no null termination

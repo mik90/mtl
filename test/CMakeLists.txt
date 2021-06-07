@@ -1,6 +1,7 @@
 include(GoogleTest)
 
 add_executable(UnitTest 
+  algorithm.cpp
   main.cpp
   maybe.cpp
   result.cpp

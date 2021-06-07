@@ -6,6 +6,7 @@
 #include <type_traits>
 
 #include "mtl/maybe.hpp"
+#include "mtl/algorithm.hpp"
 
 namespace mtl {
 
@@ -19,18 +20,26 @@ class StaticArray {
 
     /// @note User is expected to make sure that Capacity > list.size()
     StaticArray(std::initializer_list<ValueType> list) : size_(0) {
+        auto begin = list.begin();
         auto end = list.end();
         // Limit the amount of values copied over if it's greater than the capacity
         if (list.size() > Capacity) {
             end = list.begin() + Capacity;
         }
 
-        std::for_each(list.begin(), end, [this](const auto& item){
-            this->data_[this->size_++] = item;
+        std::for_each(begin, end, [this](const auto& item){
+            return this->data_[this->size_++] = item;
         });
     }
+
     size_t size() const noexcept { return size_; }
     size_t capacity() const noexcept { return capacity_; }
+
+    // Iterators
+    ValueType* begin() noexcept { return data_; }
+    ValueType* end() noexcept { return data_ + size_; }
+    const ValueType* cbegin() const noexcept { return data_; }
+    const ValueType* cend() const noexcept { return data_ + size_; }
 
     /// @brief Add an element if there's room, otherwise disregard it
     void push_back(const ValueType& value) {
@@ -74,4 +83,18 @@ class StaticArray {
     ValueType data_[Capacity];
     size_t size_ = 0;
 };
+
+/**
+ * @brief Converts variadic args into a given ValueType
+ * stackoverflow answer describing std::make_array impl: https://stackoverflow.com/a/39040524
+ * There's probably a better way to do this than to make an initializer_list
+ */
+template <typename ValueType, class... Args>
+static auto make_static_array(Args&&... args) {
+    const auto count = sizeof...(Args);
+    std::initializer_list<ValueType> list = { std::forward<Args>(args)... };
+    return StaticArray<ValueType, count>(list);
+}
+
+
 } // namespace mtl

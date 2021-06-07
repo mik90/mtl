@@ -84,3 +84,12 @@ TEST(StaticArrayTest, maybe_copy_at_none) {
     const auto maybe_value = array.maybe_copy_at(5);
     ASSERT_TRUE(maybe_value.is_none());
 }
+
+TEST(StaticArrayTest, make_static_array) {
+    const auto array = mtl::make_static_array<int>(0, 1, 2, 3);
+    ASSERT_EQ(array.size(), 4);
+    ASSERT_EQ(array[0], 0);
+    ASSERT_EQ(array[1], 1);
+    ASSERT_EQ(array[2], 2);
+    ASSERT_EQ(array[3], 3);
+}
