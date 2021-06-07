@@ -33,6 +33,8 @@ Includes fork of https://github.com/mik90/wrapped_var
     - static array
       - started on this
       - [x] helper like `std::make_array` that handles the size template parameter
+      - std::array doens't actually have a constructor, it's implicitly declared
+        - can i do this? 
     - dynamic array
         - impl using a static array
     - hash map

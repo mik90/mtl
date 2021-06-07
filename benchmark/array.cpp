@@ -1,12 +1,19 @@
 #include <benchmark/benchmark.h>
+#include "mtl/static_array.hpp"
+#include <array>
 
-static void BM_SomeFunction(benchmark::State& state) {
-    // Perform setup here
+static void std_array_init_list(benchmark::State& state) {
     for (auto _ : state) {
-        // This code gets timed
-        const int i = 2 + 3;
-        benchmark::DoNotOptimize(i);
+        std::array<int, 7> arr = {0, 1, 2, 3, 4, 5, 6};
+        benchmark::DoNotOptimize(arr[3]);
     }
 }
-// Register the function as a benchmark
-BENCHMARK(BM_SomeFunction);
+BENCHMARK(std_array_init_list);
+
+static void mtl_static_array_init_list(benchmark::State& state) {
+    for (auto _ : state) {
+        mtl::StaticArray<int, 7> arr = {0, 1, 2, 3, 4, 5, 6};
+        benchmark::DoNotOptimize(arr[3]);
+    }
+}
+BENCHMARK(mtl_static_array_init_list);

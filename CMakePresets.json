@@ -67,7 +67,7 @@
         },
         {
             "name": "unitTestRelease",
-            "configurePreset": "unitTestsAndBenchmarks",
+            "configurePreset": "allProjectsRelWithDebInfo",
             "output": {
                 "outputOnFailure": true
             },
