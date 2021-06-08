@@ -7,6 +7,7 @@ add_executable(UnitTest
   result.cpp
   dyn_array.cpp
   static_array.cpp
+  pointers.cpp
   wrapped_var.cpp
 )
 

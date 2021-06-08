@@ -1,12 +1,19 @@
 # mtl
 A C++ template library
 Includes fork of https://github.com/mik90/wrapped_var
+For usage, all that's needed is the include/mtl directory
 
 ## Build and run tests
 `mkdir build && cd build`
 `cmake .. -DENABLE_TESTING=ON`
 `cmake --build UnitTest`
 `./bin/UnitTest`
+
+## Build and run benchmarks
+`mkdir build && cd build`
+`cmake .. -DENABLE_BENCHMARKS=ON -DCMAKE_BUILD_TYPE=Release`
+`cmake --build Benchmark`
+`./bin/Benchmark`
 
 # Tasklist
 * `result`
@@ -15,10 +22,17 @@ Includes fork of https://github.com/mik90/wrapped_var
 * `memoize`
     - [ ] memoization wrapper that stores results of a function
 * `algorithm`
-    - [ ] helpers like map, reduce, and fold
-        - [ ] possibly add parallelization?
+    - algorithmic helpers
+    - [x] map,
+    - [ ] reduce
+    - [ ] fold
+    - [ ] add parallelization option
+* `pointers`
+    - [x] `OwnedPtr` - similar to `unique_ptr`
+    - [ ] `SharedPtr` - `shared_ptr`
+    - [ ] `NonOwnedPtr` - `weak_ptr`
 * `maybe`
-    - [x] make `mtl::maybe` (similar to `std::optional`) 
+    - [x] make `mtl::Maybe` (similar to `std::optional`) 
     - has the same issues as `result` although less numerous
     - used union and tagging, may not be sufficient
         - this wont handle reference types
@@ -30,27 +44,30 @@ Includes fork of https://github.com/mik90/wrapped_var
         - `https://www.bfilipek.com/2018/05/using-optional.html`
             - std::aligned_storage or std::aligned_union
 * `containers`
-    - static array
+    - [x] static array
       - started on this
       - [x] helper like `std::make_array` that handles the size template parameter
       - std::array doens't actually have a constructor, it's implicitly declared
         - can i do this? Not really, a std::array's size cannot change and is embedded in its type
-    - dynamic array
+      - [ ] finish up `remote_at`
+    - [ ] dynamic array
         - impl using a static array
-    - hash map
-    - tree-based map
-    - set
-    - linked list
-    - tree
-    - graph
+    - [ ] hash map
+    - [ ] tree-based map
+    - [ ] set
+    - [ ] linked list
+    - [ ] tree
+    - [ ] graph
         - What kinds?
-            - acyclic
-            - directed acyclic
-            - cyclic
-    - iterator
+            - [ ] acyclic
+            - [ ] directed acyclic
+            - [ ] cyclic
+    - [ ] iterator
       - should be interchangeable with std iterators
 * `string`
     - utf8 text
     - no null termination
 * benchmarks that compare against performance of std:: and other libraries
+    - [x] cmake seutp
 * Also add on a tiny neural net lib based on https://github.com/codeplea/genann because why not
+    - [ ] base impl

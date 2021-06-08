@@ -74,19 +74,22 @@ class StaticArray {
     void reset() noexcept {
         size_ = 0;
     }
-
+/*
     Maybe<ValueType> remove_at(size_t idx) {
         if (idx > size_) {
             return None{};
         }
         const auto ret_value = std::move(data_[idx]);
         // range to shift
-        const auto n_values_to_shift = end() - idx - 1;
         // Overwrite old values
-        std::memmove(begin() + index, begin() + index + 1, n_values_to_shift);
+        const auto from = std::advance(std::begin(data_), idx);
+        const auto to = from + 1;
+        const auto n_items_to_move = std::distance(to, std::end(data_));
+        std::memmove(from, to, n_items_to_move);
         size_--;
         return Some{ret_value};
     }
+    */
 
   private:
     const size_t capacity_ = Capacity;

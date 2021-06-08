@@ -93,3 +93,15 @@ TEST(StaticArrayTest, make_static_array) {
     ASSERT_EQ(array[2], 2);
     ASSERT_EQ(array[3], 3);
 }
+
+/*
+TEST(StaticArrayTest, remove_at_0) {
+    auto array = mtl::make_static_array<int>(0, 1, 2, 3);
+    const auto maybe = array.remove_at(2);
+    ASSERT_TRUE(maybe);
+    ASSERT_EQ(maybe.get_some(), 2);
+    ASSERT_EQ(array[0], 0);
+    ASSERT_EQ(array[1], 1);
+    ASSERT_EQ(array[2], 3);
+}
+*/
