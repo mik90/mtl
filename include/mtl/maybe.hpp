@@ -6,6 +6,11 @@
 namespace mtl {
 struct None {};
 
+template <typename T>
+struct Some {
+    T value_;
+};
+
 /**
  * @brief similar to std::optional
  */
@@ -21,9 +26,12 @@ class Maybe {
     Maybe(tag tag_override) : none_(None{}), tag_(tag_override) {}
 
   public:
-    /// @todo There should be an easier way to return none
     static Maybe none() { return Maybe(tag::NONE); }
     Maybe(None) : none_(None{}), tag_(tag::NONE) {}
+
+    // Construct from Some
+    Maybe(const Some<T>& some) : some_(some.value_), tag_(tag::SOME) {}
+    Maybe(Some<T>&& some) : some_(some.value_), tag_(tag::SOME) {}
 
     // The member function itself must be templated for it to be a universal reference
     // https://stackoverflow.com/a/30569606/15827495

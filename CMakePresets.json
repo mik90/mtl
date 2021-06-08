@@ -49,8 +49,18 @@
             "configurePreset": "unitTestsDebug"
         },
         {
-            "name": "unitTestsAndBenchmarks",
-            "configurePreset": "allProjectsRelWithDebInfo"
+            "name": "unitTests",
+            "configurePreset": "allProjectsRelWithDebInfo",
+            "targets": [
+                "UnitTest"
+            ]
+        },
+        {
+            "name": "benchmarks",
+            "configurePreset": "allProjectsRelWithDebInfo",
+            "targets": [
+                "Benchmark"
+            ]
         }
     ],
     "testPresets": [

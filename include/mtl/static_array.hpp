@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstring>
 #include <initializer_list>
 #include <iterator>
 #include <utility>
@@ -11,7 +12,7 @@
 namespace mtl {
 
 /**
- * @brief statically sized array
+ * @brief Array with a static capacity and variable size
  */
 template <typename ValueType, size_t Capacity>
 class StaticArray {
@@ -41,16 +42,20 @@ class StaticArray {
     const ValueType* cbegin() const noexcept { return data_; }
     const ValueType* cend() const noexcept { return data_ + size_; }
 
-    /// @brief Add an element if there's room, otherwise disregard it
-    void push_back(const ValueType& value) {
+    /// @brief Add an element if there's room, otherwise disregard it and return false
+    bool push_back(const ValueType& value) {
         if (size_ < capacity_) {
             data_[size_++] = value;
+            return true;
         }
+        return false;
     }
-    void push_back(ValueType&& value) {
+    bool push_back(ValueType&& value) {
         if (size_ < capacity_) {
             data_[size_++] = std::move(value);
+            return true;
         }
+        return false;
     }
 
     ValueType& operator[](size_t idx) { return data_[idx]; }
@@ -62,7 +67,7 @@ class StaticArray {
             return None{};
         }
 
-        return data_[idx];
+        return Some{data_[idx]};
     }
 
     // Simply resets size, doesn't destroy anything
@@ -74,8 +79,13 @@ class StaticArray {
         if (idx > size_) {
             return None{};
         }
-        const auto ret_value = data_[idx];
-        /// @todo impl this
+        const auto ret_value = std::move(data_[idx]);
+        // range to shift
+        const auto n_values_to_shift = end() - idx - 1;
+        // Overwrite old values
+        std::memmove(begin() + index, begin() + index + 1, n_values_to_shift);
+        size_--;
+        return Some{ret_value};
     }
 
   private:

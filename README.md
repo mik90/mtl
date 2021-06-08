@@ -21,7 +21,7 @@ Includes fork of https://github.com/mik90/wrapped_var
     - [x] make `mtl::maybe` (similar to `std::optional`) 
     - has the same issues as `result` although less numerous
     - used union and tagging, may not be sufficient
-        -this wont handle reference types
+        - this wont handle reference types
     - reading:
         - optional impl `https://github.com/akrzemi1/Optional/blob/master/optional.hpp`
         - `http://www.club.cc.cmu.edu/~ajo/disseminate/2017-02-15-Optional-From-Scratch.pdf`
@@ -34,7 +34,7 @@ Includes fork of https://github.com/mik90/wrapped_var
       - started on this
       - [x] helper like `std::make_array` that handles the size template parameter
       - std::array doens't actually have a constructor, it's implicitly declared
-        - can i do this? 
+        - can i do this? Not really, a std::array's size cannot change and is embedded in its type
     - dynamic array
         - impl using a static array
     - hash map

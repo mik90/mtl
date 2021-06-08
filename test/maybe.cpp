@@ -9,6 +9,11 @@ TEST(MaybeTest, is_some) {
     ASSERT_TRUE(value.is_some());
 }
 
+TEST(MaybeTest, is_some_explicit) {
+    const auto value = mtl::Maybe<int>(mtl::Some{5});
+    ASSERT_TRUE(value.is_some());
+}
+
 TEST(MaybeTest, is_none) {
     const auto value = mtl::Maybe<int>::none();
     ASSERT_TRUE(value.is_none());
