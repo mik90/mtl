@@ -19,6 +19,12 @@ option(ENABLE_BENCHMARKS "Enable Benchmarks" OFF)
 # Set up some extra Conan dependencies based on our needs before loading Conan
 set(CONAN_EXTRA_REQUIRES "")
 set(CONAN_EXTRA_OPTIONS "")
+if(ENABLE_TESTING)
+  list(APPEND CONAN_EXTRA_OPTIONS mtl:build_tests=True)
+endif()
+if(ENABLE_BENCHMARKS)
+  list(APPEND CONAN_EXTRA_OPTIONS mtl:build_benchmarks=True)
+endif()
 set(CONAN_PROFILE default CACHE STRING "Conan profile to use")
 
 include(cmake/Conan.cmake)

@@ -1,5 +1,4 @@
 {
     "cmake.configureOnOpen": true,
-    "cmake.useCMakePresets": "auto",
-    "python.pythonPath": "/usr/bin/python"
+    "cmake.useCMakePresets": "auto"
 }

@@ -13,12 +13,13 @@ class MtlConan(ConanFile):
         "build_tests": [True, False],
     }
     default_options = {
-        "build_benchmarks": True,
-        "build_tests": True,
+        "build_benchmarks": False,
+        "build_tests": False,
     }
     generators = "cmake"
-    exports_sources = "src/*", "CMakeLists.txt", "test/*", "cmake/*"
+    exports_sources = "include/*", "test/*", "CMakeLists.txt", "cmake/*"
     no_copy_source = True
+    generators = "cmake"
 
     def requirements(self):
         if self.options.build_tests:
@@ -34,15 +35,13 @@ class MtlConan(ConanFile):
             cmake_defs["ENABLE_TESTING"] = "ON"
         if self.options.build_benchmarks:
             cmake_defs["ENABLE_BENCHMARKS"] = "ON"
-        cmake.configure()
+        cmake.configure(defs=cmake_defs)
         cmake.build()
         if self.options.build_tests:
-            cmake.test()
+            cmake.test(target="UnitTest")
 
     def package(self):
-        self.copy("*.hpp", src="src", dst="mtl")
-        if self.options.build_tests:
-            self.copy("*.cpp", src="test", dst="test")
+        self.copy("*.hpp", src="include/mtl", dst="mtl")
 
     def package_id(self):
         self.info.header_only()
