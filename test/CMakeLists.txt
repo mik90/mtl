@@ -1,6 +1,6 @@
 include(GoogleTest)
 
-add_executable(UnitTest 
+add_executable(UnitTest
   algorithm.cpp
   main.cpp
   maybe.cpp
@@ -9,6 +9,7 @@ add_executable(UnitTest
   static_array.cpp
   pointers.cpp
   wrapped_var.cpp
+  utils.hpp
 )
 
 target_include_directories(UnitTest PRIVATE
@@ -23,3 +24,7 @@ target_link_libraries(UnitTest PRIVATE
 )
 
 gtest_discover_tests(UnitTest)
+
+if(BUILD_NN)
+  add_subdirectory(nn)
+endif()

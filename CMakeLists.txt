@@ -13,8 +13,9 @@ set_project_warnings(project_warnings)
 
 include(cmake/StaticAnalyzers.cmake)
 
-option(ENABLE_TESTING "Enable Test Builds" OFF)
+option(ENABLE_TESTING "Enable Test Builds" ON)
 option(ENABLE_BENCHMARKS "Enable Benchmarks" OFF)
+option(BUILD_NN "Build tiny neural net lib" ON)
 
 # Set up some extra Conan dependencies based on our needs before loading Conan
 set(CONAN_EXTRA_REQUIRES "")
@@ -41,4 +42,9 @@ endif()
 if(ENABLE_BENCHMARKS)
   message("Configuring benchmarks...")
   add_subdirectory(benchmark)
+endif()
+
+if(BUILD_NN)
+  message("Building nn")
+  add_subdirectory(nn)
 endif()
