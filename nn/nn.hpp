@@ -1,5 +1,7 @@
 #pragma once
 
+#include "mtl/maybe.hpp"
+#include "mtl/static_array.hpp"
 #include <cstdio>
 #include <functional>
 
@@ -18,23 +20,39 @@ enum class ActivationFuncKind {
 
 class nn {
   private:
-    size_t n_inputs;
-    size_t n_hidden_layers;
-    /// @todo what is this (hidden)
-    size_t n_hidden;
-    size_t n_outputs;
-    ActivationFuncKind input_activation_func;
-    ActivationFuncKind output_activation_func;
-    size_t n_weights;
-    size_t n_neurons;
-    /// @todo list of weights (size of n_weights)
-    /// @todo list of outputs (input array and output for each of the n_neurons)
-    /// @todo deltas for each hidden and output neuron (n_neurons - n_inputs)
+    std::size_t n_inputs_;
+    std::size_t n_hidden_layers_;
+    /// @todo what is this??? (hidden). Is it the number of hidden neurons?
+    std::size_t n_hidden_;
+    std::size_t n_outputs_;
+    std::size_t n_total_weights_;
+    std::size_t n_total_neurons_;
+    ActivationFuncKind hidden_activation_func_;
+    ActivationFuncKind output_activation_func_;
+    /// list of weights (size of n_weights)
+    mtl::StaticArray<double, 1> weights_;
+    /// list of outputs (input array and output for each of the n_total_neurons)
+    mtl::StaticArray<double, 1> outputs_;
+    /// deltas for each hidden and output neuron (n_total_neurons - n_inputs)
+    mtl::StaticArray<double, 1> deltas_;
+
   public:
-    nn(size_t n_inputs, size_t n_hidden_layers, size_t hiddens, size_t n_outputs);
+    /**
+     * @param n_inputs must be at least 1
+     * @param n_hidden_layers must be at least 0.
+     * @param n_hidden must be at least 1 if n_hidden_layers is greater than 0. What is this vlaue??
+     * @param n_outputs Must be at least 1
+     */
+    nn(std::size_t n_inputs, std::size_t n_hidden_layers, std::size_t n_hidden,
+       std::size_t n_outputs, std::size_t n_total_weights, std::size_t n_total_neurons,
+       ActivationFuncKind hidden_activation_func, ActivationFuncKind output_activation_func);
+    static mtl::Maybe<nn> make_nn(std::size_t n_inputs, std::size_t n_hidden_layers,
+                                  std::size_t n_hidden, std::size_t n_outputs,
+                                  ActivationFuncKind hidden_activation_func,
+                                  ActivationFuncKind output_activation_func);
     /// @todo serialize
     /// @todo deserialize
-    /// @todo run that returns a list of outputs
+    /// @todo run that returns a list of outputs (genann run)
     /// @todo train that does a 'backprop update'
     void init_sigmoid_lookup();
     double sigmoid_activation(double neuron);

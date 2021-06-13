@@ -50,7 +50,9 @@ For usage, all that's needed is the include/mtl directory
 - [x] helper like `std::make_array` that handles the size template parameter
 - std::array doens't actually have a constructor, it's implicitly declared
 - can i do this? Not really, a std::array's size cannot change and is embedded in its type
-- [ ] finish up `remote_at`
+- [ ] finish up `remove_at`
+- [ ] create template specialization that makes it easier to have it as a member func
+    - don't include size and allow for resize
 ### dynamic array
 - [ ] impl using a static array
 ### hash map

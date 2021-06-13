@@ -3,11 +3,12 @@
 #include <cstring>
 #include <initializer_list>
 #include <iterator>
-#include <utility>
+#include <string>
 #include <type_traits>
+#include <utility>
 
-#include "mtl/maybe.hpp"
 #include "mtl/algorithm.hpp"
+#include "mtl/maybe.hpp"
 
 namespace mtl {
 
@@ -28,9 +29,8 @@ class StaticArray {
             end = list.begin() + Capacity;
         }
 
-        std::for_each(begin, end, [this](const auto& item){
-            return this->data_[this->size_++] = item;
-        });
+        std::for_each(begin, end,
+                      [this](const auto& item) { return this->data_[this->size_++] = item; });
     }
 
     size_t size() const noexcept { return size_; }
@@ -71,25 +71,41 @@ class StaticArray {
     }
 
     // Simply resets size, doesn't destroy anything
-    void reset() noexcept {
-        size_ = 0;
-    }
-/*
+    void reset() noexcept { size_ = 0; }
+
     Maybe<ValueType> remove_at(size_t idx) {
-        if (idx > size_) {
+        if (idx >= size_) {
             return None{};
         }
         const auto ret_value = std::move(data_[idx]);
-        // range to shift
+        // shift all values to the left
         // Overwrite old values
-        const auto from = std::advance(std::begin(data_), idx);
-        const auto to = from + 1;
-        const auto n_items_to_move = std::distance(to, std::end(data_));
-        std::memmove(from, to, n_items_to_move);
+        /*
+         * size = 4
+         * idx == 1
+         * values [0,  1,  2,  3]
+         * idx    [0,  1,  2,  3]
+         *         |   |   |---|
+         *         |   |   |
+         *         |   |   | move range to the left by 1 idx
+         *         |   |
+         *         |   | overwritten
+         *         |
+         *         | stays the same
+         */
+        if (idx < size() - 1) { // e.g. idx is 2 or less with size as 4
+            // Some data still exists on the right of idx and needs to be shifted to the left
+            const auto deleted_item_ptr = &data_[idx];
+            const auto start_of_range_to_move = &data_[idx + 1];
+            const auto n_bytes_to_move =
+                sizeof(ValueType) * static_cast<std::size_t>(end() - start_of_range_to_move);
+            std::memmove(deleted_item_ptr, start_of_range_to_move, n_bytes_to_move);
+        } else {
+            // Idx was at the end of the array so no data needs to be shifted over
+        }
         size_--;
         return Some{ret_value};
     }
-    */
 
   private:
     const size_t capacity_ = Capacity;
@@ -105,9 +121,8 @@ class StaticArray {
 template <typename ValueType, class... Args>
 static auto make_static_array(Args&&... args) {
     const auto count = sizeof...(Args);
-    std::initializer_list<ValueType> list = { std::forward<Args>(args)... };
+    std::initializer_list<ValueType> list = {std::forward<Args>(args)...};
     return StaticArray<ValueType, count>(list);
 }
-
 
 } // namespace mtl

@@ -21,7 +21,8 @@
                     "value": "RelWithDebInfo"
                 },
                 "ENABLE_TESTING": "ON",
-                "ENABLE_BENCHMARKS": "ON"
+                "ENABLE_BENCHMARKS": "ON",
+                "BUILD_NN": "ON"
             }
         },
         {
@@ -39,20 +40,31 @@
                     "value": "Debug"
                 },
                 "ENABLE_TESTING": "ON",
-                "ENABLE_BENCHMARKS": "OFF"
+                "ENABLE_BENCHMARKS": "OFF",
+                "BUILD_NN": "ON"
             }
         }
     ],
     "buildPresets": [
         {
-            "name": "unitTests",
-            "configurePreset": "unitTestsDebug"
+            "name": "unitTestsDebug",
+            "configurePreset": "unitTestsDebug",
+            "targets": [
+                "UnitTest"
+            ]
         },
         {
-            "name": "unitTests",
+            "name": "unitTestsRel",
             "configurePreset": "allProjectsRelWithDebInfo",
             "targets": [
                 "UnitTest"
+            ]
+        },
+        {
+            "name": "nnUnitTestsDebug",
+            "configurePreset": "unitTestsDebug",
+            "targets": [
+                "nnUnitTest"
             ]
         },
         {

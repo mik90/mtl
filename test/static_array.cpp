@@ -94,14 +94,52 @@ TEST(StaticArrayTest, make_static_array) {
     ASSERT_EQ(array[3], 3);
 }
 
-/*
-TEST(StaticArrayTest, remove_at_0) {
+TEST(StaticArrayTest, remove_at_begin) {
     auto array = mtl::make_static_array<int>(0, 1, 2, 3);
     const auto maybe = array.remove_at(2);
-    ASSERT_TRUE(maybe);
+    ASSERT_TRUE(maybe.is_some());
     ASSERT_EQ(maybe.get_some(), 2);
     ASSERT_EQ(array[0], 0);
     ASSERT_EQ(array[1], 1);
     ASSERT_EQ(array[2], 3);
 }
-*/
+
+TEST(StaticArrayTest, remove_at_first_quarter) {
+    auto array = mtl::make_static_array<int>(0, 1, 2, 3);
+    const auto maybe = array.remove_at(1);
+    ASSERT_TRUE(maybe.is_some());
+    ASSERT_EQ(maybe.get_some(), 1);
+    ASSERT_EQ(array[0], 0);
+    ASSERT_EQ(array[1], 2);
+    ASSERT_EQ(array[2], 3);
+}
+
+TEST(StaticArrayTest, remove_at_second_quarter) {
+    auto array = mtl::make_static_array<int>(0, 1, 2, 3);
+    const auto maybe = array.remove_at(2);
+    ASSERT_TRUE(maybe.is_some());
+    ASSERT_EQ(maybe.get_some(), 2);
+    ASSERT_EQ(array[0], 0);
+    ASSERT_EQ(array[1], 1);
+    ASSERT_EQ(array[2], 3);
+}
+
+TEST(StaticArrayTest, remove_at_end) {
+    auto array = mtl::make_static_array<int>(0, 1, 2, 3);
+    const auto maybe = array.remove_at(3);
+    ASSERT_TRUE(maybe.is_some());
+    ASSERT_EQ(maybe.get_some(), 3);
+    ASSERT_EQ(array[0], 0);
+    ASSERT_EQ(array[1], 1);
+    ASSERT_EQ(array[2], 2);
+}
+
+TEST(StaticArrayTest, remove_at_invalid) {
+    auto array = mtl::make_static_array<int>(0, 1, 2, 3);
+    const auto maybe = array.remove_at(10);
+    ASSERT_TRUE(maybe.is_none());
+    ASSERT_EQ(array[0], 0);
+    ASSERT_EQ(array[1], 1);
+    ASSERT_EQ(array[2], 2);
+    ASSERT_EQ(array[3], 3);
+}
