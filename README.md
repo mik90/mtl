@@ -50,11 +50,11 @@ For usage, all that's needed is the include/mtl directory
 - [x] helper like `std::make_array` that handles the size template parameter
 - std::array doens't actually have a constructor, it's implicitly declared
 - can i do this? Not really, a std::array's size cannot change and is embedded in its type
-- [ ] finish up `remove_at`
-- [ ] create template specialization that makes it easier to have it as a member func
-    - don't include size and allow for resize
+- [x] finish up `remove_at`
 ### dynamic array
-- [ ] impl using a static array
+- [x] impl using a mtl::OwnedPtr
+- [ ] deal with segfault in DynArrayTest.default_capacity
+    - CTest lists out the test segfault
 ### hash map
 - [ ] start
 ### tree-based map
@@ -77,7 +77,10 @@ For usage, all that's needed is the include/mtl directory
 ### benchmarks that compare against performance of std:: and other libraries
 - [x] cmake setup
 - [ ] add third party libraries for comparison
+    - used for containers
+- [ ] test mtl algorithm against std algorithms to ensure it isn't worse
 
 ## nn
 A tiny neural net lib based on https://github.com/codeplea/genann because why not
 - [ ] base impl
+    - requires DynArray to work

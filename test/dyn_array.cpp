@@ -34,19 +34,71 @@ TEST(DynArrayTest, push_back_ensure_size) {
     ASSERT_EQ(array[2], 2);
 }
 
-TEST(DynArrayTest, set_capacity) {
+TEST(DynArrayTest, set_capacity_smaller) {
     auto array = mtl::DynArray<int>();
     array.set_capacity(2);
     ASSERT_EQ(array.capacity(), 2);
 }
 
-TEST(DynArrayTest, many_elements) {
+TEST(DynArrayTest, set_capacity_larger) {
     auto array = mtl::DynArray<std::size_t>();
-    for (std::size_t i = 0; i < 1024; ++i) {
+    // Default capacity is 12
+    const std::size_t capacity = 45;
+    array.set_capacity(capacity);
+    ASSERT_EQ(array.capacity(), capacity);
+}
+
+TEST(DynArrayTest, default_capacity) {
+    auto array = mtl::DynArray<std::size_t>();
+    // Default capacity is 12
+    const std::size_t capacity = 12;
+    ASSERT_EQ(array.capacity(), capacity);
+
+    for (std::size_t i = 0; i < capacity; ++i) {
         array.push_back(i);
     }
-    // The indices should be equal to the values`
-    for (std::size_t i = 0; i < 1024; ++i) {
-        ASSERT_EQ(array[i], i) << "Expected array[" << i << "] was " << array[i];
+    ASSERT_EQ(array.size(), capacity);
+
+    // The indices should be equal to the values
+    for (std::size_t i = 0; i < capacity; ++i) {
+        ASSERT_EQ(array[i], i) << "Expected array[" << i << "] = " << array[i] << " instead of "
+                               << i;
+    }
+}
+
+TEST(DynArrayTest, resize_once) {
+    auto array = mtl::DynArray<std::size_t>();
+    // Default capacity is 12
+    const std::size_t capacity = 13;
+    array.set_capacity(capacity);
+    ASSERT_EQ(array.capacity(), capacity);
+
+    for (std::size_t i = 0; i < capacity; ++i) {
+        array.push_back(i);
+    }
+    ASSERT_EQ(array.size(), capacity);
+
+    // The indices should be equal to the values
+    for (std::size_t i = 0; i < capacity; ++i) {
+        ASSERT_EQ(array[i], i) << "Expected array[" << i << "] = " << array[i] << " instead of "
+                               << i;
+    }
+}
+
+TEST(DynArrayTest, many_elements) {
+    auto array = mtl::DynArray<std::size_t>();
+    const std::size_t n_elements = 1024;
+    array.set_capacity(n_elements);
+    ASSERT_EQ(array.capacity(), n_elements);
+
+    for (std::size_t i = 0; i < n_elements; ++i) {
+        array.push_back(i);
+    }
+    ASSERT_EQ(array.size(), n_elements);
+
+    // The indices should be equal to the values
+    for (std::size_t i = 0; i < n_elements; ++i) {
+        ASSERT_EQ(array[i], i) << "Expected array[" << i << "] = " << array[i] << " instead of "
+                               << i;
     }
 }

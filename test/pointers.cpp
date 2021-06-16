@@ -44,3 +44,21 @@ TEST(PointerTest, maybe_get_none) {
     auto maybe = owned_ptr.maybe_get();
     ASSERT_TRUE(maybe.is_none());
 }
+
+TEST(PointerTest, ctor_array) {
+    auto raw_ptr = new int[5];
+    {
+        raw_ptr[0] = 0;
+        raw_ptr[1] = 1;
+        raw_ptr[2] = 2;
+        raw_ptr[3] = 3;
+        raw_ptr[4] = 4;
+    }
+    const auto owned_ptr = mtl::OwnedPtr<int[]>(raw_ptr);
+    ASSERT_TRUE(owned_ptr.has_value());
+    ASSERT_EQ(owned_ptr[0], 0);
+    ASSERT_EQ(owned_ptr[1], 1);
+    ASSERT_EQ(owned_ptr[2], 2);
+    ASSERT_EQ(owned_ptr[3], 3);
+    ASSERT_EQ(owned_ptr[4], 4);
+}

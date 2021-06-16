@@ -1,6 +1,7 @@
 #pragma once
 
 #include "mtl/maybe.hpp"
+#include "mtl/pointers.hpp"
 #include <cstdlib>
 #include <cstring>
 #include <utility>
@@ -15,15 +16,18 @@ class DynArray {
     static constexpr std::size_t default_capacity_ = 12;
     static constexpr std::size_t default_alignment_ = sizeof(std::size_t);
     // I'd need OwnedPtr<T[]> to use that, i think
-    ValueType* data_;
+    OwnedPtr<ValueType[]> data_;
     std::size_t size_ = 0;
     std::size_t capacity_ = default_capacity_;
 
-  public:
-    DynArray() {
-        data_ = static_cast<ValueType*>(
-            std::aligned_alloc(default_alignment_, default_capacity_ * sizeof(ValueType)));
+    OwnedPtr<ValueType[]> allocate_new() {
+        auto raw_ptr = static_cast<ValueType*>(
+            std::aligned_alloc(default_alignment_, capacity_ * sizeof(ValueType)));
+        return OwnedPtr<ValueType[]>(raw_ptr);
     }
+
+  public:
+    DynArray() : data_(allocate_new()) {}
 
     void set_capacity(std::size_t new_capacity) {
         if (new_capacity == capacity_) {
@@ -35,15 +39,13 @@ class DynArray {
         }
         // Increase capacity
         capacity_ = new_capacity;
-        const ValueType* temp = data_;
-        data_ = static_cast<ValueType*>(
-            std::aligned_alloc(default_alignment_, capacity_ * sizeof(ValueType)));
-        std::memmove(data_, temp, size_);
+        OwnedPtr<ValueType[]> temp = std::move(data_);
+        data_ = allocate_new();
+        std::memmove(data_.get(), temp.get(), size_);
     }
 
     DynArray(std::initializer_list<ValueType> list) {
-        data_ = static_cast<ValueType*>(
-            std::aligned_alloc(default_alignment_, default_capacity_ * sizeof(ValueType)));
+        data_ = allocate_new();
 
         auto begin = list.begin();
         auto end = list.end();
