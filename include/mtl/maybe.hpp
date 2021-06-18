@@ -23,16 +23,27 @@ class Maybe {
         None none_;
     };
     enum class tag { SOME, NONE } tag_;
+    // Just the tag and nothing else, means it's None
     Maybe(tag tag_override) : none_(None{}), tag_(tag_override) {}
 
+    // The tag and values, so forward htem
+    template <class... Args>
+    Maybe(tag tag_override, Args&&... args)
+        : some_(std::forward<Args>(args)...), tag_(tag_override) {}
+
   public:
-    static Maybe none() { return Maybe(tag::NONE); }
+    static Maybe<T> none() { return Maybe(tag::NONE); }
+
     Maybe(None) : none_(None{}), tag_(tag::NONE) {}
 
     // Construct from Some
     Maybe(const Some<T>& some) : some_(some.value_), tag_(tag::SOME) {}
     Maybe(Some<T>&& some) : some_(some.value_), tag_(tag::SOME) {}
 
+    template <class... Args>
+    static Maybe<T> some(Args&&... args) {
+        return Maybe(tag::SOME, std::forward<Args>(args)...);
+    }
     // The member function itself must be templated for it to be a universal reference
     // https://stackoverflow.com/a/30569606/15827495
     template <typename U>

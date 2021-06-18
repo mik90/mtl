@@ -1,8 +1,9 @@
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
-
 #include "mtl/maybe.hpp"
 #include "utils.hpp"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+#include <string>
+#include <utility>
 
 TEST(MaybeTest, is_some) {
     const auto value = mtl::Maybe<int>(5);
@@ -38,6 +39,31 @@ TEST(MaybeTest, release_move_only_default) {
     auto value = mtl::Maybe<test::MoveOnlyInt>::none();
     ASSERT_EQ(value.release_or(5), 5);
 }
+
+mtl::Maybe<int> func_returning_some() { return mtl::Some<int>(5); }
+mtl::Maybe<int> func_returning_none() { return mtl::None(); }
+
+TEST(MaybeTest, func_returns_some) {
+    const auto some = func_returning_some();
+    ASSERT_TRUE(some.is_some());
+}
+
+TEST(MaybeTest, func_returns_none) {
+    const auto some = func_returning_none();
+    ASSERT_TRUE(some.is_none());
+}
+
+mtl::Maybe<std::string> func_returning_some_string() { return mtl::Some<std::string>("hello"); }
+TEST(MaybeTest, func_returns_some_string) {
+    const auto some = func_returning_some_string();
+    ASSERT_TRUE(some.is_some());
+}
+
+TEST(MaybeTest, ctor_pair) {
+    const auto some = mtl::Maybe<std::pair<int, double>>::some(5, 10.2);
+    ASSERT_TRUE(some.is_some());
+}
+
 /*
 Don't allow this yet
 TEST(MaybeTest, store_reference) {

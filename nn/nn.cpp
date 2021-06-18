@@ -76,8 +76,8 @@ mtl::Maybe<Nn> Nn::make_nn(std::size_t n_inputs, std::size_t n_hidden_layers, st
 
     const std::size_t n_total_neurons = (n_inputs + n_hidden * n_hidden_layers + n_outputs);
 
-    return mtl::Some<Nn>{Nn(n_inputs, n_hidden_layers, n_hidden, n_outputs, n_total_weights,
-                            n_total_neurons, hidden_activation_func, output_activation_func)};
+    return mtl::Maybe<Nn>::some(n_inputs, n_hidden_layers, n_hidden, n_outputs, n_total_weights,
+                                n_total_neurons, hidden_activation_func, output_activation_func);
 }
 
 Nn::Nn(std::size_t n_inputs, std::size_t n_hidden_layers, std::size_t n_hidden,
