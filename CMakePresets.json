@@ -7,8 +7,8 @@
     },
     "configurePresets": [
         {
-            "name": "allProjectsRelWithDebInfo",
-            "displayName": "allProjectsRelWithDebInfo",
+            "name": "allProjectsRelease",
+            "displayName": "All projects (Release)",
             "description": "Unit tests and benchmarks",
             "generator": "Ninja",
             "binaryDir": "./build",
@@ -18,7 +18,7 @@
                     "value": "default"
                 },
                 "CMAKE_BUILD_TYPE": {
-                    "value": "RelWithDebInfo"
+                    "value": "Release"
                 },
                 "ENABLE_TESTING": "ON",
                 "ENABLE_BENCHMARKS": "ON",
@@ -26,8 +26,46 @@
             }
         },
         {
-            "name": "unitTestsDebug",
-            "displayName": "unitTestsDebug",
+            "name": "allUnitTestsDebug",
+            "displayName": "All Unit Tests (Debug)",
+            "description": "Unit tests",
+            "generator": "Ninja",
+            "binaryDir": "./build",
+            "cacheVariables": {
+                "CONAN_PROFILE": {
+                    "type": "STRING",
+                    "value": "default"
+                },
+                "CMAKE_BUILD_TYPE": {
+                    "value": "Release"
+                },
+                "ENABLE_TESTING": "ON",
+                "ENABLE_BENCHMARKS": "OFF",
+                "BUILD_NN": "ON"
+            }
+        },
+        {
+            "name": "mtlUnitTestsDebug",
+            "displayName": "mtl: UnitTest (Debug)",
+            "description": "Unit tests with debug config",
+            "generator": "Ninja",
+            "binaryDir": "./build",
+            "cacheVariables": {
+                "CONAN_PROFILE": {
+                    "type": "STRING",
+                    "value": "default"
+                },
+                "CMAKE_BUILD_TYPE": {
+                    "value": "Debug"
+                },
+                "ENABLE_TESTING": "ON",
+                "ENABLE_BENCHMARKS": "OFF",
+                "BUILD_NN": "OFF"
+            }
+        },
+        {
+            "name": "nnUnitTestsDebug",
+            "displayName": "nn: UnitTest (Debug)",
             "description": "Unit tests with debug config",
             "generator": "Ninja",
             "binaryDir": "./build",
@@ -47,29 +85,30 @@
     ],
     "buildPresets": [
         {
-            "name": "unitTestsDebug",
-            "configurePreset": "unitTestsDebug",
-            "targets": [
-                "UnitTest"
-            ]
-        },
-        {
-            "name": "unitTestsRel",
-            "configurePreset": "allProjectsRelWithDebInfo",
+            "name": "mtlUnitTestsDebug",
+            "configurePreset": "mtlUnitTestsDebug",
             "targets": [
                 "UnitTest"
             ]
         },
         {
             "name": "nnUnitTestsDebug",
-            "configurePreset": "unitTestsDebug",
+            "configurePreset": "nnUnitTestsDebug",
             "targets": [
                 "nnUnitTest"
             ]
         },
         {
-            "name": "benchmarks",
-            "configurePreset": "allProjectsRelWithDebInfo",
+            "name": "allUnitTestsDebug",
+            "configurePreset": "allUnitTestsDebug",
+            "targets": [
+                "UnitTest",
+                "nnUnitTest"
+            ]
+        },
+        {
+            "name": "benchmarksRelease",
+            "configurePreset": "allProjectsRelease",
             "targets": [
                 "Benchmark"
             ]
@@ -77,8 +116,33 @@
     ],
     "testPresets": [
         {
-            "name": "unitTestDebug",
-            "configurePreset": "unitTestsDebug",
+            "name": "mtlUnitTestDebug",
+            "displayName": "mtl: UnitTest",
+            "configurePreset": "mtlUnitTestsDebug",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": false
+            }
+        },
+        {
+            "name": "nnUnitTestDebug",
+            "displayName": "nn: UnitTest",
+            "configurePreset": "nnUnitTestsDebug",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": false
+            }
+        },
+        {
+            "name": "allUnitTestDebug",
+            "displayName": "All Unit Tests",
+            "configurePreset": "allUnitTestsDebug",
             "output": {
                 "outputOnFailure": true
             },
@@ -89,7 +153,7 @@
         },
         {
             "name": "unitTestRelease",
-            "configurePreset": "allProjectsRelWithDebInfo",
+            "configurePreset": "allProjectsRelease",
             "output": {
                 "outputOnFailure": true
             },
