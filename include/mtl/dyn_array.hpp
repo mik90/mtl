@@ -27,7 +27,7 @@ class DynArray {
     }
 
   public:
-    DynArray() : data_(allocate_new()) {}
+    DynArray() : data_(allocate_new()), size_(0), capacity_(default_capacity_) {}
 
     void set_capacity(std::size_t new_capacity) {
         if (new_capacity == capacity_) {
@@ -44,7 +44,7 @@ class DynArray {
         std::memmove(data_.get(), temp.get(), size_);
     }
 
-    DynArray(std::initializer_list<ValueType> list) {
+    DynArray(std::initializer_list<ValueType> list) : size_(0), capacity_(default_capacity_) {
         data_ = allocate_new();
 
         auto begin = list.begin();
