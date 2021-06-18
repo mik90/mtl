@@ -6,7 +6,7 @@
 
 namespace nn {
 
-double nn::sigmoid_activation(double neuron) {
+double Nn::sigmoid_activation(double neuron) {
     /// @todo where do these numbers comefrom
     if (neuron < -45.0) {
         return 0;
@@ -25,14 +25,14 @@ double interval;
 constexpr double sigmoid_dom_min = -15.0;
 constexpr double sigmoid_dom_max = 15.0;
 
-void nn::init_sigmoid_lookup() {
+void Nn::init_sigmoid_lookup() {
     const double coef = (sigmoid_dom_max - sigmoid_dom_min) / static_cast<double>(lookup_size);
     interval = static_cast<double>(lookup_size) / (sigmoid_dom_max - sigmoid_dom_min);
     for (std::size_t i = 0; i < lookup_size; ++i) {
         lookup_table[i] = sigmoid_activation(sigmoid_dom_min + coef * static_cast<double>(i));
     }
 }
-double nn::sigmoid_activation_cached(double neuron) {
+double Nn::sigmoid_activation_cached(double neuron) {
     assert(!std::isnan(neuron));
 
     if (neuron < sigmoid_dom_min) {
@@ -48,10 +48,10 @@ double nn::sigmoid_activation_cached(double neuron) {
     }
     return lookup_table[static_cast<std::size_t>(est)];
 }
-double nn::sigmoid_activation_linear(double neuron) { return neuron; }
-double nn::sigmoid_activation_threshold(double neuron) { return neuron > 0; }
+double Nn::sigmoid_activation_linear(double neuron) { return neuron; }
+double Nn::sigmoid_activation_threshold(double neuron) { return neuron > 0; }
 
-mtl::Maybe<nn> nn::make_nn(std::size_t n_inputs, std::size_t n_hidden_layers, std::size_t n_hidden,
+mtl::Maybe<Nn> Nn::make_nn(std::size_t n_inputs, std::size_t n_hidden_layers, std::size_t n_hidden,
                            std::size_t n_outputs, ActivationFuncKind hidden_activation_func,
                            ActivationFuncKind output_activation_func) {
     if (n_inputs < 1)
@@ -76,11 +76,11 @@ mtl::Maybe<nn> nn::make_nn(std::size_t n_inputs, std::size_t n_hidden_layers, st
 
     const std::size_t n_total_neurons = (n_inputs + n_hidden * n_hidden_layers + n_outputs);
 
-    return mtl::Some{nn(n_inputs, n_hidden_layers, n_hidden, n_outputs, n_total_weights,
-                        n_total_neurons, hidden_activation_func, output_activation_func)};
+    return mtl::Some<Nn>{Nn(n_inputs, n_hidden_layers, n_hidden, n_outputs, n_total_weights,
+                            n_total_neurons, hidden_activation_func, output_activation_func)};
 }
 
-nn::nn(std::size_t n_inputs, std::size_t n_hidden_layers, std::size_t n_hidden,
+Nn::Nn(std::size_t n_inputs, std::size_t n_hidden_layers, std::size_t n_hidden,
        std::size_t n_outputs, std::size_t n_total_weights, std::size_t n_total_neurons,
        ActivationFuncKind hidden_activation_func, ActivationFuncKind output_activation_func)
     : n_inputs_(n_inputs), n_hidden_layers_(n_hidden_layers), n_hidden_(n_hidden),
@@ -88,10 +88,13 @@ nn::nn(std::size_t n_inputs, std::size_t n_hidden_layers, std::size_t n_hidden,
       hidden_activation_func_(hidden_activation_func),
       output_activation_func_(output_activation_func) {
     /// list of weights (size of n_weights)
-    // weights_ = mtl::StaticArray<double, n_total_weights_>;
+    weights_ = mtl::DynArray<double>();
+    weights_.set_capacity(n_total_weights_);
     /// list of outputs (input array and output for each of the n_total_neurons)
-    // outputs_ = mtl::StaticArray<double, n_total_neurons_>;
+    outputs_ = mtl::DynArray<double>();
+    outputs_.set_capacity(n_total_neurons_);
     /// deltas for each hidden and output neuron (n_total_neurons - n_inputs)
-    // deltas_ = mtl::StaticArray<double, n_total_neurons_ - n_inputs_>;
+    deltas_ = mtl::DynArray<double>();
+    deltas_.set_capacity(n_total_neurons_ - n_inputs_);
 }
 } // namespace nn

@@ -1,7 +1,8 @@
+#include "mtl/dyn_array.hpp"
+#include <cmath>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-
-#include "mtl/dyn_array.hpp"
+#include <limits>
 
 TEST(DynArrayTest, ctor) {
     mtl::DynArray<int> arr;
@@ -101,4 +102,26 @@ TEST(DynArrayTest, many_elements) {
         ASSERT_EQ(array[i], i) << "Expected array[" << i << "] = " << array[i] << " instead of "
                                << i;
     }
+}
+
+TEST(DynArrayTest, ctor_double) {
+    mtl::DynArray<double> arr;
+    ASSERT_EQ(arr.size(), 0);
+}
+
+TEST(DynArrayTest, ctor_init_list_double) {
+    const double value_0 = 0.0;
+    const double value_1 = 1.2;
+    const double value_2 = -2.7;
+    const auto array = mtl::DynArray<double>({value_0, value_1, value_2});
+    ASSERT_EQ(array.size(), 3);
+    ASSERT_DOUBLE_EQ(array[0], value_0);
+    ASSERT_DOUBLE_EQ(array[1], value_1);
+    ASSERT_DOUBLE_EQ(array[2], value_2);
+}
+
+TEST(DynArrayTest, _set_capacity_double) {
+    mtl::DynArray<double> arr;
+    arr.set_capacity(25);
+    ASSERT_EQ(arr.capacity(), 25);
 }

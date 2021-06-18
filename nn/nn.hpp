@@ -1,7 +1,7 @@
 #pragma once
 
+#include "mtl/dyn_array.hpp"
 #include "mtl/maybe.hpp"
-#include "mtl/static_array.hpp"
 #include <cstdio>
 #include <functional>
 
@@ -18,7 +18,7 @@ enum class ActivationFuncKind {
     SIGMOID_LINEAR,
 };
 
-class nn {
+class Nn {
   private:
     std::size_t n_inputs_;
     std::size_t n_hidden_layers_;
@@ -30,11 +30,11 @@ class nn {
     ActivationFuncKind hidden_activation_func_;
     ActivationFuncKind output_activation_func_;
     /// list of weights (size of n_weights)
-    mtl::StaticArray<double, 1> weights_;
+    mtl::DynArray<double> weights_;
     /// list of outputs (input array and output for each of the n_total_neurons)
-    mtl::StaticArray<double, 1> outputs_;
+    mtl::DynArray<double> outputs_;
     /// deltas for each hidden and output neuron (n_total_neurons - n_inputs)
-    mtl::StaticArray<double, 1> deltas_;
+    mtl::DynArray<double> deltas_;
 
   public:
     /**
@@ -43,10 +43,10 @@ class nn {
      * @param n_hidden must be at least 1 if n_hidden_layers is greater than 0. What is this vlaue??
      * @param n_outputs Must be at least 1
      */
-    nn(std::size_t n_inputs, std::size_t n_hidden_layers, std::size_t n_hidden,
+    Nn(std::size_t n_inputs, std::size_t n_hidden_layers, std::size_t n_hidden,
        std::size_t n_outputs, std::size_t n_total_weights, std::size_t n_total_neurons,
        ActivationFuncKind hidden_activation_func, ActivationFuncKind output_activation_func);
-    static mtl::Maybe<nn> make_nn(std::size_t n_inputs, std::size_t n_hidden_layers,
+    static mtl::Maybe<Nn> make_nn(std::size_t n_inputs, std::size_t n_hidden_layers,
                                   std::size_t n_hidden, std::size_t n_outputs,
                                   ActivationFuncKind hidden_activation_func,
                                   ActivationFuncKind output_activation_func);
