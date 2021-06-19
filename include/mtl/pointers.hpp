@@ -37,7 +37,7 @@ class OwnedPtr {
     const T& operator*() const { return *ptr_; }
 
     Maybe<T*> maybe_get() const noexcept {
-        if (ptr_) {
+        if (has_value()) {
             return Some{ptr_};
         }
         return None{};
@@ -65,6 +65,12 @@ class OwnedPtr {
     void set(T* ptr) noexcept { ptr_ = ptr; }
     T* get() noexcept { return ptr_; }
     const T* get() const noexcept { return ptr_; }
+
+    T* release() {
+        const auto temp = ptr_;
+        ptr_ = nullptr;
+        return temp;
+    }
 };
 
 template <class T>
@@ -125,6 +131,11 @@ class OwnedPtr<T[]> {
     void set(T* ptr) noexcept { ptr_ = ptr; }
     T* get() noexcept { return ptr_; }
     const T* get() const noexcept { return ptr_; }
+    T* release() {
+        const auto temp = ptr_;
+        ptr_ = nullptr;
+        return temp;
+    }
 };
 
 template <typename T, class... Args>

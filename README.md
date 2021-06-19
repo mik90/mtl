@@ -6,13 +6,13 @@ For usage, all that's needed is the include/mtl directory
 ## Build and run tests
 `mkdir build && cd build`
 `cmake .. -DENABLE_TESTING=ON`
-`cmake --build UnitTest`
+`cmake --build . --target UnitTest`
 `./bin/UnitTest`
 
 ## Build and run benchmarks
 `mkdir build && cd build`
 `cmake .. -DENABLE_BENCHMARKS=ON -DCMAKE_BUILD_TYPE=Release`
-`cmake --build Benchmark`
+`cmake --build . --target Benchmark`
 `./bin/Benchmark`
 
 # Tasklist
@@ -55,7 +55,8 @@ For usage, all that's needed is the include/mtl directory
 - [x] impl using a mtl::OwnedPtr
 - [x] deal with segfault in DynArrayTest.default_capacity
     - CTest lists out the test segfault
-- [ ] Allow for copy construction
+- [x] Allow for copy construction
+    - done with `copy()`
 ### hash map
 - [ ] start
 ### tree-based map
@@ -83,6 +84,13 @@ For usage, all that's needed is the include/mtl directory
 
 ## nn
 A tiny neural net lib based on https://github.com/codeplea/genann because why not
-- [ ] In order to test randomization, DynArray needs to be copied
-- [ ] impl train
+- [x] In order to test randomization, DynArray needs to be copied
 - [ ] impl run
+    - started on this, hard to translate over
+- [ ] impl train
+
+## Build and run tests
+`mkdir build && cd build`
+`cmake .. -DBUILD_NN=ON -DENABLE_TESTING=ON`
+`cmake --build . --target nnUnitTest`
+`./bin/nnUnitTest`

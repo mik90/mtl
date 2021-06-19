@@ -20,10 +20,10 @@ class DynArray {
     std::size_t capacity_ = default_capacity_;
 
     // Allocates a copy of data_
-    OwnedPtr<ValueType[]> allocate_copy() {
+    OwnedPtr<ValueType[]> copy_data(const DynArray& other) {
         auto copy_ptr = static_cast<ValueType*>(
-            std::aligned_alloc(default_alignment_, capacity_ * sizeof(ValueType)));
-        std::memcpy(copy_ptr, data_.get(), size_);
+            std::aligned_alloc(default_alignment_, other.capacity() * sizeof(ValueType)));
+        std::memcpy(copy_ptr, other.get_raw_ptr(), other.size());
         return OwnedPtr<ValueType[]>(copy_ptr);
     }
 
@@ -33,11 +33,28 @@ class DynArray {
         return OwnedPtr<ValueType[]>(raw_ptr);
     }
 
+    DynArray(const DynArray& other) : size_(other.size()), capacity_(other.capacity()) {
+        data_ = copy_data(other);
+    }
     DynArray(std::size_t capacity) : size_(0), capacity_(capacity_) { data_.swap(allocate_new()); }
 
   public:
     DynArray() : data_(allocate_new()), size_(0), capacity_(default_capacity_) {}
     static DynArray make_with_capacity(std::size_t capacity) { return DynArray(capacity); }
+
+    DynArray copy() const { return DynArray(*this); }
+
+    DynArray& operator=(const DynArray& other) {
+        size_ = other.size();
+        capacity_ = other.capacity();
+        data_ = copy_data(other);
+    }
+
+    DynArray& operator=(DynArray&& other) {
+        size_ = other.size();
+        capacity_ = other.capacity();
+        data_ = other.take_data();
+    }
 
     void set_capacity(std::size_t new_capacity) {
         if (new_capacity == capacity_) {
@@ -95,6 +112,8 @@ class DynArray {
 
     std::size_t capacity() const noexcept { return capacity_; }
     std::size_t size() const noexcept { return size_; }
+    const ValueType* get_raw_ptr() const noexcept { return data_.get(); }
+    OwnedPtr<ValueType> take_data() { return OwnedPtr<ValueType>(data_.release()); }
 
     // Dumb iterators
     ValueType* begin() noexcept { return data_.get(); }

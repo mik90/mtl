@@ -82,13 +82,10 @@ Nn::Nn(std::size_t n_inputs, std::size_t n_hidden_layers, std::size_t n_hidden,
     n_total_neurons_ = (n_inputs + n_hidden * n_hidden_layers + n_outputs);
 
     /// list of weights (size of n_weights)
-    weights_ = mtl::DynArray<double>();
     weights_.set_capacity(n_total_weights_);
     /// list of outputs (input array and output for each of the n_total_neurons)
-    outputs_ = mtl::DynArray<double>();
     outputs_.set_capacity(n_total_neurons_);
     /// deltas for each hidden and output neuron (n_total_neurons - n_inputs)
-    deltas_ = mtl::DynArray<double>();
     deltas_.set_capacity(n_total_neurons_ - n_inputs_);
 }
 
@@ -104,7 +101,6 @@ void Nn::randomize() {
 }
 
 void Nn::init_sigmoid_lookup() {
-
     const double coef = (sigmoid_dom_max - sigmoid_dom_min) / lookup_size;
 
     /// @todo Interval needs to be a member, and what is the interval for? Lookup talb interval?
@@ -113,5 +109,60 @@ void Nn::init_sigmoid_lookup() {
     for (std::size_t i = 0; i < lookup_table.size(); ++i) {
         lookup_table[i] = sigmoid_activation(sigmoid_dom_min + coef * static_cast<double>(i));
     }
+}
+double Nn::activation_hidden(double neuron) {
+    switch (hidden_activation_func_) {
+    case ActivationFuncKind::SIGMOID: {
+        return sigmoid_activation(neuron);
+    }
+    case ActivationFuncKind::SIGMOID_CACHED: {
+        return sigmoid_activation_cached(neuron);
+    }
+    case ActivationFuncKind::SIGMOID_LINEAR: {
+        return sigmoid_activation_linear(neuron);
+    }
+    case ActivationFuncKind::SIGMOID_THRESHOLD: {
+        return sigmoid_activation_threshold(neuron);
+    }
+    }
+    return sigmoid_activation(neuron);
+}
+
+double Nn::activation_output(double neuron) {
+    switch (output_activation_func_) {
+    case ActivationFuncKind::SIGMOID: {
+        return sigmoid_activation(neuron);
+    }
+    case ActivationFuncKind::SIGMOID_CACHED: {
+        return sigmoid_activation_cached(neuron);
+    }
+    case ActivationFuncKind::SIGMOID_LINEAR: {
+        return sigmoid_activation_linear(neuron);
+    }
+    case ActivationFuncKind::SIGMOID_THRESHOLD: {
+        return sigmoid_activation_threshold(neuron);
+    }
+    }
+    return sigmoid_activation(neuron);
+}
+
+mtl::DynArray<double> Nn::run(const mtl::DynArray<double>& inputs) {
+    outputs_ = inputs;
+    auto output_iter = outputs_.begin();
+
+    auto weight_iter = weights_.cbegin();
+
+    // Special case for no hidden layers
+    if (!n_hidden_layers_) {
+        for (std::size_t i = 0; i < outputs_.size(); ++i) {
+            double sum = *weight_iter++ * -1.0;
+            for (const auto& input_elem : inputs) {
+                sum = *weight_iter++ * input_elem;
+            }
+            *output_iter++ = activation_output(sum);
+        }
+        return outputs_;
+    }
+    return outputs_;
 }
 } // namespace nn

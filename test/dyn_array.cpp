@@ -2,7 +2,6 @@
 #include <cmath>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <limits>
 
 TEST(DynArrayTest, ctor) {
     mtl::DynArray<int> arr;
@@ -158,4 +157,31 @@ TEST(DynArrayTest, set_capacity_below_size) {
 TEST(DynArrayTest, make_with_capacity) {
     const auto arr = mtl::DynArray::make_with_capacity(25);
     ASSERT_EQ(arr.capacity(), 25);
+}
+
+TEST(DynArrayTest, copy_const) {
+    const auto arr = mtl::DynArray<int>({0, 1, 2, 3});
+    { auto new_arr = arr.copy(); }
+    { auto new_arr(arr.copy()); }
+}
+
+TEST(DynArrayTest, overwrite_with_r_value) {
+    auto arr = mtl::DynArray<int>({9, 8, 7, 6});
+    arr = mtl::DynArray<int>({0, 1, 2, 3});
+
+    ASSERT_EQ(arr[0], 0);
+    ASSERT_EQ(arr[1], 1);
+    ASSERT_EQ(arr[2], 2);
+    ASSERT_EQ(arr[3], 3);
+}
+
+TEST(DynArrayTest, overwrite_with_l_value) {
+    const auto l_value_arr = mtl::DynArray<int>({0, 1, 2, 3});
+    auto arr = mtl::DynArray<int>({9, 8, 7, 6});
+    arr = l_value_arr;
+
+    ASSERT_EQ(arr[0], 0);
+    ASSERT_EQ(arr[1], 1);
+    ASSERT_EQ(arr[2], 2);
+    ASSERT_EQ(arr[3], 3);
 }

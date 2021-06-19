@@ -27,6 +27,7 @@ class Nn {
     std::size_t n_outputs_;
     std::size_t n_total_weights_;
     std::size_t n_total_neurons_;
+    /// @todo just use a func pointer
     ActivationFuncKind hidden_activation_func_;
     ActivationFuncKind output_activation_func_;
     /// list of weights (size of n_weights)
@@ -52,8 +53,12 @@ class Nn {
                                   ActivationFuncKind output_activation_func);
     /// @todo serialize
     /// @todo deserialize
-    /// @todo run that returns a list of outputs (genann run)
-    /// @todo train that does a 'backprop update'
+    /// @brief run that returns a list of outputs (genann's run)
+    mtl::DynArray<double> run(const mtl::DynArray<double>& inputs);
+
+    /// @brief train that does a 'backprop update'
+    void train(const mtl::DynArray<double>& inputs, const mtl::DynArray<double>& desired_outputs,
+               double learning_rate);
     void randomize();
     void init_sigmoid_lookup();
     double sigmoid_activation(double neuron);
@@ -61,9 +66,11 @@ class Nn {
     double sigmoid_activation_cached(double neuron);
     double sigmoid_activation_threshold(double neuron);
     double sigmoid_activation_linear(double neuron);
+    double activation_hidden(double neuron);
+    double activation_output(double neuron);
 
-    // const mtl::DynArray<double>& get_weights() const { return weights_; }
-    // mtl::DynArray<double> copy_weights() const { return weights_; }
+    const mtl::DynArray<double>& get_weights() const { return weights_; }
+    mtl::DynArray<double> copy_weights() const { return weights_.copy(); }
 };
 
 } // namespace nn
