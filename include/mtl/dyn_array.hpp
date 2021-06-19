@@ -119,6 +119,8 @@ class DynArray {
     // Dumb iterators
     ValueType* begin() noexcept { return data_.get(); }
     ValueType* end() noexcept { return data_.get() + size_; }
+    const ValueType* begin() const noexcept { return cbegin(); }
+    const ValueType* end() const noexcept { return cbegin(); }
     const ValueType* cbegin() const noexcept { return data_.get(); }
     const ValueType* cend() const noexcept { return data_.get() + size_; }
 };

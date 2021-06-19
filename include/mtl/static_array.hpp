@@ -39,6 +39,8 @@ class StaticArray {
     // Iterators
     ValueType* begin() noexcept { return data_; }
     ValueType* end() noexcept { return data_ + size_; }
+    const ValueType* begin() const noexcept { return cbegin(); }
+    const ValueType* end() const noexcept { return cend(); }
     const ValueType* cbegin() const noexcept { return data_; }
     const ValueType* cend() const noexcept { return data_ + size_; }
 
