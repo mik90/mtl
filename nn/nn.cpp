@@ -161,8 +161,8 @@ mtl::DynArray<double> Nn::run(const mtl::DynArray<double>& inputs) {
             }
             *output_iter++ = activation_output(sum);
         }
-        return outputs_;
+        return outputs_.copy();
     }
-    return outputs_;
+    return outputs_.copy();
 }
 } // namespace nn

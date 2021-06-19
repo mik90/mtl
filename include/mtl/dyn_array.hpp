@@ -14,27 +14,26 @@ template <typename ValueType>
 class DynArray {
   private:
     static constexpr std::size_t default_capacity_ = 12;
-    static constexpr std::size_t default_alignment_ = sizeof(std::size_t);
     std::size_t size_ = 0;
     std::size_t capacity_ = default_capacity_;
     OwnedPtr<ValueType[]> data_;
 
     // Allocates a copy of data_
     OwnedPtr<ValueType[]> copy_data(const DynArray& other) {
-        auto copy_ptr = static_cast<ValueType*>(
-            std::aligned_alloc(default_alignment_, other.capacity() * sizeof(ValueType)));
+        auto copy_ptr = new ValueType[other.capacity()];
         std::memcpy(copy_ptr, other.get_raw_ptr(), other.size() * sizeof(ValueType));
         return OwnedPtr<ValueType[]>(copy_ptr);
     }
 
     OwnedPtr<ValueType[]> allocate_new() {
-        auto raw_ptr = static_cast<ValueType*>(
-            std::aligned_alloc(default_alignment_, capacity_ * sizeof(ValueType)));
+        auto raw_ptr = new ValueType[capacity_];
         return OwnedPtr<ValueType[]>(raw_ptr);
     }
 
+    /// @brief Private so that you must explicitly use `copy()` in order to copy a DynArray
     DynArray(const DynArray& other)
         : size_(other.size()), capacity_(other.capacity()), data_(copy_data(other)) {}
+
     DynArray(std::size_t capacity) : size_(0), capacity_(capacity), data_(allocate_new()) {}
 
   public:

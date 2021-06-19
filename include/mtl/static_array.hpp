@@ -63,7 +63,8 @@ class StaticArray {
     const ValueType& operator[](size_t idx) const noexcept { return data_[idx]; }
 
     Maybe<ValueType> maybe_copy_at(size_t idx) const {
-        if (idx > size_) {
+        // Capacity should never be greater than size_, but the compiler warns about the possiblity
+        if (idx >= size_ || idx >= capacity_) {
             return None{};
         }
 
@@ -74,7 +75,8 @@ class StaticArray {
     void reset() noexcept { size_ = 0; }
 
     Maybe<ValueType> remove_at(size_t idx) {
-        if (idx >= size_) {
+        // Capacity should never be greater than size_, but the compiler warns about the possiblity
+        if (idx >= size_ || idx >= capacity_) {
             return None{};
         }
         const auto ret_value = std::move(data_[idx]);

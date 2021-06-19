@@ -45,58 +45,19 @@
                 "ENABLE_BENCHMARKS": "OFF",
                 "BUILD_NN": "ON"
             }
-        },
-        {
-            "name": "mtlUnitTestsDebug",
-            "displayName": "mtl: UnitTest (Debug)",
-            "description": "Unit tests with debug config",
-            "generator": "Ninja",
-            "binaryDir": "./build",
-            "cacheVariables": {
-                "CONAN_PROFILE": {
-                    "type": "STRING",
-                    "value": "default"
-                },
-                "CMAKE_BUILD_TYPE": {
-                    "value": "Debug"
-                },
-                "ENABLE_TESTING": "ON",
-                "ENABLE_BENCHMARKS": "OFF",
-                "BUILD_NN": "OFF"
-            }
-        },
-        {
-            "name": "nnUnitTestsDebug",
-            "displayName": "nn: UnitTest (Debug)",
-            "description": "Unit tests with debug config",
-            "generator": "Ninja",
-            "binaryDir": "./build",
-            "cacheVariables": {
-                "CONAN_PROFILE": {
-                    "type": "STRING",
-                    "value": "default"
-                },
-                "CMAKE_BUILD_TYPE": {
-                    "type": "STRING",
-                    "value": "Debug"
-                },
-                "ENABLE_TESTING": "ON",
-                "ENABLE_BENCHMARKS": "OFF",
-                "BUILD_NN": "ON"
-            }
         }
     ],
     "buildPresets": [
         {
             "name": "mtlUnitTestsDebug",
-            "configurePreset": "mtlUnitTestsDebug",
+            "configurePreset": "allUnitTestsDebug",
             "targets": [
                 "UnitTest"
             ]
         },
         {
             "name": "nnUnitTestsDebug",
-            "configurePreset": "nnUnitTestsDebug",
+            "configurePreset": "allUnitTestsDebug",
             "targets": [
                 "nnUnitTest"
             ]
@@ -121,7 +82,12 @@
         {
             "name": "mtlUnitTestDebug",
             "displayName": "mtl: UnitTest",
-            "configurePreset": "mtlUnitTestsDebug",
+            "configurePreset": "allUnitTestsDebug",
+            "filter": {
+                "exclude": {
+                    "name": "NnTest"
+                }
+            },
             "output": {
                 "outputOnFailure": true
             },
@@ -133,7 +99,12 @@
         {
             "name": "nnUnitTestDebug",
             "displayName": "nn: UnitTest",
-            "configurePreset": "nnUnitTestsDebug",
+            "configurePreset": "allUnitTestsDebug",
+            "filter": {
+                "include": {
+                    "name": "NnTest"
+                }
+            },
             "output": {
                 "outputOnFailure": true
             },
