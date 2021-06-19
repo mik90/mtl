@@ -3,7 +3,7 @@ from conans import ConanFile, CMake, tools
 
 class MtlConan(ConanFile):
     name = "mtl"
-    description = "Config files with enforced types"
+    description = "A small template library"
     version = "0.1"
     license = "MIT"
     url = "https://github.com/mik90/mtl"
@@ -27,7 +27,7 @@ class MtlConan(ConanFile):
         if self.options.build_benchmarks:
             self.requires("benchmark/1.5.3")
 
-    # Only for building tests
+    # Only for building tests and benchmarks
     def build(self):
         cmake = CMake(self)
         cmake_defs = {}
