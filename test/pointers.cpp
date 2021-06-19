@@ -3,6 +3,7 @@
 
 #include <type_traits>
 
+#include "mtl/dyn_array.hpp"
 #include "mtl/pointers.hpp"
 
 TEST(PointerTest, ctor_int) {
@@ -61,4 +62,12 @@ TEST(PointerTest, ctor_array) {
     ASSERT_EQ(owned_ptr[2], 2);
     ASSERT_EQ(owned_ptr[3], 3);
     ASSERT_EQ(owned_ptr[4], 4);
+}
+
+TEST(PointerTest, move_ctor) {
+    auto owned_ptr = mtl::OwnedPtr<int>(new int(5));
+    auto other_ptr = std::move(owned_ptr);
+    ASSERT_TRUE(other_ptr.has_value());
+    ASSERT_EQ(*other_ptr, 5);
+    ASSERT_TRUE(owned_ptr.is_null());
 }

@@ -15,10 +15,17 @@ class DynArray {
   private:
     static constexpr std::size_t default_capacity_ = 12;
     static constexpr std::size_t default_alignment_ = sizeof(std::size_t);
-    // I'd need OwnedPtr<T[]> to use that, i think
     OwnedPtr<ValueType[]> data_;
     std::size_t size_ = 0;
     std::size_t capacity_ = default_capacity_;
+
+    // Allocates a copy of data_
+    OwnedPtr<ValueType[]> allocate_copy() {
+        auto copy_ptr = static_cast<ValueType*>(
+            std::aligned_alloc(default_alignment_, capacity_ * sizeof(ValueType)));
+        std::memcpy(copy_ptr, data_.get(), size_);
+        return OwnedPtr<ValueType[]>(copy_ptr);
+    }
 
     OwnedPtr<ValueType[]> allocate_new() {
         auto raw_ptr = static_cast<ValueType*>(
@@ -26,16 +33,19 @@ class DynArray {
         return OwnedPtr<ValueType[]>(raw_ptr);
     }
 
+    DynArray(std::size_t capacity) : size_(0), capacity_(capacity_) { data_.swap(allocate_new()); }
+
   public:
     DynArray() : data_(allocate_new()), size_(0), capacity_(default_capacity_) {}
+    static DynArray make_with_capacity(std::size_t capacity) { return DynArray(capacity); }
 
     void set_capacity(std::size_t new_capacity) {
         if (new_capacity == capacity_) {
             return;
         }
-        if (new_capacity < capacity_) {
+        if (new_capacity < size_) {
             // New capacity is smol-er
-            size_ = capacity_;
+            size_ = new_capacity;
         }
         // Increase capacity
         capacity_ = new_capacity;
@@ -85,5 +95,11 @@ class DynArray {
 
     std::size_t capacity() const noexcept { return capacity_; }
     std::size_t size() const noexcept { return size_; }
+
+    // Dumb iterators
+    ValueType* begin() noexcept { return data_.get(); }
+    ValueType* end() noexcept { return data_.get() + size_; }
+    const ValueType* cbegin() const noexcept { return data_.get(); }
+    const ValueType* cend() const noexcept { return data_.get() + size_; }
 };
 } // namespace mtl

@@ -18,6 +18,7 @@
                     "value": "default"
                 },
                 "CMAKE_BUILD_TYPE": {
+                    "type": "STRING",
                     "value": "Release"
                 },
                 "ENABLE_TESTING": "ON",
@@ -37,6 +38,7 @@
                     "value": "default"
                 },
                 "CMAKE_BUILD_TYPE": {
+                    "type": "STRING",
                     "value": "Release"
                 },
                 "ENABLE_TESTING": "ON",
@@ -75,6 +77,7 @@
                     "value": "default"
                 },
                 "CMAKE_BUILD_TYPE": {
+                    "type": "STRING",
                     "value": "Debug"
                 },
                 "ENABLE_TESTING": "ON",

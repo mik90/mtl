@@ -44,8 +44,8 @@ class Nn {
      * @param n_outputs Must be at least 1
      */
     Nn(std::size_t n_inputs, std::size_t n_hidden_layers, std::size_t n_hidden,
-       std::size_t n_outputs, std::size_t n_total_weights, std::size_t n_total_neurons,
-       ActivationFuncKind hidden_activation_func, ActivationFuncKind output_activation_func);
+       std::size_t n_outputs, ActivationFuncKind hidden_activation_func,
+       ActivationFuncKind output_activation_func);
     static mtl::Maybe<Nn> make_nn(std::size_t n_inputs, std::size_t n_hidden_layers,
                                   std::size_t n_hidden, std::size_t n_outputs,
                                   ActivationFuncKind hidden_activation_func,
@@ -54,12 +54,16 @@ class Nn {
     /// @todo deserialize
     /// @todo run that returns a list of outputs (genann run)
     /// @todo train that does a 'backprop update'
+    void randomize();
     void init_sigmoid_lookup();
     double sigmoid_activation(double neuron);
     /// @todo use mtl::memoized
     double sigmoid_activation_cached(double neuron);
     double sigmoid_activation_threshold(double neuron);
     double sigmoid_activation_linear(double neuron);
+
+    // const mtl::DynArray<double>& get_weights() const { return weights_; }
+    // mtl::DynArray<double> copy_weights() const { return weights_; }
 };
 
 } // namespace nn

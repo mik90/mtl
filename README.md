@@ -53,8 +53,9 @@ For usage, all that's needed is the include/mtl directory
 - [x] finish up `remove_at`
 ### dynamic array
 - [x] impl using a mtl::OwnedPtr
-- [ ] deal with segfault in DynArrayTest.default_capacity
+- [x] deal with segfault in DynArrayTest.default_capacity
     - CTest lists out the test segfault
+- [ ] Allow for copy construction
 ### hash map
 - [ ] start
 ### tree-based map
@@ -82,5 +83,6 @@ For usage, all that's needed is the include/mtl directory
 
 ## nn
 A tiny neural net lib based on https://github.com/codeplea/genann because why not
-- [ ] base impl
-    - requires DynArray to work
+- [ ] In order to test randomization, DynArray needs to be copied
+- [ ] impl train
+- [ ] impl run

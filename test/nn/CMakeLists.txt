@@ -2,7 +2,7 @@ include(GoogleTest)
 
 add_executable(nnUnitTest
   main.cpp
-  nn.cpp
+  test_nn.cpp
 )
 
 target_include_directories(nnUnitTest PRIVATE

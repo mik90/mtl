@@ -120,8 +120,42 @@ TEST(DynArrayTest, ctor_init_list_double) {
     ASSERT_DOUBLE_EQ(array[2], value_2);
 }
 
-TEST(DynArrayTest, _set_capacity_double) {
+TEST(DynArrayTest, set_capacity_double) {
     mtl::DynArray<double> arr;
     arr.set_capacity(25);
+    ASSERT_EQ(arr.capacity(), 25);
+}
+
+TEST(DynArrayTest, set_capacity_default_to_5) {
+    mtl::DynArray<double> arr;
+    arr.set_capacity(5);
+    ASSERT_EQ(arr.capacity(), 5);
+}
+
+/// Capacity is decreased to below size
+TEST(DynArrayTest, set_capacity_below_size) {
+    auto array = mtl::DynArray<std::size_t>();
+    const std::size_t starting_capacity = 48;
+
+    for (std::size_t i = 0; i < starting_capacity; ++i) {
+        array.push_back(i);
+    }
+    ASSERT_EQ(array.size(), starting_capacity);
+
+    const std::size_t smaller_capacity = 12;
+    // The indices should be equal to the values
+    array.set_capacity(smaller_capacity);
+
+    ASSERT_EQ(array.size(), smaller_capacity);
+    ASSERT_EQ(array.capacity(), smaller_capacity);
+
+    for (std::size_t i = 0; i < smaller_capacity; ++i) {
+        ASSERT_EQ(array[i], i) << "Expected array[" << i << "] = " << array[i] << " instead of "
+                               << i;
+    }
+}
+
+TEST(DynArrayTest, make_with_capacity) {
+    const auto arr = mtl::DynArray::make_with_capacity(25);
     ASSERT_EQ(arr.capacity(), 25);
 }
