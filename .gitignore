@@ -36,3 +36,6 @@
 
 # genann reference
 /genann
+
+# clangd cache
+/.cache

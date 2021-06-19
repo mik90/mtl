@@ -66,6 +66,7 @@ class OwnedPtr {
     T* get() noexcept { return ptr_; }
     const T* get() const noexcept { return ptr_; }
 
+    /// @brief Returns pointer, setting interval value to null
     T* release() {
         const auto temp = ptr_;
         ptr_ = nullptr;
@@ -145,12 +146,12 @@ static OwnedPtr<T> make_owned(Args&&... args) {
 }
 
 /**
- * @brief Copy-able pointer wrapper. Similar to shared_ptr
+ * @brief Copyable pointer wrapper. Similar to shared_ptr
  */
 class SharedPtr {};
 
 /**
- * @brief Copy-able pointer wrapper. Similar to weak_ptr
+ * @brief Copyable pointer wrapper. Similar to weak_ptr
  */
 class NonOwnedPtr {};
 } // namespace mtl
