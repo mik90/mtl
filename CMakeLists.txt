@@ -17,7 +17,6 @@ option(ENABLE_TESTING "Enable Test Builds" ON)
 option(ENABLE_BENCHMARKS "Enable Benchmarks" OFF)
 option(BUILD_NN "Build tiny neural net lib" ON)
 
-# Set up some extra Conan dependencies based on our needs before loading Conan
 set(CONAN_EXTRA_REQUIRES "")
 set(CONAN_EXTRA_OPTIONS "")
 if(ENABLE_TESTING)
@@ -45,6 +44,6 @@ if(ENABLE_BENCHMARKS)
 endif()
 
 if(BUILD_NN)
-  message("Building nn")
+  message("Configuring nn..")
   add_subdirectory(nn)
 endif()

@@ -5,31 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "UnitTest",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/bin/UnitTest",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ]
-        },
-        {
-            "name": "Single case UnitTest",
+            "name": "mtlUnitTest",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/bin/UnitTest",
             "args": [
-                "--gtest_filter=StaticArrayTest.remove_at_first_quarter"
+                "--gtest_filter=*"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -50,7 +31,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/build/bin/nnUnitTest",
             "args": [
-                "--gtest_filter=NnTest.ctor"
+                "--gtest_filter=*"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

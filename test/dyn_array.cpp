@@ -61,8 +61,7 @@ TEST(DynArrayTest, default_capacity) {
 
     // The indices should be equal to the values
     for (std::size_t i = 0; i < capacity; ++i) {
-        ASSERT_EQ(array[i], i) << "Expected array[" << i << "] = " << array[i] << " instead of "
-                               << i;
+        ASSERT_EQ(array[i], i) << "array[" << i << "] = " << array[i] << " instead of " << i;
     }
 }
 
@@ -80,8 +79,7 @@ TEST(DynArrayTest, resize_once) {
 
     // The indices should be equal to the values
     for (std::size_t i = 0; i < capacity; ++i) {
-        ASSERT_EQ(array[i], i) << "Expected array[" << i << "] = " << array[i] << " instead of "
-                               << i;
+        ASSERT_EQ(array[i], i) << "array[" << i << "] = " << array[i] << " instead of " << i;
     }
 }
 
@@ -98,8 +96,7 @@ TEST(DynArrayTest, many_elements) {
 
     // The indices should be equal to the values
     for (std::size_t i = 0; i < n_elements; ++i) {
-        ASSERT_EQ(array[i], i) << "Expected array[" << i << "] = " << array[i] << " instead of "
-                               << i;
+        ASSERT_EQ(array[i], i) << "array[" << i << "] = " << array[i] << " instead of " << i;
     }
 }
 
@@ -142,27 +139,26 @@ TEST(DynArrayTest, set_capacity_below_size) {
     ASSERT_EQ(array.size(), starting_capacity);
 
     const std::size_t smaller_capacity = 12;
-    // The indices should be equal to the values
+    // Decrease the capacity below the size
     array.set_capacity(smaller_capacity);
 
     ASSERT_EQ(array.size(), smaller_capacity);
     ASSERT_EQ(array.capacity(), smaller_capacity);
 
     for (std::size_t i = 0; i < smaller_capacity; ++i) {
-        ASSERT_EQ(array[i], i) << "Expected array[" << i << "] = " << array[i] << " instead of "
-                               << i;
+        ASSERT_EQ(array[i], i) << "array[" << i << "] = " << array[i] << " instead of " << i;
     }
 }
 
 TEST(DynArrayTest, make_with_capacity) {
-    const auto arr = mtl::DynArray::make_with_capacity(25);
+    const auto arr = mtl::DynArray<int>::make_with_capacity(25);
     ASSERT_EQ(arr.capacity(), 25);
 }
 
 TEST(DynArrayTest, copy_const) {
     const auto arr = mtl::DynArray<int>({0, 1, 2, 3});
-    { auto new_arr = arr.copy(); }
-    { auto new_arr(arr.copy()); }
+    auto new_arr = arr.copy();
+    auto newer_arr(arr.copy());
 }
 
 TEST(DynArrayTest, overwrite_with_r_value) {
