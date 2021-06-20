@@ -11,7 +11,7 @@ TEST(MaybeTest, is_some) {
 }
 
 TEST(MaybeTest, is_some_explicit) {
-    const auto value = mtl::Maybe<int>(mtl::Some{5});
+    const auto value = mtl::Maybe(mtl::Some<int>{5});
     ASSERT_TRUE(value.is_some());
 }
 
@@ -40,7 +40,7 @@ TEST(MaybeTest, release_move_only_default) {
     ASSERT_EQ(value.release_or(5), 5);
 }
 
-mtl::Maybe<int> func_returning_some() { return mtl::Some<int>(5); }
+mtl::Maybe<int> func_returning_some() { return 5; }
 mtl::Maybe<int> func_returning_none() { return mtl::None(); }
 
 TEST(MaybeTest, func_returns_some) {
@@ -53,7 +53,7 @@ TEST(MaybeTest, func_returns_none) {
     ASSERT_TRUE(some.is_none());
 }
 
-mtl::Maybe<std::string> func_returning_some_string() { return mtl::Some<std::string>("hello"); }
+mtl::Maybe<std::string> func_returning_some_string() { return "hello"; }
 TEST(MaybeTest, func_returns_some_string) {
     const auto some = func_returning_some_string();
     ASSERT_TRUE(some.is_some());
