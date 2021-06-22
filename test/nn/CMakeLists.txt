@@ -12,7 +12,7 @@ target_include_directories(nnUnitTest PRIVATE
 target_link_libraries(nnUnitTest PRIVATE
   project_warnings
   project_options
-  CONAN_PKG::gtest
+  GTest::gtest
 	nn
 )
 

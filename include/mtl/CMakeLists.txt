@@ -1,8 +1,10 @@
 add_library(mtl INTERFACE
   algorithm.hpp
   dyn_array.hpp
+  iterator.hpp
   maybe.hpp
   memoize.hpp
+  pointers.hpp
   result.hpp
   static_array.hpp
   wrapped_var.hpp

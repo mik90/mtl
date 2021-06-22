@@ -83,6 +83,10 @@ cmake --build . --target nnUnitTest
 ### hash map
 - [ ] start
 
+### iterators
+- [ ] start
+- should be interchangeable with std iterators
+
 ### tree-based map
 - [ ] start
 

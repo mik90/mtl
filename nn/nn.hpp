@@ -55,6 +55,8 @@ class Nn {
     /// @todo deserialize
     /// @brief run that returns a list of outputs (genann's run)
     mtl::DynArray<double> run(const mtl::DynArray<double>& inputs);
+    [[nodiscard]] mtl::DynArray<double>
+    run_without_hidden_layers(const mtl::DynArray<double>& inputs);
 
     /// @brief train that does a 'backprop update'
     void train(const mtl::DynArray<double>& inputs, const mtl::DynArray<double>& desired_outputs,

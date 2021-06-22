@@ -146,22 +146,29 @@ double Nn::activation_output(double neuron) {
     return sigmoid_activation(neuron);
 }
 
-mtl::DynArray<double> Nn::run(const mtl::DynArray<double>& inputs) {
-    outputs_ = inputs;
+mtl::DynArray<double> Nn::run_without_hidden_layers(const mtl::DynArray<double>& inputs) {
     auto output_iter = outputs_.begin();
 
     auto weight_iter = weights_.cbegin();
+    for (std::size_t i = 0; i < outputs_.size(); ++i) {
+        double sum = *weight_iter++ * -1.0;
+        for (const auto& input_elem : inputs) {
+            sum = *weight_iter++ * input_elem;
+        }
+        *output_iter++ = activation_output(sum);
+    }
+    return outputs_.copy();
+}
+
+mtl::DynArray<double> Nn::run(const mtl::DynArray<double>& inputs) {
+    outputs_ = inputs;
+    // auto output_iter = outputs_.begin();
+
+    // auto weight_iter = weights_.cbegin();
 
     // Special case for no hidden layers
     if (!n_hidden_layers_) {
-        for (std::size_t i = 0; i < outputs_.size(); ++i) {
-            double sum = *weight_iter++ * -1.0;
-            for (const auto& input_elem : inputs) {
-                sum = *weight_iter++ * input_elem;
-            }
-            *output_iter++ = activation_output(sum);
-        }
-        return outputs_.copy();
+        return run_without_hidden_layers(inputs);
     }
     return outputs_.copy();
 }

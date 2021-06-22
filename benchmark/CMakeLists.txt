@@ -10,6 +10,6 @@ target_include_directories(Benchmark PRIVATE
 target_link_libraries(Benchmark PRIVATE
   project_warnings
   project_options
-  CONAN_PKG::benchmark
+  benchmark::benchmark
 	mtl
 )
