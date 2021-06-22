@@ -1,5 +1,6 @@
 #pragma once
 
+#include "mtl/iterator.hpp"
 #include "mtl/maybe.hpp"
 #include "mtl/pointers.hpp"
 #include <cstdlib>
@@ -21,7 +22,7 @@ class DynArray {
     // Allocates a copy of data_
     OwnedPtr<ValueType[]> copy_data(const DynArray& other) {
         auto copy_ptr = new ValueType[other.capacity()];
-        std::memcpy(copy_ptr, other.get_raw_ptr(), other.size() * sizeof(ValueType));
+        std::memcpy(copy_ptr, other.data(), other.size() * sizeof(ValueType));
         return OwnedPtr<ValueType[]>(copy_ptr);
     }
 
@@ -113,8 +114,28 @@ class DynArray {
 
     std::size_t capacity() const noexcept { return capacity_; }
     std::size_t size() const noexcept { return size_; }
-    const ValueType* get_raw_ptr() const noexcept { return data_.get(); }
+    bool is_empty() const noexcept { return size_ == 0; }
+    bool has_values() const noexcept { return !is_empty(); }
+
+    ValueType* data() noexcept { return data_.get(); }
+    const ValueType* data() const noexcept { return data_.get(); }
     OwnedPtr<ValueType[]> take_data() { return OwnedPtr<ValueType[]>(data_.release()); }
+
+    Iterator<ValueType> iter() {
+        if (size() > 0) {
+            return Iterator(data());
+        } else {
+            return Iterator<ValueType>();
+        }
+    }
+
+    const ConstIterator<ValueType> c_iter() const {
+        if (size() > 0) {
+            return ConstIterator(data());
+        } else {
+            return ConstIterator<ValueType>();
+        }
+    }
 
     // Dumb iterators
     ValueType* begin() noexcept { return data_.get(); }

@@ -1,13 +1,20 @@
 #include "nn.hpp"
 #include "mtl/algorithm.hpp"
+#include "mtl/dyn_array.hpp"
+#include "mtl/iterator.hpp"
+#include "mtl/result.hpp"
 #include "mtl/static_array.hpp"
 #include <cassert>
 #include <cmath>
+#include <cstddef>
 #include <random>
+#include <utility>
 
 namespace nn {
 
-double Nn::sigmoid_activation(double neuron) {
+using mtl::Ok;
+
+FpType Nn::sigmoid_activation(FpType neuron) {
     /// @todo where do these numbers comefrom
     if (neuron < -45.0) {
         return 0;
@@ -18,32 +25,24 @@ double Nn::sigmoid_activation(double neuron) {
     }
 }
 
-/// @todo Create Lookup table struct
-constexpr std::size_t lookup_size = 4096;
-auto lookup_table = mtl::StaticArray<double, lookup_size>();
-double interval;
-/// @todo wtf r these
-constexpr double sigmoid_dom_min = -15.0;
-constexpr double sigmoid_dom_max = 15.0;
-
-double Nn::sigmoid_activation_cached(double neuron) {
+FpType Nn::sigmoid_activation_cached(FpType neuron) {
     assert(!std::isnan(neuron));
 
-    if (neuron < sigmoid_dom_min) {
-        return *(lookup_table.cbegin());
+    if (neuron < sigmoid_dom_min_) {
+        return *(lookup_table_.cbegin());
     }
-    if (neuron >= sigmoid_dom_max) {
-        return *(lookup_table.cend());
+    if (neuron >= sigmoid_dom_max_) {
+        return *(lookup_table_.cend());
     }
 
-    const auto est = (neuron - sigmoid_dom_min) * interval + 0.5;
-    if (est > lookup_size) {
-        return *(lookup_table.cend());
+    const auto est = static_cast<std::size_t>((neuron - sigmoid_dom_min_) * table_interval_ + 0.5);
+    if (est > lookup_table_.size()) {
+        return *(lookup_table_.cend());
     }
-    return lookup_table[static_cast<std::size_t>(est)];
+    return lookup_table_[est];
 }
-double Nn::sigmoid_activation_linear(double neuron) { return neuron; }
-double Nn::sigmoid_activation_threshold(double neuron) { return neuron > 0; }
+FpType Nn::sigmoid_activation_linear(FpType neuron) { return neuron; }
+FpType Nn::sigmoid_activation_threshold(FpType neuron) { return neuron > 0; }
 
 mtl::Maybe<Nn> Nn::make_nn(std::size_t n_inputs, std::size_t n_hidden_layers, std::size_t n_hidden,
                            std::size_t n_outputs, ActivationFuncKind hidden_activation_func,
@@ -92,7 +91,7 @@ Nn::Nn(std::size_t n_inputs, std::size_t n_hidden_layers, std::size_t n_hidden,
 void Nn::randomize() {
     std::random_device rand_dev;
     std::mt19937 gen(rand_dev());
-    std::uniform_real_distribution<double> dis(-0.5, 0.5);
+    std::uniform_real_distribution<FpType> dis(-0.5, 0.5);
 
     // Iterate thru weights_, randomizing
     for (auto& elem : weights_) {
@@ -101,16 +100,18 @@ void Nn::randomize() {
 }
 
 void Nn::init_sigmoid_lookup() {
-    const double coef = (sigmoid_dom_max - sigmoid_dom_min) / lookup_size;
+    const FpType table_idx_fp = static_cast<FpType>(lookup_table_.size());
+    const FpType coef = (sigmoid_dom_max_ - sigmoid_dom_min_) / table_idx_fp;
 
-    /// @todo Interval needs to be a member, and what is the interval for? Lookup talb interval?
-    interval = lookup_size / (sigmoid_dom_max - sigmoid_dom_min);
+    /// @todo Interval needs to be a member, and what is the table_interval_ for? Lookup table
+    /// table_interval_?
+    table_interval_ = table_idx_fp / (sigmoid_dom_max_ - sigmoid_dom_min_);
 
-    for (std::size_t i = 0; i < lookup_table.size(); ++i) {
-        lookup_table[i] = sigmoid_activation(sigmoid_dom_min + coef * static_cast<double>(i));
+    for (std::size_t i = 0; i < lookup_table_.size(); ++i) {
+        lookup_table_[i] = sigmoid_activation(sigmoid_dom_min_ + coef * static_cast<FpType>(i));
     }
 }
-double Nn::activation_hidden(double neuron) {
+FpType Nn::activation_hidden(FpType neuron) {
     switch (hidden_activation_func_) {
     case ActivationFuncKind::SIGMOID: {
         return sigmoid_activation(neuron);
@@ -128,7 +129,7 @@ double Nn::activation_hidden(double neuron) {
     return sigmoid_activation(neuron);
 }
 
-double Nn::activation_output(double neuron) {
+FpType Nn::activation_output(FpType neuron) {
     switch (output_activation_func_) {
     case ActivationFuncKind::SIGMOID: {
         return sigmoid_activation(neuron);
@@ -146,30 +147,95 @@ double Nn::activation_output(double neuron) {
     return sigmoid_activation(neuron);
 }
 
-mtl::DynArray<double> Nn::run_without_hidden_layers(const mtl::DynArray<double>& inputs) {
-    auto output_iter = outputs_.begin();
+mtl::Result<mtl::Ok, mtl::Error> Nn::run_without_hidden_layers(RunState& state) {
 
-    auto weight_iter = weights_.cbegin();
-    for (std::size_t i = 0; i < outputs_.size(); ++i) {
-        double sum = *weight_iter++ * -1.0;
-        for (const auto& input_elem : inputs) {
-            sum = *weight_iter++ * input_elem;
+    for (std::size_t i = 0; i < n_outputs_; ++i) {
+        FpType sum = *(state.weight_iter) * -1.0;
+        state.weight_iter.next();
+
+        for (const auto& input_elem : inputs_) {
+            sum += *(state.weight_iter) * input_elem;
+            state.weight_iter.next();
         }
-        *output_iter++ = activation_output(sum);
+        outputs_.push_back(activation_output(sum));
     }
-    return outputs_.copy();
+    return Ok{};
 }
 
-mtl::DynArray<double> Nn::run(const mtl::DynArray<double>& inputs) {
-    outputs_ = inputs;
+mtl::Result<mtl::Ok, mtl::Error> Nn::run_input_layer(RunState& state, ) {
+
+    for (std::size_t i = 0; i < n_hidden_; ++i) {
+        FpType sum = *(state.weight_iter) * -1.0;
+        state.weight_iter.next();
+        for (const auto& input_elem : inputs_) {
+            sum += *(state.weight_iter) * input_elem;
+            state.weight_iter.next();
+        }
+        outputs_.push_back(activation_hidden(sum));
+    }
+    return Ok{};
+}
+mtl::Result<mtl::Ok, mtl::Error> Nn::run_hidden_layers(RunState& state) {
+    // Wtf, why start at 1?
+    for (std::size_t i = 1; i < n_hidden_layers_; ++i) {
+        for (std::size_t j = 0; j < n_hidden_; ++j) {
+            FpType sum = *(state.weight_iter) * -1.0;
+            state.weight_iter.next();
+            for (std::size_t k = 0; k < n_hidden_; ++k) {
+                sum += *(state.weight_iter) * inputs_[k];
+                state.weight_iter.next();
+            }
+            outputs_.push_back(activation_hidden(sum));
+        }
+    }
+
+    return Ok{};
+}
+
+mtl::Result<mtl::Ok, mtl::Error> Nn::run_output_layers(RunState& state) {
+
+    for (std::size_t i = 0; i < n_outputs_; ++i) {
+        FpType sum = *(state.weight_iter) * -1.0;
+        state.weight_iter.next();
+        for (std::size_t k = 0; k < n_hidden_; ++k) {
+            sum += *(state.weight_iter) * inputs_[k];
+            ;
+            state.weight_iter.next();
+        }
+        outputs_.push_back(activation_output(sum));
+    }
+
+    return Ok{};
+}
+
+mtl::Result<mtl::Ok, mtl::Error> Nn::run(const mtl::DynArray<FpType>& inputs) {
     // auto output_iter = outputs_.begin();
 
     // auto weight_iter = weights_.cbegin();
+    RunState state;
+    { state.weight_iter = weights_.c_iter(); }
+
+    inputs_ = inputs;
 
     // Special case for no hidden layers
-    if (!n_hidden_layers_) {
-        return run_without_hidden_layers(inputs);
+    if (hidden_layers_configured()) {
+        return run_without_hidden_layers(state);
     }
-    return outputs_.copy();
+    auto res = run_input_layer(state);
+    if (res.is_err()) {
+        return std::move(res);
+    }
+    res = run_hidden_layers(state);
+    if (res.is_err()) {
+        return res;
+    }
+
+    res = run_output_layer(state);
+    if (res.is_err()) {
+
+        return res;
+    }
+
+    return Ok{};
 }
 } // namespace nn

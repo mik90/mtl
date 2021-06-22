@@ -5,12 +5,22 @@
 #include <cmath>
 #include <limits>
 
-nn::Nn get_default_nn() {
+using nn::FpType;
 
+nn::Nn get_default_nn() {
     const std::size_t n_inputs = 2;
     const std::size_t n_hidden_layers = 1;
     const std::size_t n_hidden = 1;
     const std::size_t n_outputs = 2;
+    const auto hidden_act_func = nn::ActivationFuncKind::SIGMOID_CACHED;
+    const auto output_act_func = nn::ActivationFuncKind::SIGMOID_CACHED;
+    return {n_inputs, n_hidden_layers, n_hidden, n_outputs, hidden_act_func, output_act_func};
+}
+nn::Nn get_nn_no_hidden() {
+    const std::size_t n_inputs = 1;
+    const std::size_t n_hidden_layers = 0;
+    const std::size_t n_hidden = 0;
+    const std::size_t n_outputs = 1;
     const auto hidden_act_func = nn::ActivationFuncKind::SIGMOID_CACHED;
     const auto output_act_func = nn::ActivationFuncKind::SIGMOID_CACHED;
     return {n_inputs, n_hidden_layers, n_hidden, n_outputs, hidden_act_func, output_act_func};
@@ -36,9 +46,9 @@ bool are_equal(double a, double b) {
 
 TEST(NnTest, randomize) {
     auto nn = get_default_nn();
-    const auto starting_weights = nn.get_weights().copy();
+    const auto starting_weights = nn.borrow_weights().copy();
     nn.randomize();
-    const auto ending_weights = nn.get_weights().copy();
+    const auto ending_weights = nn.borrow_weights().copy();
 
     ASSERT_GE(ending_weights.size(), 0);
     ASSERT_EQ(starting_weights.size(), ending_weights.size());
@@ -53,4 +63,19 @@ TEST(NnTest, init_sigmoid_lookup) {
     nn.randomize();
     nn.init_sigmoid_lookup();
     SUCCEED();
+}
+
+TEST(NnTest, run_without_hidden_layers) {
+    auto nn = get_nn_no_hidden();
+    const auto configured_n_outputs = nn.n_outputs();
+    const auto inputs = mtl::DynArray<double>{0.0, 1.0, 0.3, 2.0};
+
+    nn.randomize();
+    nn.init_sigmoid_lookup();
+
+    const auto result = nn.run(inputs);
+
+    ASSERT_TRUE(result.is_ok());
+    const auto& outputs = nn.borrow_outputs();
+    ASSERT_EQ(outputs.size(), configured_n_outputs);
 }

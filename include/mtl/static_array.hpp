@@ -8,6 +8,7 @@
 #include <utility>
 
 #include "mtl/algorithm.hpp"
+#include "mtl/iterator.hpp"
 #include "mtl/maybe.hpp"
 
 namespace mtl {
@@ -35,8 +36,28 @@ class StaticArray {
 
     size_t size() const noexcept { return size_; }
     size_t capacity() const noexcept { return capacity_; }
+    bool is_empty() const noexcept { return size_ == 0; }
+    bool has_values() const noexcept { return !is_empty(); }
 
-    // Iterators
+    ValueType* data() noexcept { return data_; }
+    const ValueType* data() const noexcept { return data_; }
+
+    Iterator<ValueType> iter() {
+        if (size() > 0) {
+            return Iterator(data());
+        } else {
+            return Iterator<ValueType>();
+        }
+    }
+
+    const ConstIterator<ValueType> c_iter() const {
+        if (size() > 0) {
+            return ConstIterator(data());
+        } else {
+            return ConstIterator<ValueType>();
+        }
+    }
+    // dumb iterators
     ValueType* begin() noexcept { return data_; }
     ValueType* end() noexcept { return data_ + size_; }
     const ValueType* begin() const noexcept { return cbegin(); }

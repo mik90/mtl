@@ -1,41 +1,56 @@
 #pragma once
 
 #include <string>
+#include <type_traits>
 #include <utility>
 
 #include "maybe.hpp"
 
 namespace mtl {
 
+struct Ok {};
+struct Err {};
 template <typename OkType, typename ErrorType>
 class Result {
   private:
-    struct ok_tag {};
-    struct err_tag {};
     union {
         OkType ok_;
         ErrorType err_;
     };
     enum class tag { OK, ERR, NONE } tag_;
 
+  public:
     // Ctors with tags so they know which type to construct in-place
     template <class... Args>
-    Result(ok_tag, Args&&... args) : ok_(std::forward<Args>(args)...), tag_(tag::OK) {}
+    Result(Ok, Args&&... args) : ok_(std::forward<Args>(args)...), tag_(tag::OK) {}
     template <class... Args>
-    Result(err_tag, Args&&... args) : err_(std::forward<Args>(args)...), tag_(tag::ERR) {}
+    Result(Err, Args&&... args) : err_(std::forward<Args>(args)...), tag_(tag::ERR) {}
 
-  public:
     template <class... Args>
     static Result ok(Args&&... args) {
-        return Result(ok_tag{}, std::forward<Args>(args)...);
+        return Result(Ok{}, std::forward<Args>(args)...);
     }
 
     template <class... Args>
     static Result err(Args&&... args) {
-        return Result(err_tag{}, std::forward<Args>(args)...);
+        return Result(Err{}, std::forward<Args>(args)...);
     }
 
     /// @todo This should only be defined if either the OkType or ErrorType are non-trivial
+    Result(Result&& res) {
+        if (tag_ == tag::OK) {
+            ok_ = std::move(res.ok_);
+        } else {
+            err_ = std::move(res.err_);
+        }
+    }
+    Result(const Result& res) {
+        if (tag_ == tag::OK) {
+            ok_ = res.ok_;
+        } else {
+            err_ = res.err_;
+        }
+    }
     ~Result() {}
 
     // Observers

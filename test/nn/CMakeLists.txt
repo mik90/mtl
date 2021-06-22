@@ -1,5 +1,3 @@
-include(GoogleTest)
-
 add_executable(nnUnitTest
   main.cpp
   test_nn.cpp
