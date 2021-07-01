@@ -36,21 +36,48 @@ class Result {
         return Result(Err{}, std::forward<Args>(args)...);
     }
 
+    Result(Result&& other) {
+        if (other.is_ok()) {
+            ok_ = std::move(other.ok_);
+            tag_ = tag::OK;
+        } else {
+            err_ = std::move(other.err_);
+            tag_ = tag::ERR;
+        }
+    }
+    Result(const Result& other) {
+        if (other.is_ok()) {
+            ok_ = other.ok_;
+            tag_ = tag::OK;
+        } else {
+            err_ = other.err_;
+            tag_ = tag::ERR;
+        }
+    }
+
+    Result& operator=(const Result& other) {
+        if (other.is_ok()) {
+            ok_ = other.ok_;
+            tag_ = tag::OK;
+        } else {
+            err_ = other.err_;
+            tag_ = tag::ERR;
+        }
+        return *this;
+    }
+
+    Result& operator=(Result&& other) {
+        if (other.is_ok()) {
+            ok_ = std::move(other.ok_);
+            tag_ = tag::OK;
+        } else {
+            err_ = std::move(other.err_);
+            tag_ = tag::ERR;
+        }
+        return *this;
+    }
+
     /// @todo This should only be defined if either the OkType or ErrorType are non-trivial
-    Result(Result&& res) {
-        if (tag_ == tag::OK) {
-            ok_ = std::move(res.ok_);
-        } else {
-            err_ = std::move(res.err_);
-        }
-    }
-    Result(const Result& res) {
-        if (tag_ == tag::OK) {
-            ok_ = res.ok_;
-        } else {
-            err_ = res.err_;
-        }
-    }
     ~Result() {}
 
     // Observers
@@ -119,6 +146,7 @@ class Error {
     std::string error_info_;
 
   public:
+    Error(ErrorKind kind, const char* info) : kind_(kind), error_info_(info) {}
     Error(ErrorKind kind, std::string info) : kind_(kind), error_info_(std::move(info)) {}
     Error(std::string info) : kind_(ErrorKind::unknown), error_info_(std::move(info)) {}
     std::string stringify(ErrorKind kind) const {

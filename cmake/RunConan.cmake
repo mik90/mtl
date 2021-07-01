@@ -13,7 +13,12 @@ conan_cmake_configure(REQUIRES ${CONAN_EXTRA_REQUIRES}
                       GENERATORS cmake_find_package)
 conan_cmake_autodetect(settings)
 
+set(CONAN_REMOTES conan-center)
+if(OFFLINE_CONAN)
+  set(CONAN_REMOTES "")
+endif()
+
 conan_cmake_install(PATH_OR_REFERENCE .
                     BUILD missing
-                    REMOTE conan-center
+                    REMOTE ${CONAN_REMOTES}
                     SETTINGS ${settings})

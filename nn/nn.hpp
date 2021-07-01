@@ -47,8 +47,13 @@ class Nn {
     mtl::DynArray<FpType> deltas_;
     mtl::Result<mtl::Ok, mtl::Error> run_input_layer(RunState& state);
     mtl::Result<mtl::Ok, mtl::Error> run_hidden_layers(RunState& state);
-    mtl::Result<mtl::Ok, mtl::Error> run_output_layers(RunState& state);
+    mtl::Result<mtl::Ok, mtl::Error> run_output_layer(RunState& state);
     mtl::Result<mtl::Ok, mtl::Error> run_without_hidden_layers(RunState& state);
+
+    mtl::Result<mtl::Ok, mtl::Error> set_output_layer_deltas();
+    mtl::Result<mtl::Ok, mtl::Error> set_hidden_layer_deltas();
+    mtl::Result<mtl::Ok, mtl::Error> train_output_layer();
+    mtl::Result<mtl::Ok, mtl::Error> train_hidden_layer();
 
     mtl::StaticArray<FpType, 4096> lookup_table_;
     FpType table_interval_ = 0;
@@ -75,8 +80,9 @@ class Nn {
     mtl::Result<mtl::Ok, mtl::Error> run(const mtl::DynArray<FpType>& inputs);
 
     /// @brief train that does a 'backprop update'
-    void train(const mtl::DynArray<FpType>& inputs, const mtl::DynArray<FpType>& desired_outputs,
-               FpType learning_rate);
+    mtl::Result<mtl::Ok, mtl::Error> train(const mtl::DynArray<FpType>& inputs,
+                                           const mtl::DynArray<FpType>& desired_outputs,
+                                           FpType learning_rate);
     void randomize();
     bool hidden_layers_configured() const noexcept { return n_hidden_layers_ > 0; }
     void init_sigmoid_lookup();

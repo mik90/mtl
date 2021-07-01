@@ -37,6 +37,7 @@ cmake --build . --target nnUnitTest
 ### result
 - [x] Allow for move-only types
 - [x] impl rough minimal variant
+- [ ] Find a way to make it easier to return mtl::Error as an mtl::Err
 
 ### memoize
 - [ ] memoization wrapper that caches results of a function
@@ -120,4 +121,7 @@ cmake --build . --target nnUnitTest
 - [x] In order to test randomization, DynArray needs to be copied
 - [ ] impl run
     - started on this, hard to translate over
+    - [ ] clean up weight_iter logic
+    - The naming of the layers needs ot be clarified
+    - [ ] inputs shouldn't be copied
 - [ ] impl train

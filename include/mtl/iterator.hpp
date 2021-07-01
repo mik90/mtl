@@ -41,7 +41,7 @@ class ConstIterator {
             return None{};
         }
     }
-    ValueType& operator*() { return *cur_; }
+    const ValueType& operator*() const { return *cur_; }
     bool is_null() const noexcept { return cur_ == nullptr; }
     bool not_null() const noexcept { return !is_null(); }
 };

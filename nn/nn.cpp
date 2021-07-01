@@ -12,6 +12,7 @@
 
 namespace nn {
 
+using mtl::Err;
 using mtl::Ok;
 
 FpType Nn::sigmoid_activation(FpType neuron) {
@@ -162,7 +163,7 @@ mtl::Result<mtl::Ok, mtl::Error> Nn::run_without_hidden_layers(RunState& state) 
     return Ok{};
 }
 
-mtl::Result<mtl::Ok, mtl::Error> Nn::run_input_layer(RunState& state, ) {
+mtl::Result<mtl::Ok, mtl::Error> Nn::run_input_layer(RunState& state) {
 
     for (std::size_t i = 0; i < n_hidden_; ++i) {
         FpType sum = *(state.weight_iter) * -1.0;
@@ -175,6 +176,7 @@ mtl::Result<mtl::Ok, mtl::Error> Nn::run_input_layer(RunState& state, ) {
     }
     return Ok{};
 }
+
 mtl::Result<mtl::Ok, mtl::Error> Nn::run_hidden_layers(RunState& state) {
     // Wtf, why start at 1?
     for (std::size_t i = 1; i < n_hidden_layers_; ++i) {
@@ -192,14 +194,13 @@ mtl::Result<mtl::Ok, mtl::Error> Nn::run_hidden_layers(RunState& state) {
     return Ok{};
 }
 
-mtl::Result<mtl::Ok, mtl::Error> Nn::run_output_layers(RunState& state) {
+mtl::Result<mtl::Ok, mtl::Error> Nn::run_output_layer(RunState& state) {
 
     for (std::size_t i = 0; i < n_outputs_; ++i) {
         FpType sum = *(state.weight_iter) * -1.0;
         state.weight_iter.next();
         for (std::size_t k = 0; k < n_hidden_; ++k) {
             sum += *(state.weight_iter) * inputs_[k];
-            ;
             state.weight_iter.next();
         }
         outputs_.push_back(activation_output(sum));
@@ -223,7 +224,7 @@ mtl::Result<mtl::Ok, mtl::Error> Nn::run(const mtl::DynArray<FpType>& inputs) {
     }
     auto res = run_input_layer(state);
     if (res.is_err()) {
-        return std::move(res);
+        return res;
     }
     res = run_hidden_layers(state);
     if (res.is_err()) {
@@ -232,10 +233,39 @@ mtl::Result<mtl::Ok, mtl::Error> Nn::run(const mtl::DynArray<FpType>& inputs) {
 
     res = run_output_layer(state);
     if (res.is_err()) {
-
         return res;
+    }
+
+    if (weights_.size() != n_total_weights_) {
+        return mtl::Result<Ok, mtl::Error>::err(
+            "weights_.size() != n_total_weights_, expected to create all weights");
+    }
+
+    if (outputs_.size() != n_outputs_) {
+        return mtl::Result<Ok, mtl::Error>::err(
+            "outputs_.size() != n_outputs_, expected to create all outputs");
     }
 
     return Ok{};
 }
+
+mtl::Result<mtl::Ok, mtl::Error> set_output_layer_deltas() {
+
+    // in genann:double const *o = ann->output + ann->inputs + ann->hidden * ann->hidden_layers
+    // This is taking the (output_ptr + input_ptr + (0 or 1 for hidden) * n_hidden_layers to find
+    // the delta
+
+    return Ok{};
+}
+mtl::Result<mtl::Ok, mtl::Error> set_hidden_layer_deltas() { return Ok{}; }
+mtl::Result<mtl::Ok, mtl::Error> train_output_layer() { return Ok{}; }
+mtl::Result<mtl::Ok, mtl::Error> train_hidden_layer() { return Ok{}; }
+mtl::Result<mtl::Ok, mtl::Error> Nn::train(const mtl::DynArray<FpType>& inputs,
+                                           const mtl::DynArray<FpType>& desired_outputs,
+                                           FpType learning_rate) {
+    run(inputs);
+
+    return Ok{};
+}
+
 } // namespace nn

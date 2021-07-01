@@ -39,11 +39,12 @@
                 },
                 "CMAKE_BUILD_TYPE": {
                     "type": "STRING",
-                    "value": "Release"
+                    "value": "Debug"
                 },
                 "ENABLE_TESTING": "ON",
                 "ENABLE_BENCHMARKS": "OFF",
-                "BUILD_NN": "ON"
+                "BUILD_NN": "ON",
+                "OFFLINE_CONAN": "ON"
             }
         }
     ],

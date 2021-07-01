@@ -12,10 +12,10 @@
             "args": [
                 "--gtest_filter=*"
             ],
+            "console": "internalConsole",
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [
                 {
@@ -31,12 +31,12 @@
             "request": "launch",
             "program": "${workspaceFolder}/build/bin/nnUnitTest",
             "args": [
-                "--gtest_filter=*"
+                "--gtest_filter=*without_hidden*"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": false,
+            "console": "internalConsole",
             "MIMode": "gdb",
             "setupCommands": [
                 {
