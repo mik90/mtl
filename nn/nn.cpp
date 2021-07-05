@@ -265,6 +265,9 @@ mtl::Result<mtl::Ok, mtl::Error> Nn::train(const mtl::DynArray<FpType>& inputs,
                                            FpType learning_rate) {
     run(inputs);
 
+    static_cast<void>(learning_rate);
+    static_cast<void>(desired_outputs);
+
     return Ok{};
 }
 
