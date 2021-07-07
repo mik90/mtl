@@ -121,7 +121,7 @@ cmake --build . --target nnUnitTest
 - [x] In order to test randomization, DynArray needs to be copied
 - [ ] impl run
     - started on this, hard to translate over
-    - [ ] clean up weight_iter logic
+    - [ ] clean up weight_iter logic, use mtl::Maybe with the iterators
     - The naming of the layers needs ot be clarified
     - [ ] inputs shouldn't be copied
 - [ ] impl train

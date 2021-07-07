@@ -3,6 +3,7 @@
 #include "mtl/iterator.hpp"
 #include "mtl/maybe.hpp"
 #include "mtl/pointers.hpp"
+#include <cstddef>
 #include <cstdlib>
 #include <cstring>
 #include <utility>
@@ -98,6 +99,23 @@ class DynArray {
             set_capacity(capacity_ * 2);
         }
         data_[size_++] = std::move(value);
+    }
+
+    /// @brief fill entirety of the array with a given value
+    void fill_with(const ValueType& value) {
+        size_ = 0;
+        while (size_ < capacity_) {
+            data_[size_++] = value;
+        }
+    }
+
+    /// @brief Where GeneratorFunc is a callable that returns a value
+    template <typename GeneratorFunc>
+    void fill_with_generator(GeneratorFunc&& func) {
+        size_ = 0;
+        while (size_ < capacity_) {
+            data_[size_++] = func();
+        }
     }
 
     ValueType& operator[](size_t idx) { return data_[idx]; }

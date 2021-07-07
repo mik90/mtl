@@ -51,7 +51,7 @@ TEST(NnTest, randomize) {
     const auto ending_weights = nn.borrow_weights().copy();
 
     ASSERT_GE(ending_weights.size(), 0);
-    ASSERT_EQ(starting_weights.size(), ending_weights.size());
+    ASSERT_GT(ending_weights.size(), starting_weights.size());
 
     for (std::size_t i = 0; i < ending_weights.size(); ++i) {
         ASSERT_FALSE(are_equal(starting_weights[i], ending_weights[i]));

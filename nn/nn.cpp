@@ -12,7 +12,6 @@
 
 namespace nn {
 
-using mtl::Err;
 using mtl::Ok;
 
 FpType Nn::sigmoid_activation(FpType neuron) {
@@ -83,8 +82,10 @@ Nn::Nn(std::size_t n_inputs, std::size_t n_hidden_layers, std::size_t n_hidden,
 
     /// list of weights (size of n_weights)
     weights_.set_capacity(n_total_weights_);
+
     /// list of outputs (input array and output for each of the n_total_neurons)
     outputs_.set_capacity(n_total_neurons_);
+
     /// deltas for each hidden and output neuron (n_total_neurons - n_inputs)
     deltas_.set_capacity(n_total_neurons_ - n_inputs_);
 }
@@ -94,10 +95,8 @@ void Nn::randomize() {
     std::mt19937 gen(rand_dev());
     std::uniform_real_distribution<FpType> dis(-0.5, 0.5);
 
-    // Iterate thru weights_, randomizing
-    for (auto& elem : weights_) {
-        elem = dis(gen);
-    }
+    // Fill array with random weights
+    weights_.fill_with_generator([&dis, &gen] { return dis(gen); });
 }
 
 void Nn::init_sigmoid_lookup() {
@@ -197,6 +196,7 @@ mtl::Result<mtl::Ok, mtl::Error> Nn::run_hidden_layers(RunState& state) {
 mtl::Result<mtl::Ok, mtl::Error> Nn::run_output_layer(RunState& state) {
 
     for (std::size_t i = 0; i < n_outputs_; ++i) {
+        // TODO Segfault here
         FpType sum = *(state.weight_iter) * -1.0;
         state.weight_iter.next();
         for (std::size_t k = 0; k < n_hidden_; ++k) {
@@ -219,7 +219,7 @@ mtl::Result<mtl::Ok, mtl::Error> Nn::run(const mtl::DynArray<FpType>& inputs) {
     inputs_ = inputs;
 
     // Special case for no hidden layers
-    if (hidden_layers_configured()) {
+    if (!hidden_layers_configured()) {
         return run_without_hidden_layers(state);
     }
     auto res = run_input_layer(state);

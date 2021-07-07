@@ -8,11 +8,10 @@
             "name": "mtlUnitTest",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/UnitTest",
+            "program": "${workspaceFolder}/build/test/UnitTest",
             "args": [
                 "--gtest_filter=*"
             ],
-            "console": "internalConsole",
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
@@ -29,14 +28,13 @@
             "name": "nnUnitTest",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/nnUnitTest",
+            "program": "${workspaceFolder}/build/test/nn/nnUnitTest",
             "args": [
-                "--gtest_filter=*without_hidden*"
+                "--gtest_filter=*"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "console": "internalConsole",
             "MIMode": "gdb",
             "setupCommands": [
                 {

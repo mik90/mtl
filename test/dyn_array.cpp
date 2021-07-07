@@ -181,3 +181,21 @@ TEST(DynArrayTest, overwrite_with_l_value) {
     ASSERT_EQ(arr[2], 2);
     ASSERT_EQ(arr[3], 3);
 }
+
+TEST(DynArrayTest, fill_capacity) {
+    auto arr = mtl::DynArray<int>::make_with_capacity(50);
+    ASSERT_EQ(arr.size(), 0);
+    arr.fill_with(5);
+    for (const auto& elem : arr) {
+        ASSERT_EQ(elem, 5);
+    }
+}
+
+TEST(DynArrayTest, fill_capacity_generator_func) {
+    auto arr = mtl::DynArray<int>::make_with_capacity(50);
+    ASSERT_EQ(arr.size(), 0);
+    arr.fill_with_generator([] { return 5; });
+    for (const auto& elem : arr) {
+        ASSERT_EQ(elem, 5);
+    }
+}
