@@ -50,9 +50,9 @@ cmake --build . --target nnUnitTest
 - [ ] add parallelization option
 
 ### pointers
-- [x] `OwnedPtr` - similar to `unique_ptr`
+- [x] `OwningPtr` - similar to `unique_ptr`
 - [ ] `SharedPtr` - `shared_ptr`
-- [ ] `NonOwnedPtr` - `weak_ptr`
+- [ ] `NonOwningPtr` - `weak_ptr`
 
 ### maybe
 - [x] make `mtl::Maybe` (similar to `std::optional`) 
@@ -75,7 +75,7 @@ cmake --build . --target nnUnitTest
 - [x] finish up `remove_at`
 
 ### dynamic array
-- [x] impl using a mtl::OwnedPtr
+- [x] impl using a mtl::OwningPtr
 - [x] deal with segfault in DynArrayTest.default_capacity
     - CTest lists out the test segfault
 - [x] Allow for copy construction

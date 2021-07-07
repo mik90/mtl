@@ -8,19 +8,19 @@
 
 TEST(PointerTest, ctor_int) {
     int* raw_ptr = new int(5);
-    auto owned_ptr = mtl::OwnedPtr<int>(raw_ptr);
+    auto owned_ptr = mtl::OwningPtr<int>(raw_ptr);
     ASSERT_TRUE(owned_ptr.has_value());
     ASSERT_EQ(owned_ptr.get(), raw_ptr);
 }
 
 TEST(PointerTest, no_copy) {
-    static_assert(!std::is_copy_constructible_v<mtl::OwnedPtr<int>>);
-    static_assert(!std::is_copy_assignable_v<mtl::OwnedPtr<int>>);
+    static_assert(!std::is_copy_constructible_v<mtl::OwningPtr<int>>);
+    static_assert(!std::is_copy_assignable_v<mtl::OwningPtr<int>>);
 }
 
 TEST(PointerTest, move_constructable) {
-    static_assert(std::is_move_constructible_v<mtl::OwnedPtr<int>>);
-    static_assert(std::is_move_assignable_v<mtl::OwnedPtr<int>>);
+    static_assert(std::is_move_constructible_v<mtl::OwningPtr<int>>);
+    static_assert(std::is_move_assignable_v<mtl::OwningPtr<int>>);
 }
 
 TEST(PointerTest, make_owned_ptr) {
@@ -41,7 +41,7 @@ TEST(PointerTest, maybe_get_some) {
 }
 
 TEST(PointerTest, maybe_get_none) {
-    const auto owned_ptr = mtl::OwnedPtr<int>(nullptr);
+    const auto owned_ptr = mtl::OwningPtr<int>(nullptr);
     auto maybe = owned_ptr.maybe_get();
     ASSERT_TRUE(maybe.is_none());
 }
@@ -55,7 +55,7 @@ TEST(PointerTest, ctor_array) {
         raw_ptr[3] = 3;
         raw_ptr[4] = 4;
     }
-    const auto owned_ptr = mtl::OwnedPtr<int[]>(raw_ptr);
+    const auto owned_ptr = mtl::OwningPtr<int[]>(raw_ptr);
     ASSERT_TRUE(owned_ptr.has_value());
     ASSERT_EQ(owned_ptr[0], 0);
     ASSERT_EQ(owned_ptr[1], 1);
@@ -65,7 +65,7 @@ TEST(PointerTest, ctor_array) {
 }
 
 TEST(PointerTest, move_ctor) {
-    auto owned_ptr = mtl::OwnedPtr<int>(new int(5));
+    auto owned_ptr = mtl::OwningPtr<int>(new int(5));
     auto other_ptr = std::move(owned_ptr);
     ASSERT_TRUE(other_ptr.has_value());
     ASSERT_EQ(*other_ptr, 5);

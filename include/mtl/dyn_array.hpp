@@ -17,18 +17,18 @@ class DynArray {
     static constexpr std::size_t default_capacity_ = 12;
     std::size_t size_ = 0;
     std::size_t capacity_ = default_capacity_;
-    OwnedPtr<ValueType[]> data_;
+    OwningPtr<ValueType[]> data_;
 
     // Allocates a copy of data_
-    OwnedPtr<ValueType[]> copy_data(const DynArray& other) {
+    OwningPtr<ValueType[]> copy_data(const DynArray& other) {
         auto copy_ptr = new ValueType[other.capacity()];
         std::memcpy(copy_ptr, other.data(), other.size() * sizeof(ValueType));
-        return OwnedPtr<ValueType[]>(copy_ptr);
+        return OwningPtr<ValueType[]>(copy_ptr);
     }
 
-    OwnedPtr<ValueType[]> allocate_new() {
+    OwningPtr<ValueType[]> allocate_new() {
         auto raw_ptr = new ValueType[capacity_];
-        return OwnedPtr<ValueType[]>(raw_ptr);
+        return OwningPtr<ValueType[]>(raw_ptr);
     }
 
     /// @brief Private so that you must explicitly use `copy()` in order to copy a DynArray
@@ -68,7 +68,7 @@ class DynArray {
         }
         // Update capacity
         capacity_ = new_capacity;
-        OwnedPtr<ValueType[]> temp = std::move(data_);
+        OwningPtr<ValueType[]> temp = std::move(data_);
         data_ = allocate_new();
         std::memmove(data_.get(), temp.get(), size_);
     }
@@ -119,7 +119,7 @@ class DynArray {
 
     ValueType* data() noexcept { return data_.get(); }
     const ValueType* data() const noexcept { return data_.get(); }
-    OwnedPtr<ValueType[]> take_data() { return OwnedPtr<ValueType[]>(data_.release()); }
+    OwningPtr<ValueType[]> take_data() { return OwningPtr<ValueType[]>(data_.release()); }
 
     Iterator<ValueType> iter() {
         if (size() > 0) {

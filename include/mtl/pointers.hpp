@@ -14,25 +14,25 @@ namespace mtl {
  */
 
 template <class T>
-class OwnedPtr {
+class OwningPtr {
   private:
     T* ptr_ = nullptr;
 
   public:
-    OwnedPtr(OwnedPtr& other) = delete;
-    OwnedPtr(const OwnedPtr& other) = delete;
-    OwnedPtr& operator=(const OwnedPtr& other) = delete;
-    OwnedPtr& operator=(OwnedPtr& other) = delete;
+    OwningPtr(OwningPtr& other) = delete;
+    OwningPtr(const OwningPtr& other) = delete;
+    OwningPtr& operator=(const OwningPtr& other) = delete;
+    OwningPtr& operator=(OwningPtr& other) = delete;
 
-    OwnedPtr(OwnedPtr&& other) {
+    OwningPtr(OwningPtr&& other) {
         ptr_ = other.get();
         other.set(nullptr);
     }
-    OwnedPtr& operator=(OwnedPtr&& other) {
+    OwningPtr& operator=(OwningPtr&& other) {
         ptr_ = other.get();
         other.set(nullptr);
     }
-    OwnedPtr& operator=(T* other) { ptr_ = other; }
+    OwningPtr& operator=(T* other) { ptr_ = other; }
     T& operator*() { return *ptr_; }
     const T& operator*() const { return *ptr_; }
 
@@ -51,16 +51,16 @@ class OwnedPtr {
             delete ptr_;
         }
     }
-    void swap(OwnedPtr&& other) {
+    void swap(OwningPtr&& other) {
         const auto temp = other.get();
         other.set(ptr_);
         ptr_ = temp;
     }
 
-    OwnedPtr() = default;
-    OwnedPtr(T* ptr) : ptr_(ptr) {}
-    OwnedPtr(std::nullptr_t) : ptr_(nullptr) {}
-    ~OwnedPtr() { clear(); };
+    OwningPtr() = default;
+    OwningPtr(T* ptr) : ptr_(ptr) {}
+    OwningPtr(std::nullptr_t) : ptr_(nullptr) {}
+    ~OwningPtr() { clear(); };
 
     void set(T* ptr) noexcept { ptr_ = ptr; }
     T* get() noexcept { return ptr_; }
@@ -75,26 +75,26 @@ class OwnedPtr {
 };
 
 template <class T>
-class OwnedPtr<T[]> {
+class OwningPtr<T[]> {
   private:
     T* ptr_ = nullptr;
 
   public:
-    OwnedPtr(OwnedPtr& other) = delete;
-    OwnedPtr(const OwnedPtr& other) = delete;
-    OwnedPtr& operator=(const OwnedPtr& other) = delete;
-    OwnedPtr& operator=(OwnedPtr& other) = delete;
-    OwnedPtr(OwnedPtr&& other) {
+    OwningPtr(OwningPtr& other) = delete;
+    OwningPtr(const OwningPtr& other) = delete;
+    OwningPtr& operator=(const OwningPtr& other) = delete;
+    OwningPtr& operator=(OwningPtr& other) = delete;
+    OwningPtr(OwningPtr&& other) {
         ptr_ = other.get();
         other.set(nullptr);
     }
 
-    OwnedPtr& operator=(OwnedPtr&& other) {
+    OwningPtr& operator=(OwningPtr&& other) {
         ptr_ = other.get();
         other.set(nullptr);
         return *this;
     }
-    OwnedPtr& operator=(T* other) { ptr_ = other; }
+    OwningPtr& operator=(T* other) { ptr_ = other; }
 
     T& operator*() { return *ptr_; }
 
@@ -115,7 +115,7 @@ class OwnedPtr<T[]> {
             delete[] ptr_;
         }
     }
-    void swap(OwnedPtr&& other) {
+    void swap(OwningPtr&& other) {
         const auto temp = other.get();
         other.set(ptr_);
         ptr_ = temp;
@@ -124,10 +124,10 @@ class OwnedPtr<T[]> {
 
     const T& operator[](size_t idx) const noexcept { return ptr_[idx]; }
 
-    OwnedPtr() = default;
-    OwnedPtr(T* ptr) : ptr_(ptr) {}
-    OwnedPtr(std::nullptr_t) : ptr_(nullptr) {}
-    ~OwnedPtr() { clear(); };
+    OwningPtr() = default;
+    OwningPtr(T* ptr) : ptr_(ptr) {}
+    OwningPtr(std::nullptr_t) : ptr_(nullptr) {}
+    ~OwningPtr() { clear(); };
 
     void set(T* ptr) noexcept { ptr_ = ptr; }
     T* get() noexcept { return ptr_; }
@@ -140,9 +140,9 @@ class OwnedPtr<T[]> {
 };
 
 template <typename T, class... Args>
-static OwnedPtr<T> make_owned(Args&&... args) {
+static OwningPtr<T> make_owned(Args&&... args) {
     T* value = new T(std::forward<Args>(args)...);
-    return OwnedPtr<T>(value);
+    return OwningPtr<T>(value);
 }
 
 /**
@@ -153,5 +153,5 @@ class SharedPtr {};
 /**
  * @brief Copyable pointer wrapper. Similar to weak_ptr
  */
-class NonOwnedPtr {};
+class NonOwningPtr {};
 } // namespace mtl
