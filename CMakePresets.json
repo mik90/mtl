@@ -22,8 +22,7 @@
                     "value": "Release"
                 },
                 "ENABLE_TESTING": "ON",
-                "ENABLE_BENCHMARKS": "ON",
-                "BUILD_NN": "ON"
+                "ENABLE_BENCHMARKS": "ON"
             }
         },
         {
@@ -43,7 +42,6 @@
                 },
                 "ENABLE_TESTING": "ON",
                 "ENABLE_BENCHMARKS": "OFF",
-                "BUILD_NN": "ON",
                 "OFFLINE_CONAN": "ON"
             }
         }
@@ -54,21 +52,6 @@
             "configurePreset": "allUnitTestsDebug",
             "targets": [
                 "UnitTest"
-            ]
-        },
-        {
-            "name": "nnUnitTestsDebug",
-            "configurePreset": "allUnitTestsDebug",
-            "targets": [
-                "nnUnitTest"
-            ]
-        },
-        {
-            "name": "allUnitTestsDebug",
-            "configurePreset": "allUnitTestsDebug",
-            "targets": [
-                "UnitTest",
-                "nnUnitTest"
             ]
         },
         {
@@ -89,35 +72,6 @@
                     "name": "NnTest"
                 }
             },
-            "output": {
-                "outputOnFailure": true
-            },
-            "execution": {
-                "noTestsAction": "error",
-                "stopOnFailure": false
-            }
-        },
-        {
-            "name": "nnUnitTestDebug",
-            "displayName": "nn: UnitTest",
-            "configurePreset": "allUnitTestsDebug",
-            "filter": {
-                "include": {
-                    "name": "NnTest"
-                }
-            },
-            "output": {
-                "outputOnFailure": true
-            },
-            "execution": {
-                "noTestsAction": "error",
-                "stopOnFailure": false
-            }
-        },
-        {
-            "name": "allUnitTestDebug",
-            "displayName": "All Unit Tests",
-            "configurePreset": "allUnitTestsDebug",
             "output": {
                 "outputOnFailure": true
             },

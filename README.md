@@ -19,17 +19,6 @@ cmake --build . --target Benchmark
 ./bin/Benchmark`
 ```
 
-# nn
-A tiny neural net lib based on https://github.com/codeplea/genann. Relies on mtl.
-
-## Build and run tests
-```bash
-mkdir build && cd build
-cmake .. -DBUILD_NN=ON -DENABLE_TESTING=ON
-cmake --build . --target nnUnitTest
-./bin/nnUnitTest
-```
-
 
 # Tasklist
 
@@ -116,13 +105,3 @@ cmake --build . --target nnUnitTest
 - [x] cmake setup
 - [ ] test mtl algorithm against std algorithms to ensure it isn't worse
 - [ ] add third party libraries for comparison
-
-### nn
-- [x] In order to test randomization, DynArray needs to be copied
-- [x] impl run
-    - started on this, hard to translate over
-    - [ ] clean up weight_iter logic, use mtl::Maybe with the iterators
-    - The naming of the layers needs ot be clarified
-    - [ ] inputs shouldn't be copied
-- [ ] impl train
-    - [ ] clean up iteration logic, use mtl::Maybe and mtl algos

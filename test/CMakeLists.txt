@@ -25,7 +25,3 @@ target_link_libraries(UnitTest PRIVATE
 )
 
 gtest_discover_tests(UnitTest)
-
-if(BUILD_NN)
-  add_subdirectory(nn)
-endif()

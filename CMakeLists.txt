@@ -45,8 +45,3 @@ if(ENABLE_BENCHMARKS)
   message("Configuring benchmarks...")
   add_subdirectory(benchmark)
 endif()
-
-if(BUILD_NN)
-  message("Configuring nn..")
-  add_subdirectory(nn)
-endif()
