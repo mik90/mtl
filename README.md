@@ -37,7 +37,7 @@ cmake --build . --target Benchmark
 ### algorithm
 
 - algorithmic helpers
-- [x] map,
+- [x] map
 - [ ] reduce
 - [ ] fold
 - [ ] add parallelization option
@@ -91,8 +91,7 @@ cmake --build . --target Benchmark
 
 - [x] start
 - Should i merge ConstIterator and Iterator?
-- should be interchangeable with std iterators
-
+- [ ] should be interchangeable with std iterators
 ### tree-based map
 
 - [ ] start

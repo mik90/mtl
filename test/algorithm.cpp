@@ -8,7 +8,7 @@
 
 TEST(AlgorithmTest, std_map_addition) {
     std::vector<int> vec = {-1, 0, 1, 2};
-    mtl::map(vec.begin(), vec.end(), [](auto& i) { return ++i; });
+    mtl::for_each(vec.begin(), vec.end(), [](auto& i) { return ++i; });
 
     ASSERT_EQ(vec[0], 0);
     ASSERT_EQ(vec[1], 1);
@@ -18,7 +18,7 @@ TEST(AlgorithmTest, std_map_addition) {
 
 TEST(AlgorithmTest, mtl_map_addition) {
     mtl::StaticArray<int, 4> arr = {-1, 0, 1, 2};
-    mtl::map(arr.begin(), arr.end(), [](auto i) { return ++i; });
+    mtl::for_each(arr.begin(), arr.end(), [](auto i) { return ++i; });
 
     ASSERT_EQ(arr[0], 0);
     ASSERT_EQ(arr[1], 1);
@@ -28,7 +28,7 @@ TEST(AlgorithmTest, mtl_map_addition) {
 
 TEST(AlgorithmTest, mtl_map_addition_ref) {
     mtl::StaticArray<int, 4> arr = {-1, 0, 1, 2};
-    mtl::map(arr.begin(), arr.end(), [](auto& i) { return ++i; });
+    mtl::for_each(arr.begin(), arr.end(), [](auto& i) { return ++i; });
 
     ASSERT_EQ(arr[0], 0);
     ASSERT_EQ(arr[1], 1);

@@ -46,11 +46,8 @@
             ]
         },
         {
-            "name": "benchmarksRelease",
-            "configurePreset": "allProjectsRelease",
-            "targets": [
-                "Benchmark"
-            ]
+            "name": "allProjectsRelease",
+            "configurePreset": "allProjectsRelease"
         }
     ],
     "testPresets": [
@@ -58,11 +55,6 @@
             "name": "mtlUnitTestDebug",
             "displayName": "mtl: UnitTest",
             "configurePreset": "allUnitTestsDebug",
-            "filter": {
-                "exclude": {
-                    "name": "NnTest"
-                }
-            },
             "output": {
                 "outputOnFailure": true
             },
