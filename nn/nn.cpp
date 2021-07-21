@@ -249,17 +249,66 @@ mtl::Result<mtl::Ok, mtl::Error> Nn::run(const mtl::DynArray<FpType>& inputs) {
     return Ok{};
 }
 
-mtl::Result<mtl::Ok, mtl::Error> set_output_layer_deltas() {
+mtl::Result<mtl::Ok, mtl::Error>
+Nn::set_output_layer_deltas(const mtl::DynArray<FpType>& desired_outputs) {
 
-    // in genann:double const *o = ann->output + ann->inputs + ann->hidden * ann->hidden_layers
-    // This is taking the (output_ptr + input_ptr + (0 or 1 for hidden) * n_hidden_layers to find
-    // the delta
+    auto delta_iter = deltas_.iter();
+    auto desired_output_iter = desired_outputs.c_iter();
+    auto output_iter = outputs_.c_iter();
+    if (output_activation_func_ == ActivationFuncKind::SIGMOID_LINEAR) {
+        for (std::size_t i = 0; i < n_outputs_; ++i) {
+            *delta_iter++ = *desired_output_iter++ - *output_iter++;
+        }
+    } else {
+        for (std::size_t i = 0; i < n_outputs_; ++i) {
+            *delta_iter++ =
+                (*desired_output_iter - *output_iter) * *output_iter * (FpType(1.0) - *output_iter);
+            ++desired_output_iter;
+            ++output_iter;
+        }
+    }
 
     return Ok{};
 }
-mtl::Result<mtl::Ok, mtl::Error> set_hidden_layer_deltas() { return Ok{}; }
-mtl::Result<mtl::Ok, mtl::Error> train_output_layer() { return Ok{}; }
-mtl::Result<mtl::Ok, mtl::Error> train_hidden_layer() { return Ok{}; }
+mtl::Result<mtl::Ok, mtl::Error> Nn::set_hidden_layer_deltas() {
+#if 0
+    for (h = ann->hidden_layers - 1; h >= 0; --h) {
+
+        /* Find first output and delta in this layer. */
+        double const *o = ann->output + ann->inputs + (h * ann->hidden);
+        double *d = ann->delta + (h * ann->hidden);
+
+        /* Find first delta in following layer (which may be hidden or output). */
+        double const * const dd = ann->delta + ((h+1) * ann->hidden);
+
+        /* Find first weight in following layer (which may be hidden or output). */
+        double const * const ww = ann->weight + ((ann->inputs+1) * ann->hidden) + ((ann->hidden+1) * ann->hidden * (h));
+
+        for (j = 0; j < ann->hidden; ++j) {
+
+            double delta = 0;
+
+            for (k = 0; k < (h == ann->hidden_layers-1 ? ann->outputs : ann->hidden); ++k) {
+                const double forward_delta = dd[k];
+                const int windex = k * (ann->hidden + 1) + (j + 1);
+                const double forward_weight = ww[windex];
+                delta += forward_delta * forward_weight;
+            }
+
+            *d = *o * (1.0-*o) * delta;
+            ++d; ++o;
+        }
+    }
+#endif
+    auto hidden_layers_left = n_hidden_layers_;
+    // Iterate through hidden layers backwards
+    static_cast<void>(hidden_layers_left);
+
+    return Ok{};
+}
+mtl::Result<mtl::Ok, mtl::Error> Nn::train_output_layer() { return Ok{}; }
+mtl::Result<mtl::Ok, mtl::Error> Nn::train_hidden_layers() { return Ok{}; }
+
 mtl::Result<mtl::Ok, mtl::Error> Nn::train(const mtl::DynArray<FpType>& inputs,
                                            const mtl::DynArray<FpType>& desired_outputs,
                                            FpType learning_rate) {
@@ -267,6 +316,28 @@ mtl::Result<mtl::Ok, mtl::Error> Nn::train(const mtl::DynArray<FpType>& inputs,
 
     static_cast<void>(learning_rate);
     static_cast<void>(desired_outputs);
+
+    auto res = set_output_layer_deltas(desired_outputs);
+    if (res.is_err()) {
+        return res;
+    }
+
+    if (n_hidden_ > 0) {
+        res = set_hidden_layer_deltas();
+        if (res.is_err()) {
+            return res;
+        }
+    }
+
+    res = train_output_layer();
+    if (res.is_err()) {
+        return res;
+    }
+
+    res = train_hidden_layers();
+    if (res.is_err()) {
+        return res;
+    }
 
     return Ok{};
 }

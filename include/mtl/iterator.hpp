@@ -34,6 +34,19 @@ class ConstIterator {
         }
     }
 
+    // Prefix
+    ConstIterator& operator++() {
+        ++cur_;
+        return *this;
+    }
+
+    // Postfix
+    ConstIterator operator++(int) {
+        auto temp = *this;
+        ++*this;
+        return temp;
+    }
+
     Maybe<ValueType> copy_value() const {
         if (not_null()) {
             return *cur_;
@@ -75,6 +88,18 @@ class Iterator {
             return Iterator{++cur_};
         }
     }
+    // Prefix
+    Iterator& operator++() {
+        ++cur_;
+        return *this;
+    }
+
+    // Postfix
+    Iterator operator++(int) {
+        auto temp = *this;
+        ++*this;
+        return temp;
+    }
 
     Maybe<ValueType> copy_value() const {
         if (not_null()) {
@@ -84,6 +109,7 @@ class Iterator {
         }
     }
 
+    ValueType& operator*() const { return *cur_; }
     bool is_null() const noexcept { return cur_ == nullptr; }
     bool not_null() const noexcept { return !is_null(); }
 };

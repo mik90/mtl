@@ -50,10 +50,11 @@ class Nn {
     mtl::Result<mtl::Ok, mtl::Error> run_output_layer(RunState& state);
     mtl::Result<mtl::Ok, mtl::Error> run_without_hidden_layers(RunState& state);
 
-    mtl::Result<mtl::Ok, mtl::Error> set_output_layer_deltas();
+    mtl::Result<mtl::Ok, mtl::Error>
+    set_output_layer_deltas(const mtl::DynArray<FpType>& desired_outputs);
     mtl::Result<mtl::Ok, mtl::Error> set_hidden_layer_deltas();
     mtl::Result<mtl::Ok, mtl::Error> train_output_layer();
-    mtl::Result<mtl::Ok, mtl::Error> train_hidden_layer();
+    mtl::Result<mtl::Ok, mtl::Error> train_hidden_layers();
 
     mtl::StaticArray<FpType, 4096> lookup_table_;
     FpType table_interval_ = 0;

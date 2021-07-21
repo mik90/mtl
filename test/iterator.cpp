@@ -37,4 +37,35 @@ TEST(IteratorTest, copy_value_none) {
     ASSERT_TRUE(value.is_none());
 }
 
-// TEST(IteratorTest, iterate_over_std_vector) {}
+TEST(IteratorTest, increment_prefix) {
+    auto arr = DynArray<int>{0, 1, 2, 3};
+    auto c_iter = arr.c_iter();
+    auto iter = arr.iter();
+
+    ASSERT_EQ(*++iter, arr[1]);
+    ASSERT_EQ(*++c_iter, arr[1]);
+
+    ASSERT_EQ(*++iter, arr[2]);
+    ASSERT_EQ(*++c_iter, arr[2]);
+
+    ASSERT_EQ(*++iter, arr[3]);
+    ASSERT_EQ(*++c_iter, arr[3]);
+}
+
+TEST(IteratorTest, increment_postfix) {
+    auto arr = DynArray<int>{0, 1, 2, 3};
+    auto c_iter = arr.c_iter();
+    auto iter = arr.iter();
+
+    ASSERT_EQ(*iter++, arr[0]);
+    ASSERT_EQ(*c_iter++, arr[0]);
+
+    ASSERT_EQ(*iter++, arr[1]);
+    ASSERT_EQ(*c_iter++, arr[1]);
+
+    ASSERT_EQ(*iter++, arr[2]);
+    ASSERT_EQ(*c_iter++, arr[2]);
+
+    ASSERT_EQ(*iter++, arr[3]);
+    ASSERT_EQ(*c_iter++, arr[3]);
+}
