@@ -4,6 +4,7 @@ add_executable(UnitTest
   algorithm.cpp
   dyn_array.cpp
   iterator.cpp
+  hash_map.cpp
   main.cpp
   maybe.cpp
   static_array.cpp

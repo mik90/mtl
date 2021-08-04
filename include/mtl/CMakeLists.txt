@@ -2,11 +2,13 @@ add_library(mtl INTERFACE
   algorithm.hpp
   dyn_array.hpp
   iterator.hpp
+  hash_map.hpp
   maybe.hpp
   memoize.hpp
   pointers.hpp
   result.hpp
   static_array.hpp
+  "string.hpp"
   wrapped_var.hpp
 )
 

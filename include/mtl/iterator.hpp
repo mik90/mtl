@@ -1,7 +1,7 @@
-
 #pragma once
 
 #include "mtl/maybe.hpp"
+#include <iterator>
 #include <type_traits>
 
 namespace mtl {
@@ -21,6 +21,11 @@ class ConstIterator {
   public:
     explicit ConstIterator(const ValueType* iterable) : cur_(iterable) {}
     explicit ConstIterator() : cur_(nullptr) {}
+    using iterator_category = std::bidirectional_iterator_tag;
+    using value_type = ValueType;
+    using difference_type = std::ptrdiff_t;
+    using reference = const ValueType&;
+    using pointer = const ValueType*;
 
     /// @todo Create static factory template that calls .begin() on a container. similar to
     /// std::begin
@@ -67,6 +72,11 @@ class Iterator {
   public:
     explicit Iterator(ValueType* iterable) : cur_(iterable) {}
     explicit Iterator() : cur_(nullptr) {}
+    using iterator_category = std::bidirectional_iterator_tag;
+    using value_type = ValueType;
+    using difference_type = std::ptrdiff_t;
+    using reference = ValueType&;
+    using pointer = ValueType*;
 
     template <class ContainerType>
     explicit Iterator(ContainerType& iterable) {

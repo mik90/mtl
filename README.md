@@ -1,5 +1,5 @@
 # mtl
-A C++ template library
+A basic C++ template library
 
 For usage, all that's needed is the include/mtl directory
 
@@ -71,16 +71,22 @@ cmake --build . --target Benchmark
     - done with `copy()`
 
 ### hash map
-- [ ] start
+- [x] start
+- [ ] Look in here for something to impl https://en.wikipedia.org/wiki/List_of_hash_functions 
 
-### iterators
-- [ ] start
+### iterator
+- [x] start
+- Should i merge ConstIterator and Iterator?
 - should be interchangeable with std iterators
 
 ### tree-based map
 - [ ] start
+- B-tree or Red-Black map
 
 ### set
+- [ ] start
+
+### hash set
 - [ ] start
 
 ### linked list
@@ -94,11 +100,11 @@ cmake --build . --target Benchmark
 - [ ] directed acyclic
 - [ ] cyclic
 
-### iterator
-- [ ] should be interchangeable with std iterators
-
 ### string
 - utf8 text
+    - it may be easiest to start with ASCII
+- [ ] ConstantString
+    - [ ] user defined literal
 - no null termination
 
 ### benchmarks
