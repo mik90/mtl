@@ -13,10 +13,6 @@
             "generator": "Ninja",
             "binaryDir": "./build",
             "cacheVariables": {
-                "CONAN_PROFILE": {
-                    "type": "STRING",
-                    "value": "default"
-                },
                 "CMAKE_BUILD_TYPE": {
                     "type": "STRING",
                     "value": "Release"
@@ -32,17 +28,12 @@
             "generator": "Ninja",
             "binaryDir": "./build",
             "cacheVariables": {
-                "CONAN_PROFILE": {
-                    "type": "STRING",
-                    "value": "default"
-                },
                 "CMAKE_BUILD_TYPE": {
                     "type": "STRING",
                     "value": "Debug"
                 },
                 "ENABLE_TESTING": "ON",
-                "ENABLE_BENCHMARKS": "OFF",
-                "OFFLINE_CONAN": "ON"
+                "ENABLE_BENCHMARKS": "OFF"
             }
         }
     ],
