@@ -17,8 +17,6 @@ include(cmake/StaticAnalyzers.cmake)
 
 option(ENABLE_TESTING "Enable Test Builds" ON)
 option(ENABLE_BENCHMARKS "Enable Benchmarks" OFF)
-option(BUILD_NN "Build tiny neural net lib" ON)
-option(OFFLINE_CONAN "Avoids adding any conan remotes" OFF)
 
 set(CONAN_EXTRA_REQUIRES "")
 set(CONAN_EXTRA_OPTIONS "")
