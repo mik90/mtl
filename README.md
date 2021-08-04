@@ -65,14 +65,15 @@ cmake --build . --target Benchmark
 
 ### dynamic array
 - [x] impl using a mtl::OwningPtr
-- [x] deal with segfault in DynArrayTest.default_capacity
+- [x] deal with segfault in `DynArrayTest.default_capacity`
     - CTest lists out the test segfault
 - [x] Allow for copy construction
     - done with `copy()`
 
 ### hash map
 - [x] start
-- [ ] Look in here for something to impl https://en.wikipedia.org/wiki/List_of_hash_functions 
+- [ ] Look in here for something to impl `https://en.wikipedia.org/wiki/List_of_hash_functions`
+    - probably non-cryptographic hash functions
 
 ### iterator
 - [x] start
