@@ -72,8 +72,11 @@ cmake --build . --target Benchmark
 
 ### hash map
 - [x] start
-- [ ] Look in here for something to impl `https://en.wikipedia.org/wiki/List_of_hash_functions`
+- [x] Look in here for something to impl `https://en.wikipedia.org/wiki/List_of_hash_functions`
     - probably non-cryptographic hash functions
+    - gonna use jenkins's one_at_a_time function
+- [ ] read into https://abseil.io/docs/cpp/guides/container#hash-tables
+- [ ] impl other hashes and test em
 
 ### iterator
 - [x] start

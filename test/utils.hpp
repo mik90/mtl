@@ -4,6 +4,8 @@
  * @brief Unit test helpers
  */
 
+#include <mtl/types.hpp>
+
 namespace test {
 
 struct MoveOnlyInt {

@@ -9,6 +9,7 @@ add_library(mtl INTERFACE
   result.hpp
   static_array.hpp
   "string.hpp"
+  types.hpp
   wrapped_var.hpp
 )
 

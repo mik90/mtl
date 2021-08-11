@@ -3,6 +3,7 @@
 #include "mtl/iterator.hpp"
 #include "mtl/maybe.hpp"
 #include "mtl/pointers.hpp"
+#include "mtl/types.hpp"
 #include <cstddef>
 #include <cstdlib>
 #include <cstring>
@@ -15,9 +16,9 @@ namespace mtl {
 template <typename ValueType>
 class DynArray {
   private:
-    static constexpr std::size_t default_capacity_ = 12;
-    std::size_t size_ = 0;
-    std::size_t capacity_ = default_capacity_;
+    static constexpr usize default_capacity_ = 12;
+    usize size_ = 0;
+    usize capacity_ = default_capacity_;
     OwningPtr<ValueType[]> data_;
 
     // Allocates a copy of data_
@@ -36,11 +37,11 @@ class DynArray {
     DynArray(const DynArray& other)
         : size_(other.size()), capacity_(other.capacity()), data_(copy_data(other)) {}
 
-    DynArray(std::size_t capacity) : size_(0), capacity_(capacity), data_(allocate_new()) {}
+    DynArray(usize capacity) : size_(0), capacity_(capacity), data_(allocate_new()) {}
 
   public:
     DynArray() : size_(0), capacity_(default_capacity_), data_(allocate_new()) {}
-    static DynArray make_with_capacity(std::size_t capacity) { return DynArray(capacity); }
+    static DynArray make_with_capacity(usize capacity) { return DynArray(capacity); }
 
     DynArray copy() const { return DynArray(*this); }
 
@@ -58,7 +59,7 @@ class DynArray {
         return *this;
     }
 
-    void set_capacity(std::size_t new_capacity) {
+    void set_capacity(usize new_capacity) {
         if (new_capacity == capacity_) {
             // No change
             return;
@@ -118,11 +119,11 @@ class DynArray {
         }
     }
 
-    ValueType& operator[](size_t idx) { return data_[idx]; }
+    ValueType& operator[](usize idx) { return data_[idx]; }
 
-    const ValueType& operator[](size_t idx) const noexcept { return data_[idx]; }
+    const ValueType& operator[](usize idx) const noexcept { return data_[idx]; }
 
-    Maybe<ValueType> maybe_copy_at(size_t idx) const {
+    Maybe<ValueType> maybe_copy_at(usize idx) const {
         if (idx > size_) {
             return None{};
         }
@@ -130,8 +131,8 @@ class DynArray {
         return Some{data_[idx]};
     }
 
-    std::size_t capacity() const noexcept { return capacity_; }
-    std::size_t size() const noexcept { return size_; }
+    usize capacity() const noexcept { return capacity_; }
+    usize size() const noexcept { return size_; }
     bool is_empty() const noexcept { return size_ == 0; }
     bool has_values() const noexcept { return !is_empty(); }
 

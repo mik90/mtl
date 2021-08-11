@@ -10,13 +10,14 @@
 #include "mtl/algorithm.hpp"
 #include "mtl/iterator.hpp"
 #include "mtl/maybe.hpp"
+#include "mtl/types.hpp"
 
 namespace mtl {
 
 /**
  * @brief Array with a static capacity and variable size
  */
-template <typename ValueType, size_t Capacity>
+template <typename ValueType, usize Capacity>
 class StaticArray {
   public:
     StaticArray() {}
@@ -34,8 +35,8 @@ class StaticArray {
                       [this](const auto& item) { return this->data_[this->size_++] = item; });
     }
 
-    size_t size() const noexcept { return size_; }
-    size_t capacity() const noexcept { return capacity_; }
+    usize size() const noexcept { return size_; }
+    usize capacity() const noexcept { return capacity_; }
     bool is_empty() const noexcept { return size_ == 0; }
     bool has_values() const noexcept { return !is_empty(); }
 
@@ -81,11 +82,11 @@ class StaticArray {
         return false;
     }
 
-    ValueType& operator[](size_t idx) { return data_[idx]; }
+    ValueType& operator[](usize idx) { return data_[idx]; }
 
-    const ValueType& operator[](size_t idx) const noexcept { return data_[idx]; }
+    const ValueType& operator[](usize idx) const noexcept { return data_[idx]; }
 
-    Maybe<ValueType> maybe_copy_at(size_t idx) const {
+    Maybe<ValueType> maybe_copy_at(usize idx) const {
         // Capacity should never be greater than size_, but the compiler warns about the possiblity
         if (idx >= size_ || idx >= capacity_) {
             return None{};
@@ -97,7 +98,7 @@ class StaticArray {
     // Simply resets size, doesn't destroy anything
     void reset() noexcept { size_ = 0; }
 
-    Maybe<ValueType> remove_at(size_t idx) {
+    Maybe<ValueType> remove_at(usize idx) {
         // Capacity should never be greater than size_, but the compiler warns about the possiblity
         if (idx >= size_ || idx >= capacity_) {
             return None{};
@@ -123,7 +124,7 @@ class StaticArray {
             const auto deleted_item_ptr = &data_[idx];
             const auto start_of_range_to_move = &data_[idx + 1];
             const auto n_bytes_to_move =
-                sizeof(ValueType) * static_cast<std::size_t>(end() - start_of_range_to_move);
+                sizeof(ValueType) * static_cast<usize>(end() - start_of_range_to_move);
             std::memmove(deleted_item_ptr, start_of_range_to_move, n_bytes_to_move);
         } else {
             // Idx was at the end of the array so no data needs to be shifted over
@@ -133,9 +134,9 @@ class StaticArray {
     }
 
   private:
-    const size_t capacity_ = Capacity;
+    const usize capacity_ = Capacity;
     ValueType data_[Capacity];
-    size_t size_ = 0;
+    usize size_ = 0;
 };
 
 /**
