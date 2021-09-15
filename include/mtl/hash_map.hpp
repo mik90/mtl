@@ -55,7 +55,7 @@ class HashMap {
     mtl::Maybe<KeyAndValue> insert(KeyType key, ValueType value) {
         const auto hash = HashType(static_cast<const u8*>(&key), sizeof(KeyType));
         static_cast<void>(value);
-        // TODO!
+        /// @todo hash buckets n'at
     }
 
     /// @brief Number of key:value pairs in the map
