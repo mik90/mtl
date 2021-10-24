@@ -3,6 +3,7 @@ add_library(mtl INTERFACE
   dyn_array.hpp
   iterator.hpp
   hash_map.hpp
+  linked_list.hpp
   maybe.hpp
   memoize.hpp
   pointers.hpp

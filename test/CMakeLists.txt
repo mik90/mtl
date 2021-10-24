@@ -26,4 +26,8 @@ target_link_libraries(UnitTest PRIVATE
 	mtl
 )
 
+set_target_properties(UnitTest PROPERTIES
+  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+)
+
 gtest_discover_tests(UnitTest)

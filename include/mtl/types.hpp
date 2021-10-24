@@ -2,6 +2,10 @@
 
 #include <cstddef>
 #include <cstdint>
+
+/**
+ * @brief Primitive types
+ */
 namespace mtl {
 
 using usize = std::size_t;

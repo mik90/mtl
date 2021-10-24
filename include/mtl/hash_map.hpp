@@ -4,45 +4,45 @@
 #include <cstddef>
 #include <cstdint>
 #include <mtl/dyn_array.hpp>
-#include <mtl/static_array.hpp>
+#include <mtl/linked_list.hpp>
 #include <mtl/types.hpp>
 
 namespace mtl {
-class Hash {
-  public:
-    virtual usize hash_size_bytes() const noexcept;
-    // TODO How to set a "value" method of variable type here?
-    virtual ~Hash();
-
-  private:
-};
+using Hash = u32;
 
 /// @brief Pulled from https://en.wikipedia.org/wiki/Jenkins_hash_function
-class JenkinsOneAtATime : public Hash {
+class Hasher {
   public:
-    static constexpr usize hash_size = 4; // 32-bits
-    usize hash_size_bytes() const noexcept override { return hash_size; };
-
-    JenkinsOneAtATime(const u8* raw_bytes, usize size) {
+    // Creates hash values from raw data
+    static Hash JenkinsOneAtATime(const u8* raw_bytes, usize size) {
         usize i = 0;
-        hash_ = 0;
+        Hash hash = 0;
         while (i != size) {
-            hash_ += raw_bytes[i++];
-            hash_ += hash_ << 10;
-            hash_ ^= hash_ >> 6;
+            hash += raw_bytes[i++];
+            hash += hash << 10;
+            hash ^= hash >> 6;
         }
-        hash_ += hash_ << 3;
-        hash_ ^= hash_ >> 11;
-        hash_ += hash_ << 15;
+        hash += hash << 3;
+        hash ^= hash >> 11;
+        hash += hash << 15;
+        return hash;
     }
-
-    u32 value() const noexcept { return hash_; }
-
-  private:
-    u32 hash_;
+    static Hash JenkinsOneAtATime(const char* raw_bytes, usize size) {
+        usize i = 0;
+        Hash hash = 0;
+        while (i != size) {
+            hash += static_cast<u32>(raw_bytes[i++]);
+            hash += hash << 10;
+            hash ^= hash >> 6;
+        }
+        hash += hash << 3;
+        hash ^= hash >> 11;
+        hash += hash << 15;
+        return hash;
+    }
 };
 
-template <class KeyType, class ValueType, class HashType = JenkinsOneAtATime>
+template <class KeyType, class ValueType>
 class HashMap {
   public:
     struct KeyAndValue {
@@ -53,9 +53,14 @@ class HashMap {
 
     /// @brief Maybe return the previously existing key/pair
     mtl::Maybe<KeyAndValue> insert(KeyType key, ValueType value) {
-        const auto hash = HashType(static_cast<const u8*>(&key), sizeof(KeyType));
+        const auto key_ptr = &key;
+        const auto hash =
+            Hasher::JenkinsOneAtATime(static_cast<const u8*>(key_ptr), sizeof(KeyType));
+        const usize idx = hash % values_.length();
+        keys_.push_back(std::move(key));
+        /// @todo add to map values_[idx].emplace_back
         static_cast<void>(value);
-        /// @todo hash buckets n'at
+        static_cast<void>(idx);
     }
 
     /// @brief Number of key:value pairs in the map
@@ -66,6 +71,6 @@ class HashMap {
 
   private:
     DynArray<KeyType> keys_;
-    DynArray<ValueType> values_;
+    DynArray<LinkedList<ValueType>> values_;
 };
 } // namespace mtl
