@@ -1,8 +1,29 @@
 # mtl
 
+<<<<<<< HEAD
 A basic C++ template library
+=======
+A C++ template library
+>>>>>>> 25a8625 (rename files as test)
 
 For usage, all that's needed is the include/mtl directory
+
+## Features
+
+### WrappedVar wraps a variable with a mutex
+
+```cpp
+mtl::WrappedVar<int> wrapped_int{3};
+auto var_with_lock = wrapped_int.get();
+ASSERT_EQ(var_with_lock.get_ref(), 3);
+```
+
+### DynArray that must be explicitly copied
+
+```cpp
+const auto arr = mtl::DynArray<int>({0, 1, 2, 3});
+auto new_arr = arr.copy();
+```
 
 ## Build and run tests
 
@@ -79,7 +100,6 @@ cmake --build . --target Benchmark
   - done with `copy()`
 
 ### hash map
-
 - [x] start
 - [x] Look in here for something to impl `https://en.wikipedia.org/wiki/List_of_hash_functions`
   - probably non-cryptographic hash functions
@@ -92,6 +112,7 @@ cmake --build . --target Benchmark
 - [x] start
 - Should i merge ConstIterator and Iterator?
 - [ ] should be interchangeable with std iterators
+
 ### tree-based map
 
 - [ ] start
