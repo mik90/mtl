@@ -5,7 +5,6 @@
 namespace mtl {
 
 using usize = std::size_t;
-using ssize = std::ptrdiff_t; // lol, where the heck is ssize_t?
 
 using u8 = std::uint8_t;
 using i8 = std::int8_t;
