@@ -1,10 +1,6 @@
 # mtl
 
-<<<<<<< HEAD
 A basic C++ template library
-=======
-A C++ template library
->>>>>>> 25a8625 (rename files as test)
 
 For usage, all that's needed is the include/mtl directory
 
@@ -100,6 +96,7 @@ cmake --build . --target Benchmark
   - done with `copy()`
 
 ### hash map
+
 - [x] start
 - [x] Look in here for something to impl `https://en.wikipedia.org/wiki/List_of_hash_functions`
   - probably non-cryptographic hash functions
@@ -146,7 +143,7 @@ cmake --build . --target Benchmark
   - it may be easiest to start with ASCII
 - [ ] ConstantString
   - [ ] user defined literal
-- no null termination
+  - `std::string_view` but null-termintaes
 
 ### benchmarks
 

@@ -1,16 +1,18 @@
 include(GoogleTest)
 
 add_executable(UnitTest
+  main.cpp
   test_algorithm.cpp
   test_dyn_array.cpp
+  test_hash_map.cpp
   test_iterator.cpp
-  main.cpp
   test_maybe.cpp
   test_static_array.cpp
+  test_memoize.cpp
   test_pointers.cpp
   test_result.cpp
-  utils.hpp
   test_wrapped_var.cpp
+  utils.hpp
 )
 
 target_include_directories(UnitTest PRIVATE
