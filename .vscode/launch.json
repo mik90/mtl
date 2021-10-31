@@ -8,7 +8,7 @@
             "name": "mtlUnitTest",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/build/test/UnitTest",
+            "program": "${workspaceFolder}/build/bin/UnitTest",
             "args": [
                 "--gtest_filter=${input:gtest_filter}"
             ],

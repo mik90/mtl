@@ -31,9 +31,7 @@ class DynArray {
 
     // Allocates the memory needed for data_
     OwningPtr<ValueType[]> allocate_new() {
-        const auto bytes = capacity_ * sizeof(ValueType);
-        // Allocate uninitialized memory
-        auto raw_ptr = static_cast<ValueType*>(::operator new[](bytes));
+        auto raw_ptr = new ValueType[capacity_];
         return OwningPtr<ValueType[]>(raw_ptr);
     }
 
@@ -48,15 +46,6 @@ class DynArray {
   public:
     DynArray() : size_(0), capacity_(default_capacity_), data_(allocate_new()) {}
     static DynArray make_with_capacity(usize capacity) { return DynArray(capacity); }
-    ~DynArray() {
-        /// Since the pointer has a bunch of uninitialized memory, just delete it
-        /// @todo Should I track what values are initialized and what arent so a dtor can be run on
-        /// them?
-        const auto ptr = static_cast<ValueType*>(data_.release());
-        if (ptr) {
-            delete ptr;
-        }
-    }
 
     DynArray(std::initializer_list<ValueType> list) : size_(0), capacity_(default_capacity_) {
         data_ = allocate_new();
