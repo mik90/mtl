@@ -6,11 +6,11 @@
     "configurations": [
         {
             "name": "mtlUnitTest",
-            "type": "cppdbg",
+            "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/build/test/UnitTest",
             "args": [
-                "--gtest_filter=*"
+                "--gtest_filter=${input:gtest_filter}"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -23,26 +23,14 @@
                     "ignoreFailures": true
                 }
             ]
-        },
+        }
+    ],
+    "inputs": [
         {
-            "name": "nnUnitTest",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/test/nn/nnUnitTest",
-            "args": [
-                "--gtest_filter=*"
-            ],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ]
+            "id": "gtest_filter",
+            "description": "Filter to use for GoogleTest",
+            "type": "promptString",
+            "default": "*"
         }
     ]
 }

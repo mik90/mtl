@@ -41,6 +41,10 @@ cmake --build . --target Benchmark
 
 ## Tasklist
 
+### General stuff
+
+- [ ] Build/test with sanitizers enabled
+
 ### result
 
 - [x] Allow for move-only types

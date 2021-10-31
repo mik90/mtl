@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <cstdlib>
 #include <cstring>
+#include <new>
 #include <utility>
 
 namespace mtl {
@@ -28,8 +29,11 @@ class DynArray {
         return OwningPtr<ValueType[]>(copy_ptr);
     }
 
+    // Allocates the memory needed for data_
     OwningPtr<ValueType[]> allocate_new() {
-        auto raw_ptr = new ValueType[capacity_];
+        const auto bytes = capacity_ * sizeof(ValueType);
+        // Allocate uninitialized memory
+        auto raw_ptr = static_cast<ValueType*>(::operator new[](bytes));
         return OwningPtr<ValueType[]>(raw_ptr);
     }
 
@@ -39,9 +43,34 @@ class DynArray {
 
     DynArray(usize capacity) : size_(0), capacity_(capacity), data_(allocate_new()) {}
 
+    void increase_capacity() { set_capacity(capacity_ * 2); }
+
   public:
     DynArray() : size_(0), capacity_(default_capacity_), data_(allocate_new()) {}
     static DynArray make_with_capacity(usize capacity) { return DynArray(capacity); }
+    ~DynArray() {
+        /// Since the pointer has a bunch of uninitialized memory, just delete it
+        /// @todo Should I track what values are initialized and what arent so a dtor can be run on
+        /// them?
+        const auto ptr = static_cast<ValueType*>(data_.release());
+        if (ptr) {
+            delete ptr;
+        }
+    }
+
+    DynArray(std::initializer_list<ValueType> list) : size_(0), capacity_(default_capacity_) {
+        data_ = allocate_new();
+
+        auto begin = list.begin();
+        auto end = list.end();
+        // Limit the amount of values copied over if it's greater than the capacity
+        if (list.size() > capacity_) {
+            set_capacity(list.size());
+        }
+
+        std::for_each(begin, end,
+                      [this](const auto& item) { return this->data_[this->size_++] = item; });
+    }
 
     DynArray copy() const { return DynArray(*this); }
 
@@ -75,32 +104,18 @@ class DynArray {
         std::memmove(data_.get(), temp.get(), size_);
     }
 
-    DynArray(std::initializer_list<ValueType> list) : size_(0), capacity_(default_capacity_) {
-        data_ = allocate_new();
-
-        auto begin = list.begin();
-        auto end = list.end();
-        // Limit the amount of values copied over if it's greater than the capacity
-        if (list.size() > capacity_) {
-            set_capacity(list.size());
-        }
-
-        std::for_each(begin, end,
-                      [this](const auto& item) { return this->data_[this->size_++] = item; });
-    }
-
-    void push_back(const ValueType& value) {
+    template <class... Args>
+    void emplace_back(Args&&... args) {
         if (size_ >= capacity_) {
             set_capacity(capacity_ * 2);
         }
-        data_[size_++] = value;
+        new (&data_[size_]) ValueType(std::forward<Args>(args)...);
+        ++size_;
     }
-    void push_back(ValueType&& value) {
-        if (size_ >= capacity_) {
-            set_capacity(capacity_ * 2);
-        }
-        data_[size_++] = std::move(value);
-    }
+
+    void push_back(const ValueType& value) { emplace_back(value); }
+
+    void push_back(ValueType&& value) { emplace_back(std::move(value)); }
 
     /// @brief fill entirety of the array with a given value
     void fill_with(const ValueType& value) {

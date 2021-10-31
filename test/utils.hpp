@@ -27,6 +27,7 @@ struct MoveOnlyInt {
     MoveOnlyInt(int value) : value_(value){};
     int get_value() const noexcept { return value_; }
 };
+
 inline bool operator==(const MoveOnlyInt& lhs, const MoveOnlyInt& rhs) {
     return lhs.get_value() == rhs.get_value();
 }
@@ -46,5 +47,19 @@ struct CopyableType {
     CopyableType() = default;
     ~CopyableType() = default;
 };
+
+struct NonDefaultConstructableType {
+  private:
+    int value_;
+
+  public:
+    NonDefaultConstructableType() = delete;
+    NonDefaultConstructableType(int value) : value_(value){};
+    int get_value() const noexcept { return value_; }
+};
+inline bool operator==(const NonDefaultConstructableType& lhs, int rhs) {
+    return lhs.get_value() == rhs;
+}
+inline bool operator!=(const NonDefaultConstructableType& lhs, int rhs) { return !(lhs == rhs); }
 
 } // namespace test

@@ -47,7 +47,7 @@ class OwningPtr {
     bool is_null() const noexcept { return !has_value(); }
     operator bool() const noexcept { return has_value(); }
     void clear() {
-        if (ptr_ != nullptr) {
+        if (ptr_) {
             delete ptr_;
         }
     }
@@ -110,8 +110,9 @@ class OwningPtr<T[]> {
     bool has_value() const noexcept { return ptr_ != nullptr; }
     bool is_null() const noexcept { return !has_value(); }
     operator bool() const noexcept { return has_value(); }
+
     void clear() {
-        if (ptr_ != nullptr) {
+        if (ptr_) {
             delete[] ptr_;
         }
     }

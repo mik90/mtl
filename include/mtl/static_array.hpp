@@ -67,20 +67,19 @@ class StaticArray {
     const ValueType* cend() const noexcept { return data_ + size_; }
 
     /// @brief Add an element if there's room, otherwise disregard it and return false
-    bool push_back(const ValueType& value) {
+    template <class... Args>
+    bool emplace_back(Args&&... args) {
         if (size_ < capacity_) {
-            data_[size_++] = value;
+            new (&data_[size_]) ValueType(std::forward<Args>(args)...);
+            ++size_;
             return true;
         }
         return false;
     }
-    bool push_back(ValueType&& value) {
-        if (size_ < capacity_) {
-            data_[size_++] = std::move(value);
-            return true;
-        }
-        return false;
-    }
+
+    bool push_back(const ValueType& value) { return emplace_back(value); }
+
+    bool push_back(ValueType&& value) { return emplace_back(std::move(value)); }
 
     ValueType& operator[](usize idx) { return data_[idx]; }
 

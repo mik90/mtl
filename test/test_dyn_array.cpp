@@ -1,7 +1,9 @@
 #include "mtl/dyn_array.hpp"
+#include "utils.hpp"
 #include <cmath>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <gtest/internal/gtest-internal.h>
 
 TEST(DynArrayTest, ctor) {
     mtl::DynArray<int> arr;
@@ -198,4 +200,25 @@ TEST(DynArrayTest, fill_capacity_generator_func) {
     for (const auto& elem : arr) {
         ASSERT_EQ(elem, 5);
     }
+}
+
+TEST(DynArrayTest, emplace_back) {
+    auto arr = mtl::DynArray<int>();
+    arr.emplace_back(3);
+    ASSERT_EQ(arr.size(), 1);
+    ASSERT_EQ(arr[0], 3);
+}
+
+TEST(DynArrayTest, emplace_back_move_only) {
+    auto arr = mtl::DynArray<test::MoveOnlyInt>();
+    arr.emplace_back(3);
+    ASSERT_EQ(arr.size(), 1);
+    ASSERT_EQ(arr[0], 3);
+}
+
+TEST(DynArrayTest, emplace_back_non_default_Ctor) {
+    auto arr = mtl::DynArray<test::NonDefaultConstructableType>();
+    arr.emplace_back(3);
+    ASSERT_EQ(arr.size(), 1);
+    ASSERT_EQ(arr[0], 3);
 }
