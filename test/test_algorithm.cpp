@@ -35,3 +35,23 @@ TEST(AlgorithmTest, mtl_map_addition_ref) {
     ASSERT_EQ(arr[2], 2);
     ASSERT_EQ(arr[3], 3);
 }
+
+TEST(AlgorithmTest, for_each_container) {
+    mtl::StaticArray<int, 4> arr = {-1, 0, 1, 2};
+    mtl::for_each(arr, [](auto& i) { return ++i; });
+
+    ASSERT_EQ(arr[0], 0);
+    ASSERT_EQ(arr[1], 1);
+    ASSERT_EQ(arr[2], 2);
+    ASSERT_EQ(arr[3], 3);
+}
+
+TEST(AlgorithmTest, map_container) {
+    mtl::StaticArray<int, 4> arr = {-1, 0, 1, 2};
+    const auto new_arr = mtl::map(arr, [](const auto& i) { return i + 1; });
+
+    ASSERT_EQ(new_arr[0], 0);
+    ASSERT_EQ(new_arr[1], 1);
+    ASSERT_EQ(new_arr[2], 2);
+    ASSERT_EQ(new_arr[3], 3);
+}

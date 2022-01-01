@@ -58,6 +58,7 @@ cmake --build . --target Benchmark
 ### algorithm
 
 - algorithmic helpers
+- [x] for each
 - [x] map
 - [ ] reduce
 - [ ] fold
