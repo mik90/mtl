@@ -19,7 +19,7 @@ TEST(IteratorTest, copy_value_some_const) {
     const auto iter = arr.c_iter();
     const auto value = iter.copy_value();
     ASSERT_TRUE(value.is_some());
-    ASSERT_EQ(value.get_some(), 0);
+    ASSERT_EQ(value.unsafe_get_some(), 0);
 }
 
 TEST(IteratorTest, copy_value_some) {
@@ -27,7 +27,7 @@ TEST(IteratorTest, copy_value_some) {
     const auto iter = arr.iter();
     const auto value = iter.copy_value();
     ASSERT_TRUE(value.is_some());
-    ASSERT_EQ(value.get_some(), 0);
+    ASSERT_EQ(value.unsafe_get_some(), 0);
 }
 
 TEST(IteratorTest, copy_value_none) {

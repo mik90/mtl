@@ -7,9 +7,6 @@
 namespace mtl {
 /**
  * @brief Move-only pointer wrapper. Similar to unique_ptr
- * @todo Ensure that T
- * @todo Re-impl std::default_delete
- * @todo Specialize for T[]
  * @todo Handle custom deleters
  */
 

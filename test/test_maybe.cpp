@@ -22,17 +22,17 @@ TEST(MaybeTest, is_none) {
 
 TEST(MaybeTest, get_some_const_simple) {
     const auto value = mtl::Maybe<int>(20);
-    ASSERT_EQ(value.get_some(), 20);
+    ASSERT_EQ(value.unsafe_get_some(), 20);
 }
 
 TEST(MaybeTest, get_some_non_const_simple) {
     auto value = mtl::Maybe<int>(20);
-    ASSERT_EQ(value.get_some(), 20);
+    ASSERT_EQ(value.unsafe_get_some(), 20);
 }
 
 TEST(MaybeTest, release_move_only) {
     auto value = mtl::Maybe<test::MoveOnlyInt>(5);
-    ASSERT_EQ(value.release(), 5);
+    ASSERT_EQ(value.unsafe_release(), 5);
 }
 
 TEST(MaybeTest, release_move_only_default) {

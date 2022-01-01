@@ -21,7 +21,7 @@ class LinkedList {
             std::swap(head_, {std::forward<ValueType>(value), nullptr});
             return;
         }
-        last_element_ref(head_.get_some()).next =
+        last_element_ref(head_.unsafe_get_some()).next =
             make_owned<Node>({std::forward<ValueType>(value), nullptr});
     }
 
@@ -32,7 +32,7 @@ class LinkedList {
             return;
         }
 
-        last_element_ref(head_.get_some()).next =
+        last_element_ref(head_.unsafe_get_some()).next =
             make_owned<Node>({std::forward<ValueType>(value), nullptr});
     }
 

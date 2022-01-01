@@ -55,11 +55,11 @@ class Maybe {
     // Observers
     bool is_some() const noexcept { return tag_ == tag::SOME; }
     bool is_none() const noexcept { return !is_some(); }
-    const T& get_some() const noexcept { return some_; }
+    const T& unsafe_get_some() const noexcept { return some_; }
 
     // Modifiers
     /// @todo Should this throw or just be undefined in case there's none?
-    T& get_some() { return some_; }
+    T& unsafe_get_some() { return some_; }
     T& get_some_or(T default_value) {
         if (tag_ == tag::SOME) {
             return some_;
@@ -69,7 +69,7 @@ class Maybe {
     }
 
     // Ownership modifiers
-    T&& release() {
+    T&& unsafe_release() {
         tag_ = tag::NONE;
         return std::move(some_);
     }
