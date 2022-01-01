@@ -1,18 +1,4 @@
-add_library(mtl INTERFACE
-  algorithm.hpp
-  dyn_array.hpp
-  iterator.hpp
-  hash_map.hpp
-  linked_list.hpp
-  maybe.hpp
-  memoize.hpp
-  pointers.hpp
-  result.hpp
-  static_array.hpp
-  "string.hpp"
-  types.hpp
-  wrapped_var.hpp
-)
+add_library(mtl INTERFACE)
 
 target_link_libraries(mtl INTERFACE
   project_options
