@@ -9,6 +9,7 @@ add_executable(UnitTest
   test_maybe.cpp
   test_static_array.cpp
   test_memoize.cpp
+  test_move_only.cpp
   test_pointers.cpp
   test_result.cpp
   test_wrapped_var.cpp

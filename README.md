@@ -21,6 +21,15 @@ const auto arr = mtl::DynArray<int>({0, 1, 2, 3});
 auto new_arr = arr.copy();
 ```
 
+### MoveOnly which can live on the stack and can only be moved
+
+Useful for when you want the semantics of a `std::unique_ptr` but without the heap allocation
+
+```cpp
+mtl::MoveOnly<std::string> myString{"hello"};
+ASSERT_EQ(*myString, "hello");
+```
+
 ## Build and run tests
 
 ```bash
@@ -36,7 +45,7 @@ cmake --build . --target UnitTest
 mkdir build && cd build
 cmake .. -DENABLE_BENCHMARKS=ON -DCMAKE_BUILD_TYPE=Release
 cmake --build . --target Benchmark
-./bin/Benchmark`
+./bin/Benchmark
 ```
 
 ## Tasklist
