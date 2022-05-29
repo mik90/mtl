@@ -18,7 +18,9 @@ class GenericPointer {
   public:
     using type = std::remove_extent_t<T>;
     GenericPointer() = default;
+    GenericPointer(type* ptr);
     GenericPointer(GenericPointer&& other) noexcept;
+    ~GenericPointer();
 
     // Raw access
     type* get() noexcept { return ptr_; }
@@ -52,8 +54,17 @@ class GenericPointer {
 
 // Ctors
 template <class T>
+GenericPointer<T>::GenericPointer(type* ptr) : ptr_(ptr) {}
+
+template <class T>
 GenericPointer<T>::GenericPointer(GenericPointer<T>&& other) noexcept : ptr_(other.get()) {
     other = nullptr;
+}
+
+// Dtor
+template <class T>
+GenericPointer<T>::~GenericPointer() {
+    reset();
 }
 
 // Operators
@@ -62,13 +73,19 @@ GenericPointer<T>& GenericPointer<T>::operator=(GenericPointer<T>&& other) {
     if (this == &other) {
         return *this;
     }
-    ptr_ = other.ptr_;
-    other.ptr_ = nullptr;
+    // Delete our pointer
+    reset();
+    // Take ownership of the other's pointer
+    ptr_ = other.release();
+    // AH, reset current ptr
     return *this;
 }
 
 template <class T>
 GenericPointer<T>& GenericPointer<T>::operator=(type* other) {
+    // Delete our pointer
+    reset();
+    // Take the other's
     ptr_ = other;
     return *this;
 }
@@ -134,7 +151,6 @@ class OwningPtr : public detail::GenericPointer<T> {
     explicit OwningPtr(T* ptr);
     OwningPtr(std::nullptr_t);
     OwningPtr(OwningPtr<T>&& other);
-    ~OwningPtr();
 
     // no copy!
     OwningPtr(OwningPtr<T>& other) = delete;
@@ -154,9 +170,7 @@ class OwningPtr : public detail::GenericPointer<T> {
 
 // Ctors
 template <class T>
-OwningPtr<T>::OwningPtr(T* ptr) {
-    detail::GenericPointer<T>::ptr_ = ptr;
-}
+OwningPtr<T>::OwningPtr(T* ptr) : detail::GenericPointer<T>(ptr) {}
 
 template <class T>
 OwningPtr<T>::OwningPtr(std::nullptr_t) {
@@ -165,12 +179,6 @@ OwningPtr<T>::OwningPtr(std::nullptr_t) {
 
 template <class T>
 OwningPtr<T>::OwningPtr(OwningPtr<T>&& other) : detail::GenericPointer<T>(std::move(other)) {}
-
-// dtor
-template <class T>
-OwningPtr<T>::~OwningPtr() {
-    detail::GenericPointer<T>::reset();
-};
 
 // move-assign
 template <class T>
@@ -195,7 +203,6 @@ class OwningPtr<T[]> : public detail::GenericPointer<T[]> {
     explicit OwningPtr(T* ptr);
     OwningPtr(std::nullptr_t);
     OwningPtr(OwningPtr<T[]>&& other);
-    ~OwningPtr();
 
     // no copy!
     OwningPtr(OwningPtr<T[]>& other) = delete;
@@ -218,9 +225,7 @@ class OwningPtr<T[]> : public detail::GenericPointer<T[]> {
 };
 // Ctors
 template <class T>
-OwningPtr<T[]>::OwningPtr(T* ptr) {
-    detail::GenericPointer<T[]>::ptr_ = ptr;
-}
+OwningPtr<T[]>::OwningPtr(T* ptr) : detail::GenericPointer<T[]>(ptr) {}
 
 template <class T>
 OwningPtr<T[]>::OwningPtr(std::nullptr_t) {
@@ -229,12 +234,6 @@ OwningPtr<T[]>::OwningPtr(std::nullptr_t) {
 
 template <class T>
 OwningPtr<T[]>::OwningPtr(OwningPtr<T[]>&& other) : detail::GenericPointer<T[]>(std::move(other)) {}
-
-// dtor
-template <class T>
-OwningPtr<T[]>::~OwningPtr() {
-    detail::GenericPointer<T[]>::reset();
-};
 
 // move-assign
 template <class T>

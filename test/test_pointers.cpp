@@ -71,3 +71,13 @@ TEST(PointerTest, move_ctor) {
     ASSERT_EQ(*other_ptr, 5);
     ASSERT_TRUE(owned_ptr.is_null());
 }
+
+TEST(PointerTest, overwrite) {
+    // Construct one ptr
+    mtl::OwningPtr<int> owned_ptr(new int(0));
+    // and then overwrite it, the old 'ptr' value should be deleted since the current OwningPtr is
+    // destroyed
+    owned_ptr = mtl::OwningPtr<int>(new int(1));
+    ASSERT_TRUE(owned_ptr.has_value());
+    ASSERT_EQ(*owned_ptr, 1);
+}
