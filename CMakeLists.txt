@@ -17,6 +17,7 @@ include(cmake/StaticAnalyzers.cmake)
 
 option(ENABLE_TESTING "Enable Test Builds" ON)
 option(ENABLE_BENCHMARKS "Enable Benchmarks" OFF)
+option(ENABLE_SANITIZERS "Enable Address, UB Sanitizers" ON)
 
 set(CONAN_EXTRA_REQUIRES "")
 set(CONAN_EXTRA_OPTIONS "")

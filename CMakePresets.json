@@ -10,7 +10,7 @@
       "name": "confCommon",
       "description": "Common vars, default to clang",
       "hidden": true,
-      "generator": "Ninja",
+      "generator": "Ninja Multi-Config",
       "binaryDir": "./build",
       "installDir": "./install"
     },
@@ -22,7 +22,8 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo",
         "ENABLE_TESTING": "ON",
-        "ENABLE_BENCHMARKS": "ON"
+        "ENABLE_BENCHMARKS": "ON",
+        "ENABLE_SANITIZERS": "ON"
       }
     },
     {
@@ -33,7 +34,8 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "ENABLE_TESTING": "ON",
-        "ENABLE_BENCHMARKS": "OFF"
+        "ENABLE_BENCHMARKS": "OFF",
+        "ENABLE_SANITIZERS": "ON"
       }
     }
   ],
