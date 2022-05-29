@@ -152,7 +152,7 @@ class DynArray {
         }
     }
 
-    const ConstIterator<ValueType> c_iter() const {
+    ConstIterator<ValueType> c_iter() const {
         if (size() > 0) {
             return ConstIterator(data());
         } else {
@@ -163,8 +163,10 @@ class DynArray {
     // Dumb iterators
     ValueType* begin() noexcept { return data_.get(); }
     ValueType* end() noexcept { return data_.get() + size_; }
+
     const ValueType* begin() const noexcept { return cbegin(); }
-    const ValueType* end() const noexcept { return cbegin(); }
+    const ValueType* end() const noexcept { return cend(); }
+
     const ValueType* cbegin() const noexcept { return data_.get(); }
     const ValueType* cend() const noexcept { return data_.get() + size_; }
 };

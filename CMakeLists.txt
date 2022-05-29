@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.20)
 
 # Based off of https://github.com/lefticus/cpp_starter_project
 project(mtl CXX)
@@ -24,7 +24,7 @@ if(ENABLE_TESTING)
   list(APPEND CONAN_EXTRA_REQUIRES gtest/1.11.0)
 endif()
 if(ENABLE_BENCHMARKS)
-  list(APPEND CONAN_EXTRA_REQUIRES benchmark/1.5.3)
+  list(APPEND CONAN_EXTRA_REQUIRES benchmark/1.6.1)
 endif()
 
 include(cmake/RunConan.cmake)
@@ -34,7 +34,7 @@ add_subdirectory(include/mtl)
 if(ENABLE_TESTING)
   find_package(GTest REQUIRED)
   enable_testing()
-  message("Configuring tests...")
+  message("Configuring tests...") 
   add_subdirectory(test)
 endif()
 

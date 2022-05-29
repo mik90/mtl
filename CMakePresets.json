@@ -1,78 +1,63 @@
 {
-    "version": 2,
-    "cmakeMinimumRequired": {
-        "major": 3,
-        "minor": 15,
-        "patch": 0
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "confCommon",
+      "description": "Common vars, default to clang",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "./build",
+      "installDir": "./install"
     },
-    "configurePresets": [
-        {
-            "name": "allProjectsRelease",
-            "displayName": "All projects (Release)",
-            "description": "Unit tests and benchmarks",
-            "generator": "Ninja",
-            "binaryDir": "./build",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": {
-                    "type": "STRING",
-                    "value": "Release"
-                },
-                "ENABLE_TESTING": "ON",
-                "ENABLE_BENCHMARKS": "ON"
-            }
-        },
-        {
-            "name": "allUnitTestsDebug",
-            "displayName": "All Unit Tests (Debug)",
-            "description": "Unit tests",
-            "generator": "Ninja",
-            "binaryDir": "./build",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": {
-                    "type": "STRING",
-                    "value": "Debug"
-                },
-                "ENABLE_TESTING": "ON",
-                "ENABLE_BENCHMARKS": "OFF"
-            }
-        }
-    ],
-    "buildPresets": [
-        {
-            "name": "mtlUnitTestsDebug",
-            "configurePreset": "allUnitTestsDebug",
-            "targets": [
-                "UnitTest"
-            ]
-        },
-        {
-            "name": "allProjectsRelease",
-            "configurePreset": "allProjectsRelease"
-        }
-    ],
-    "testPresets": [
-        {
-            "name": "mtlUnitTestDebug",
-            "displayName": "mtl: UnitTest",
-            "configurePreset": "allUnitTestsDebug",
-            "output": {
-                "outputOnFailure": true
-            },
-            "execution": {
-                "noTestsAction": "error",
-                "stopOnFailure": false
-            }
-        },
-        {
-            "name": "unitTestRelease",
-            "configurePreset": "allProjectsRelease",
-            "output": {
-                "outputOnFailure": true
-            },
-            "execution": {
-                "noTestsAction": "error",
-                "stopOnFailure": false
-            }
-        }
-    ]
+    {
+      "name": "Testing",
+      "displayName": "Unit testing w/ instrumentation",
+      "description": "Unit tests and benchmarks",
+      "inherits": "confCommon",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "ENABLE_TESTING": "ON",
+        "ENABLE_BENCHMARKS": "ON"
+      }
+    },
+    {
+      "name": "allUnitTestsDebug",
+      "displayName": "Unit Tests (Debug)",
+      "description": "Unit tests with full debug mode",
+      "inherits": "confCommon",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "ENABLE_TESTING": "ON",
+        "ENABLE_BENCHMARKS": "OFF"
+      }
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "testCommon",
+      "hidden": true,
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "TestingDebug",
+      "configurePreset": "allUnitTestsDebug",
+      "inherits": "test-common"
+    },
+    {
+      "name": "Testing",
+      "configurePreset": "Testing",
+      "inherits": "test-common"
+    }
+  ]
 }

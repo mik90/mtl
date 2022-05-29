@@ -133,7 +133,7 @@ class StaticArray {
     }
 
   private:
-    const usize capacity_ = Capacity;
+    static constexpr usize capacity_ = Capacity;
     ValueType data_[Capacity];
     usize size_ = 0;
 };

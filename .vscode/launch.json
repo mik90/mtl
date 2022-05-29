@@ -1,36 +1,40 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "UnitTest",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/bin/UnitTest",
+      "args": ["--gtest_filter=${input:gtest_filter}"],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
         {
-            "name": "mtlUnitTest",
-            "type": "lldb",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/bin/UnitTest",
-            "args": [
-                "--gtest_filter=${input:gtest_filter}"
-            ],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ]
-        }
-    ],
-    "inputs": [
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
         {
-            "id": "gtest_filter",
-            "description": "Filter to use for GoogleTest",
-            "type": "promptString",
-            "default": "*"
+          "description": "Set Disassembly Flavor to Intel",
+          "text": "-gdb-set disassembly-flavor intel",
+          "ignoreFailures": true
         }
-    ]
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "id": "gtest_filter",
+      "description": "Filter to use for GoogleTest",
+      "type": "promptString",
+      "default": "*"
+    }
+  ]
 }

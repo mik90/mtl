@@ -15,4 +15,5 @@ conan_cmake_autodetect(settings)
 
 conan_cmake_install(PATH_OR_REFERENCE .
                     BUILD missing
-                    SETTINGS ${settings})
+                    SETTINGS ${settings}
+)

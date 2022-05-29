@@ -25,10 +25,19 @@ target_link_libraries(UnitTest PRIVATE
   project_options
   GTest::gtest
 	mtl
+
+  # coverage
+  -coverage
+  # Sanitization
+  -fsanitize=undefined,address
 )
 
 set_target_properties(UnitTest PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+)
+
+target_compile_options(UnitTest PRIVATE
+   -fsanitize=undefined,address
 )
 
 gtest_discover_tests(UnitTest)

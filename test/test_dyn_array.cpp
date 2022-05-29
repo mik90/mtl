@@ -1,9 +1,11 @@
 #include "mtl/dyn_array.hpp"
 #include "utils.hpp"
+
 #include <cmath>
+#include <numeric>
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <gtest/internal/gtest-internal.h>
 
 TEST(DynArrayTest, ctor) {
     mtl::DynArray<int> arr;
@@ -130,25 +132,33 @@ TEST(DynArrayTest, set_capacity_default_to_5) {
     ASSERT_EQ(arr.capacity(), 5);
 }
 
-/// Capacity is decreased to below size
+/// Capacity is decreased to below size, expect that the size is reset to the lower capacity
 TEST(DynArrayTest, set_capacity_below_size) {
     auto array = mtl::DynArray<std::size_t>();
-    const std::size_t starting_capacity = 48;
+    {
+        constexpr std::size_t starting_capacity = 48;
+        for (std::size_t i = 0; i < starting_capacity; ++i) {
+            array.push_back(i);
+        }
+        ASSERT_EQ(array.size(), starting_capacity);
 
-    for (std::size_t i = 0; i < starting_capacity; ++i) {
-        array.push_back(i);
+        for (std::size_t i = 0; i < starting_capacity; ++i) {
+            ASSERT_EQ(array[i], i) << "array[" << i << "] = " << array[i] << " instead of " << i;
+        }
     }
-    ASSERT_EQ(array.size(), starting_capacity);
 
-    const std::size_t smaller_capacity = 12;
-    // Decrease the capacity below the size
-    array.set_capacity(smaller_capacity);
+    {
+        constexpr std::size_t smaller_capacity = 12;
 
-    ASSERT_EQ(array.size(), smaller_capacity);
-    ASSERT_EQ(array.capacity(), smaller_capacity);
+        // Decrease the capacity below the size
+        array.set_capacity(smaller_capacity);
+        ASSERT_EQ(array.capacity(), smaller_capacity);
 
-    for (std::size_t i = 0; i < smaller_capacity; ++i) {
-        ASSERT_EQ(array[i], i) << "array[" << i << "] = " << array[i] << " instead of " << i;
+        ASSERT_EQ(array.size(), smaller_capacity);
+
+        for (std::size_t i = 0; i < smaller_capacity; ++i) {
+            ASSERT_EQ(array[i], i) << "array[" << i << "] = " << array[i] << " instead of " << i;
+        }
     }
 }
 
