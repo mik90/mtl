@@ -140,8 +140,7 @@ OwningPtr<ValueType[]> DynArray<ValueType>::copy_data(const DynArray<ValueType>&
 
 template <typename ValueType>
 OwningPtr<ValueType[]> DynArray<ValueType>::allocate_new() {
-    auto raw_ptr = new ValueType[capacity_];
-    return OwningPtr<ValueType[]>(raw_ptr);
+    return OwningPtr<ValueType[]>(new ValueType[capacity_]);
 }
 
 // Public helpers
