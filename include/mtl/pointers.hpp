@@ -62,23 +62,24 @@ GenericPointer<T>& GenericPointer<T>::operator=(GenericPointer<T>&& other) {
     if (this == &other) {
         return *this;
     }
-    reset(other.get());
-    other.reset();
+    ptr_ = other.ptr_;
+    other.ptr_ = nullptr;
     return *this;
 }
 
 template <class T>
 GenericPointer<T>& GenericPointer<T>::operator=(type* other) {
-    reset(other);
+    ptr_ = other;
     return *this;
 }
 
 // Modifiers
 template <class T>
 void GenericPointer<T>::swap(GenericPointer<T>&& other) {
-    const auto temp = other.get();
-    other.reset(ptr_);
-    ptr_ = temp;
+    const auto ourOldPtr = ptr_;
+    ptr_ = other.get();
+
+    other.ptr_ = ourOldPtr;
 }
 
 template <class T>
@@ -177,6 +178,7 @@ OwningPtr<T>& OwningPtr<T>::operator=(OwningPtr<T>&& other) {
     detail::GenericPointer<T>::operator=(std::move(other));
     return *this;
 }
+
 template <class T>
 OwningPtr<T>& OwningPtr<T>::operator=(T* other) {
     detail::GenericPointer<T>::operator=(other);
