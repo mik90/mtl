@@ -8,7 +8,7 @@
       "name": "UnitTest",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/bin/UnitTest",
+      "program": "${workspaceFolder}/build/bin/Debug/UnitTest",
       "args": ["--gtest_filter=${input:gtest_filter}"],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
