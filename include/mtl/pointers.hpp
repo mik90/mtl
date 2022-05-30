@@ -14,13 +14,13 @@ namespace mtl {
  */
 namespace detail {
 template <class T>
-class GenericPointer {
+class BaseOwningPtr {
   public:
     using type = std::remove_extent_t<T>;
-    GenericPointer() = default;
-    GenericPointer(type* ptr);
-    GenericPointer(GenericPointer&& other) noexcept;
-    ~GenericPointer();
+    BaseOwningPtr() = default;
+    BaseOwningPtr(type* ptr);
+    BaseOwningPtr(BaseOwningPtr&& other) noexcept;
+    ~BaseOwningPtr();
 
     // Raw access
     type* get() noexcept { return ptr_; }
@@ -29,8 +29,8 @@ class GenericPointer {
     Maybe<const type*> maybe_get() const;
 
     // Operators
-    GenericPointer<T>& operator=(GenericPointer<T>&& other);
-    GenericPointer<T>& operator=(type* other);
+    BaseOwningPtr<T>& operator=(BaseOwningPtr<T>&& other);
+    BaseOwningPtr<T>& operator=(type* other);
 
     // Views
     bool has_value() const noexcept { return ptr_ != nullptr; }
@@ -40,7 +40,7 @@ class GenericPointer {
     // Modifiers
 
     // swap spec
-    void swap(GenericPointer<T>&& other);
+    void swap(BaseOwningPtr<T>&& other);
     // Delete current data
     void reset();
     // Delete current data and use new data provided as arg
@@ -54,20 +54,20 @@ class GenericPointer {
 
 // Ctors
 template <class T>
-GenericPointer<T>::GenericPointer(type* ptr) : ptr_(ptr) {}
+BaseOwningPtr<T>::BaseOwningPtr(type* ptr) : ptr_(ptr) {}
 
 template <class T>
-GenericPointer<T>::GenericPointer(GenericPointer<T>&& other) noexcept : ptr_(other.release()) {}
+BaseOwningPtr<T>::BaseOwningPtr(BaseOwningPtr<T>&& other) noexcept : ptr_(other.release()) {}
 
 // Dtor
 template <class T>
-GenericPointer<T>::~GenericPointer() {
+BaseOwningPtr<T>::~BaseOwningPtr() {
     reset();
 }
 
 // Operators
 template <class T>
-GenericPointer<T>& GenericPointer<T>::operator=(GenericPointer<T>&& other) {
+BaseOwningPtr<T>& BaseOwningPtr<T>::operator=(BaseOwningPtr<T>&& other) {
     if (this == &other) {
         return *this;
     }
@@ -80,7 +80,7 @@ GenericPointer<T>& GenericPointer<T>::operator=(GenericPointer<T>&& other) {
 }
 
 template <class T>
-GenericPointer<T>& GenericPointer<T>::operator=(type* other) {
+BaseOwningPtr<T>& BaseOwningPtr<T>::operator=(type* other) {
     // Delete our pointer
     reset();
     // Take the other's
@@ -90,7 +90,7 @@ GenericPointer<T>& GenericPointer<T>::operator=(type* other) {
 
 // Modifiers
 template <class T>
-void GenericPointer<T>::swap(GenericPointer<T>&& other) {
+void BaseOwningPtr<T>::swap(BaseOwningPtr<T>&& other) {
     const auto ourOldPtr = ptr_;
     ptr_ = other.get();
 
@@ -98,7 +98,7 @@ void GenericPointer<T>::swap(GenericPointer<T>&& other) {
 }
 
 template <class T>
-void GenericPointer<T>::reset() {
+void BaseOwningPtr<T>::reset() {
     if (has_value()) {
         if (std::is_array_v<T>) {
             delete[] ptr_;
@@ -110,27 +110,27 @@ void GenericPointer<T>::reset() {
 }
 
 template <class T>
-void GenericPointer<T>::reset(type* ptr) {
+void BaseOwningPtr<T>::reset(type* ptr) {
     reset();
     ptr_ = ptr;
 }
 
 template <class T>
-typename GenericPointer<T>::type* GenericPointer<T>::release() {
+typename BaseOwningPtr<T>::type* BaseOwningPtr<T>::release() {
     return std::exchange(ptr_, nullptr);
 }
 
 // Accessors
 
 template <class T>
-Maybe<typename GenericPointer<T>::type*> GenericPointer<T>::maybe_get() {
+Maybe<typename BaseOwningPtr<T>::type*> BaseOwningPtr<T>::maybe_get() {
     if (has_value()) {
         return ptr_;
     }
     return None{};
 }
 template <class T>
-Maybe<const typename GenericPointer<T>::type*> GenericPointer<T>::maybe_get() const {
+Maybe<const typename BaseOwningPtr<T>::type*> BaseOwningPtr<T>::maybe_get() const {
     if (has_value()) {
         return ptr_;
     }
@@ -143,7 +143,7 @@ Maybe<const typename GenericPointer<T>::type*> GenericPointer<T>::maybe_get() co
  * @brief Move-only pointer, similar to std::unique_ptr
  */
 template <class T>
-class OwningPtr : public detail::GenericPointer<T> {
+class OwningPtr : public detail::BaseOwningPtr<T> {
   public:
     OwningPtr() = default;
     explicit OwningPtr(T* ptr);
@@ -160,34 +160,34 @@ class OwningPtr : public detail::GenericPointer<T> {
     OwningPtr& operator=(OwningPtr<T>&& other);
     OwningPtr& operator=(T* other);
 
-    T& operator*() { return *detail::GenericPointer<T>::ptr_; }
-    const T& operator*() const { return detail::GenericPointer<T>::ptr_; }
-    T* operator->() { return *detail::GenericPointer<T>::ptr_; }
-    const T* operator->() const { return detail::GenericPointer<T>::ptr_; }
+    T& operator*() { return *detail::BaseOwningPtr<T>::ptr_; }
+    const T& operator*() const { return detail::BaseOwningPtr<T>::ptr_; }
+    T* operator->() { return *detail::BaseOwningPtr<T>::ptr_; }
+    const T* operator->() const { return detail::BaseOwningPtr<T>::ptr_; }
 };
 
 // Ctors
 template <class T>
-OwningPtr<T>::OwningPtr(T* ptr) : detail::GenericPointer<T>(ptr) {}
+OwningPtr<T>::OwningPtr(T* ptr) : detail::BaseOwningPtr<T>(ptr) {}
 
 template <class T>
 OwningPtr<T>::OwningPtr(std::nullptr_t) {
-    detail::GenericPointer<T>::ptr_ = nullptr;
+    detail::BaseOwningPtr<T>::ptr_ = nullptr;
 }
 
 template <class T>
-OwningPtr<T>::OwningPtr(OwningPtr<T>&& other) : detail::GenericPointer<T>(std::move(other)) {}
+OwningPtr<T>::OwningPtr(OwningPtr<T>&& other) : detail::BaseOwningPtr<T>(std::move(other)) {}
 
 // move-assign
 template <class T>
 OwningPtr<T>& OwningPtr<T>::operator=(OwningPtr<T>&& other) {
-    detail::GenericPointer<T>::operator=(std::move(other));
+    detail::BaseOwningPtr<T>::operator=(std::move(other));
     return *this;
 }
 
 template <class T>
 OwningPtr<T>& OwningPtr<T>::operator=(T* other) {
-    detail::GenericPointer<T>::operator=(other);
+    detail::BaseOwningPtr<T>::operator=(other);
     return *this;
 }
 
@@ -195,7 +195,7 @@ OwningPtr<T>& OwningPtr<T>::operator=(T* other) {
  * @brief Array specialization for OwningPtr
  */
 template <class T>
-class OwningPtr<T[]> : public detail::GenericPointer<T[]> {
+class OwningPtr<T[]> : public detail::BaseOwningPtr<T[]> {
   public:
     OwningPtr() = default;
     explicit OwningPtr(T* ptr);
@@ -213,36 +213,36 @@ class OwningPtr<T[]> : public detail::GenericPointer<T[]> {
     OwningPtr& operator=(T* other);
 
     // Array lookup
-    T& operator[](mtl::usize pos) { return detail::GenericPointer<T[]>::ptr_[pos]; }
-    const T& operator[](mtl::usize pos) const { return detail::GenericPointer<T[]>::ptr_[pos]; }
+    T& operator[](mtl::usize pos) { return detail::BaseOwningPtr<T[]>::ptr_[pos]; }
+    const T& operator[](mtl::usize pos) const { return detail::BaseOwningPtr<T[]>::ptr_[pos]; }
 
-    T& operator*() { return *detail::GenericPointer<T[]>::ptr_; }
-    const T& operator*() const { return detail::GenericPointer<T[]>::ptr_; }
-    T* operator->() { return *detail::GenericPointer<T[]>::ptr_; }
-    const T* operator->() const { return detail::GenericPointer<T[]>::ptr_; }
+    T& operator*() { return *detail::BaseOwningPtr<T[]>::ptr_; }
+    const T& operator*() const { return detail::BaseOwningPtr<T[]>::ptr_; }
+    T* operator->() { return *detail::BaseOwningPtr<T[]>::ptr_; }
+    const T* operator->() const { return detail::BaseOwningPtr<T[]>::ptr_; }
 };
 // Ctors
 template <class T>
-OwningPtr<T[]>::OwningPtr(T* ptr) : detail::GenericPointer<T[]>(ptr) {}
+OwningPtr<T[]>::OwningPtr(T* ptr) : detail::BaseOwningPtr<T[]>(ptr) {}
 
 template <class T>
 OwningPtr<T[]>::OwningPtr(std::nullptr_t) {
-    detail::GenericPointer<T[]>::ptr_ = nullptr;
+    detail::BaseOwningPtr<T[]>::ptr_ = nullptr;
 }
 
 template <class T>
-OwningPtr<T[]>::OwningPtr(OwningPtr<T[]>&& other) : detail::GenericPointer<T[]>(std::move(other)) {}
+OwningPtr<T[]>::OwningPtr(OwningPtr<T[]>&& other) : detail::BaseOwningPtr<T[]>(std::move(other)) {}
 
 // move-assign
 template <class T>
 OwningPtr<T[]>& OwningPtr<T[]>::operator=(OwningPtr<T[]>&& other) {
-    detail::GenericPointer<T[]>::operator=(std::move(other));
+    detail::BaseOwningPtr<T[]>::operator=(std::move(other));
     return *this;
 }
 
 template <class T>
 OwningPtr<T[]>& OwningPtr<T[]>::operator=(T* other) {
-    detail::GenericPointer<T[]>::operator=(other);
+    detail::BaseOwningPtr<T[]>::operator=(other);
     return *this;
 }
 

@@ -26,16 +26,19 @@ target_link_libraries(UnitTest PRIVATE
   GTest::gtest
 	mtl
 
-  # coverage
   -coverage
+)
+
+target_compile_options(UnitTest PRIVATE
+  --coverage
 )
 
 if(ENABLE_SANITIZERS)
   target_link_libraries(UnitTest PRIVATE
-    -fsanitize=undefined,address
+    -fsanitize=undefined,address,leak
   )
   target_compile_options(UnitTest PRIVATE
-    -fsanitize=undefined,address
+    -fsanitize=undefined,address,leak
   )
 endif()
 
