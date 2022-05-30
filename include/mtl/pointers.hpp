@@ -57,9 +57,7 @@ template <class T>
 GenericPointer<T>::GenericPointer(type* ptr) : ptr_(ptr) {}
 
 template <class T>
-GenericPointer<T>::GenericPointer(GenericPointer<T>&& other) noexcept : ptr_(other.get()) {
-    other = nullptr;
-}
+GenericPointer<T>::GenericPointer(GenericPointer<T>&& other) noexcept : ptr_(other.release()) {}
 
 // Dtor
 template <class T>
@@ -253,8 +251,7 @@ OwningPtr<T[]>& OwningPtr<T[]>::operator=(T* other) {
  */
 template <typename T, class... Args>
 OwningPtr<T> make_owned(Args&&... args) {
-    T* value = new T(std::forward<Args>(args)...);
-    return OwningPtr<T>(value);
+    return OwningPtr<T>(new T(std::forward<Args>(args)...));
 }
 
 /**

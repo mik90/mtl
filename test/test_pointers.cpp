@@ -31,7 +31,9 @@ TEST(PointerTest, make_owned_ptr) {
 TEST(PointerTest, move_assign) {
     auto owned_ptr = mtl::make_owned<int>(1);
     auto owned_ptr_2 = std::move(owned_ptr);
+    ASSERT_TRUE(owned_ptr.is_null());
     ASSERT_TRUE(owned_ptr_2.has_value());
+    ASSERT_EQ(*owned_ptr_2, 1);
 }
 
 TEST(PointerTest, maybe_get_some) {
