@@ -185,7 +185,7 @@ TEST(DynArrayTest, copy_const) {
 }
 
 TEST(DynArrayTest, overwrite_with_r_value) {
-    auto arr = mtl::DynArray<int>(); // <-- This is being leaked (value from allocate_new)
+    auto arr = mtl::DynArray<int>();
     arr = mtl::DynArray<int>({0, 1, 2, 3});
 
     ASSERT_EQ(arr[0], 0);
@@ -195,7 +195,7 @@ TEST(DynArrayTest, overwrite_with_r_value) {
 }
 
 TEST(DynArrayTest, overwrite_with_l_value) {
-    const auto l_value_arr = mtl::DynArray<int>();
+    const mtl::DynArray<int> l_value_arr = {0, 1, 2, 3};
     auto arr =
         mtl::DynArray<int>({9, 8, 7, 6}); // <-- arr is being leaked (value from allocate_new)
     arr = l_value_arr;
