@@ -7,7 +7,7 @@
   },
   "configurePresets": [
     {
-      "name": "confCommon",
+      "name": "base",
       "description": "Common vars, default to clang",
       "hidden": true,
       "generator": "Ninja Multi-Config",
@@ -15,10 +15,10 @@
       "installDir": "./install"
     },
     {
-      "name": "Testing",
-      "displayName": "Unit testing w/ instrumentation",
+      "name": "tests-and-benchmarks-rel",
+      "displayName": "Unit testing w/ instrumentation (RelWithDebInfo)",
       "description": "Unit tests and benchmarks",
-      "inherits": "confCommon",
+      "inherits": "base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo",
         "ENABLE_TESTING": "ON",
@@ -27,10 +27,10 @@
       }
     },
     {
-      "name": "allUnitTestsDebug",
+      "name": "tests-dbg",
       "displayName": "Unit Tests (Debug)",
       "description": "Unit tests with full debug mode",
-      "inherits": "confCommon",
+      "inherits": "base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "ENABLE_TESTING": "ON",
@@ -41,7 +41,7 @@
   ],
   "testPresets": [
     {
-      "name": "testCommon",
+      "name": "base",
       "hidden": true,
       "output": {
         "outputOnFailure": true
@@ -49,17 +49,18 @@
       "execution": {
         "noTestsAction": "error",
         "stopOnFailure": false
-      }
+      },
+      "configurePreset": "base"
     },
     {
-      "name": "TestingDebug",
-      "configurePreset": "allUnitTestsDebug",
-      "inherits": "test-common"
+      "name": "tests-dbg",
+      "configurePreset": "tests-dbg",
+      "inherits": "base"
     },
     {
-      "name": "Testing",
-      "configurePreset": "Testing",
-      "inherits": "test-common"
+      "name": "tests-rel",
+      "configurePreset": "tests-and-benchmarks-rel",
+      "inherits": "base"
     }
   ]
 }
