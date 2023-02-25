@@ -8,7 +8,7 @@ struct None {};
 
 template <typename T>
 struct Some {
-    T value_;
+    T value;
 };
 
 /**
@@ -26,7 +26,7 @@ class Maybe {
     // Just the tag and nothing else, means it's None
     Maybe(tag tag_override) : none_(None{}), tag_(tag_override) {}
 
-    // The tag and values, so forward htem
+    // The tag and values, so forward them
     template <class... Args>
     Maybe(tag tag_override, Args&&... args)
         : some_(std::forward<Args>(args)...), tag_(tag_override) {}
@@ -37,8 +37,8 @@ class Maybe {
     Maybe(None) : none_(None{}), tag_(tag::NONE) {}
 
     // Construct from Some
-    Maybe(const Some<T>& some) : some_(some.value_), tag_(tag::SOME) {}
-    Maybe(Some<T>&& some) : some_(some.value_), tag_(tag::SOME) {}
+    Maybe(const Some<T>& some) : some_(some.value), tag_(tag::SOME) {}
+    Maybe(Some<T>&& some) : some_(some.value), tag_(tag::SOME) {}
 
     template <class... Args>
     static Maybe<T> some(Args&&... args) {
