@@ -1,20 +1,21 @@
 #pragma once
 
-#include "mtl/maybe.hpp"
 #include <iterator>
 #include <type_traits>
 
+#include "mtl/maybe.hpp"
+
 namespace mtl {
-/**
- * @brief Iterates over a single type.
- * @todo Do i need an entirely separate specialization for const types or can i handle them in here?
- *        - SFINAE seems like the normal way to handle specialiation with const vs non-const
- * @todo Is there any way to deal with lifetimes during compile-time?
- *       I could add a sense of reference counting to underlying ranges but
- *       That seems like a heavyweight route.
- */
-template <class ValueType>
-class ConstIterator {
+  /**
+   * @brief Iterates over a single type.
+   * @todo Do i need an entirely separate specialization for const types or can i handle them in
+   * here?
+   *        - SFINAE seems like the normal way to handle specialiation with const vs non-const
+   * @todo Is there any way to deal with lifetimes during compile-time?
+   *       I could add a sense of reference counting to underlying ranges but
+   *       That seems like a heavyweight route.
+   */
+  template <class ValueType> class ConstIterator {
   private:
     const ValueType* cur_;
 
@@ -32,40 +33,39 @@ class ConstIterator {
 
     /// @brief Value can be discarded
     Maybe<ConstIterator> next() {
-        if (!cur_ || !(cur_ + 1)) {
-            return None{};
-        } else {
-            return ConstIterator{++cur_};
-        }
+      if (!cur_ || !(cur_ + 1)) {
+        return None{};
+      } else {
+        return ConstIterator{++cur_};
+      }
     }
 
     // Prefix
     ConstIterator& operator++() {
-        ++cur_;
-        return *this;
+      ++cur_;
+      return *this;
     }
 
     // Postfix
     ConstIterator operator++(int) {
-        auto temp = *this;
-        ++*this;
-        return temp;
+      auto temp = *this;
+      ++*this;
+      return temp;
     }
 
     Maybe<ValueType> copy_value() const {
-        if (not_null()) {
-            return *cur_;
-        } else {
-            return None{};
-        }
+      if (not_null()) {
+        return *cur_;
+      } else {
+        return None{};
+      }
     }
     const ValueType& operator*() const { return *cur_; }
     bool is_null() const noexcept { return cur_ == nullptr; }
     bool not_null() const noexcept { return !is_null(); }
-};
+  };
 
-template <class ValueType>
-class Iterator {
+  template <class ValueType> class Iterator {
   private:
     ValueType* cur_;
 
@@ -78,13 +78,12 @@ class Iterator {
     using reference = ValueType&;
     using pointer = ValueType*;
 
-    template <class ContainerType>
-    explicit Iterator(ContainerType& iterable) {
-        if (iterable.size() == 0) {
-            cur_ = nullptr;
-        } else {
-            cur_ = iterable.data();
-        }
+    template <class ContainerType> explicit Iterator(ContainerType& iterable) {
+      if (iterable.size() == 0) {
+        cur_ = nullptr;
+      } else {
+        cur_ = iterable.data();
+      }
     }
 
     /// @todo Create static factory template that calls .begin() on a container. similar to
@@ -92,35 +91,35 @@ class Iterator {
 
     /// @brief Value can be discarded
     Maybe<Iterator> next() {
-        if (!cur_ || !(cur_ + 1)) {
-            return None{};
-        } else {
-            return Iterator{++cur_};
-        }
+      if (!cur_ || !(cur_ + 1)) {
+        return None{};
+      } else {
+        return Iterator{++cur_};
+      }
     }
     // Prefix
     Iterator& operator++() {
-        ++cur_;
-        return *this;
+      ++cur_;
+      return *this;
     }
 
     // Postfix
     Iterator operator++(int) {
-        auto temp = *this;
-        ++*this;
-        return temp;
+      auto temp = *this;
+      ++*this;
+      return temp;
     }
 
     Maybe<ValueType> copy_value() const {
-        if (not_null()) {
-            return *cur_;
-        } else {
-            return None{};
-        }
+      if (not_null()) {
+        return *cur_;
+      } else {
+        return None{};
+      }
     }
 
     ValueType& operator*() const { return *cur_; }
     bool is_null() const noexcept { return cur_ == nullptr; }
     bool not_null() const noexcept { return !is_null(); }
-};
-} // namespace mtl
+  };
+}  // namespace mtl

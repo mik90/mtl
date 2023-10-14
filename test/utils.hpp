@@ -4,11 +4,11 @@
  * @brief Unit test helpers
  */
 
-#include <mtl/types.hpp>
+#include "mtl/types.hpp"
 
 namespace test {
 
-struct MoveOnlyInt {
+  struct MoveOnlyInt {
   private:
     int value_ = 0;
 
@@ -26,16 +26,16 @@ struct MoveOnlyInt {
 
     MoveOnlyInt(int value) : value_(value){};
     int get_value() const noexcept { return value_; }
-};
+  };
 
-inline bool operator==(const MoveOnlyInt& lhs, const MoveOnlyInt& rhs) {
+  inline bool operator==(const MoveOnlyInt& lhs, const MoveOnlyInt& rhs) {
     return lhs.get_value() == rhs.get_value();
-}
-inline bool operator!=(const MoveOnlyInt& lhs, const MoveOnlyInt& rhs) { return !(lhs == rhs); }
-inline bool operator==(const MoveOnlyInt& lhs, int rhs) { return lhs.get_value() == rhs; }
-inline bool operator!=(const MoveOnlyInt& lhs, int rhs) { return !(lhs == rhs); }
+  }
+  inline bool operator!=(const MoveOnlyInt& lhs, const MoveOnlyInt& rhs) { return !(lhs == rhs); }
+  inline bool operator==(const MoveOnlyInt& lhs, int rhs) { return lhs.get_value() == rhs; }
+  inline bool operator!=(const MoveOnlyInt& lhs, int rhs) { return !(lhs == rhs); }
 
-struct CopyableType {
+  struct CopyableType {
     CopyableType(CopyableType& other) = default;
     CopyableType(const CopyableType& other) = default;
     CopyableType& operator=(const CopyableType& other) = default;
@@ -46,9 +46,9 @@ struct CopyableType {
 
     CopyableType() = default;
     ~CopyableType() = default;
-};
+  };
 
-struct NonDefaultConstructableType {
+  struct NonDefaultConstructableType {
   private:
     int value_;
 
@@ -56,10 +56,10 @@ struct NonDefaultConstructableType {
     NonDefaultConstructableType() = delete;
     NonDefaultConstructableType(int value) : value_(value){};
     int get_value() const noexcept { return value_; }
-};
-inline bool operator==(const NonDefaultConstructableType& lhs, int rhs) {
+  };
+  inline bool operator==(const NonDefaultConstructableType& lhs, int rhs) {
     return lhs.get_value() == rhs;
-}
-inline bool operator!=(const NonDefaultConstructableType& lhs, int rhs) { return !(lhs == rhs); }
+  }
+  inline bool operator!=(const NonDefaultConstructableType& lhs, int rhs) { return !(lhs == rhs); }
 
-} // namespace test
+}  // namespace test

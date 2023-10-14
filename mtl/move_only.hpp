@@ -4,16 +4,14 @@
 
 namespace mtl {
 
-/**
- * @brief Stack-allocated wrapper that makes a type move-only
- */
-template <typename T>
-class MoveOnly {
+  /**
+   * @brief Stack-allocated wrapper that makes a type move-only
+   */
+  template <typename T> class MoveOnly {
   public:
     explicit MoveOnly(T&& value) : value_(std::forward<T>(value)) {}
 
-    template <class... Args>
-    MoveOnly(Args&&... args) : value_(std::forward<Args>(args)...) {}
+    template <class... Args> MoveOnly(Args&&... args) : value_(std::forward<Args>(args)...) {}
 
     MoveOnly(const MoveOnly&) = delete;
     MoveOnly& operator=(const MoveOnly&) = delete;
@@ -33,6 +31,6 @@ class MoveOnly {
 
   private:
     T value_;
-};
+  };
 
-} // namespace mtl
+}  // namespace mtl
