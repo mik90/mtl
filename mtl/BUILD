@@ -18,5 +18,5 @@ cc_library(
         "types.hpp",
         "wrapped_var.hpp",
     ],
-    visibility = ["//test:__pkg__"],
+    visibility = ["//visibility:public"],
 )
