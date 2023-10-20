@@ -15,7 +15,8 @@ namespace mtl {
   }
 
   /// @brief Apply a function to all elements in a container
-  template <class Container, class UnaryFunc> void for_each(Container& container, UnaryFunc f) {
+  template <class Container, class UnaryFunc>
+  void for_each(Container& container, UnaryFunc f) {
     auto begin = container.begin();
     auto end = container.end();
 

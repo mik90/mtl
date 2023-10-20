@@ -42,7 +42,8 @@ namespace mtl {
     }
   };
 
-  template <class KeyType, class ValueType> class HashMap {
+  template <class KeyType, class ValueType>
+  class HashMap {
   public:
     struct KeyAndValue {
       KeyType key;

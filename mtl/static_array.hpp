@@ -17,7 +17,8 @@ namespace mtl {
   /**
    * @brief Array with a static capacity and variable size
    */
-  template <typename ValueType, usize Capacity> class StaticArray {
+  template <typename ValueType, usize Capacity>
+  class StaticArray {
   public:
     StaticArray() {}
 
@@ -66,7 +67,8 @@ namespace mtl {
     const ValueType* cend() const noexcept { return data_ + size_; }
 
     /// @brief Add an element if there's room, otherwise disregard it and return false
-    template <class... Args> bool emplace_back(Args&&... args) {
+    template <class... Args>
+    bool emplace_back(Args&&... args) {
       if (size_ < capacity_) {
         new (&data_[size_]) ValueType(std::forward<Args>(args)...);
         ++size_;
@@ -141,7 +143,8 @@ namespace mtl {
    * stackoverflow answer describing std::make_array impl: https://stackoverflow.com/a/39040524
    * There's probably a better way to do this than to make an initializer_list
    */
-  template <typename ValueType, class... Args> static auto make_static_array(Args&&... args) {
+  template <typename ValueType, class... Args>
+  static auto make_static_array(Args&&... args) {
     const auto count = sizeof...(Args);
     std::initializer_list<ValueType> list = {std::forward<Args>(args)...};
     return StaticArray<ValueType, count>(list);

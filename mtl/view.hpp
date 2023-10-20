@@ -1,7 +1,8 @@
 #pragma once
 
 namespace mtl {
-  template <typename T> class View {
+  template <typename T>
+  class View {
   public:
     View() = delete;
 

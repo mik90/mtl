@@ -15,7 +15,8 @@ namespace mtl {
    *       I could add a sense of reference counting to underlying ranges but
    *       That seems like a heavyweight route.
    */
-  template <class ValueType> class ConstIterator {
+  template <class ValueType>
+  class ConstIterator {
   private:
     const ValueType* cur_;
 
@@ -65,7 +66,8 @@ namespace mtl {
     bool not_null() const noexcept { return !is_null(); }
   };
 
-  template <class ValueType> class Iterator {
+  template <class ValueType>
+  class Iterator {
   private:
     ValueType* cur_;
 
@@ -78,7 +80,8 @@ namespace mtl {
     using reference = ValueType&;
     using pointer = ValueType*;
 
-    template <class ContainerType> explicit Iterator(ContainerType& iterable) {
+    template <class ContainerType>
+    explicit Iterator(ContainerType& iterable) {
       if (iterable.size() == 0) {
         cur_ = nullptr;
       } else {

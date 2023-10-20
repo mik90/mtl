@@ -14,7 +14,8 @@ namespace mtl {
    * Generalize common parts, ripped off <https://codereview.stackexchange.com/a/263999>
    */
   namespace detail {
-    template <class T> class BaseOwningPtr {
+    template <class T>
+    class BaseOwningPtr {
     public:
       using type = std::remove_extent_t<T>;
       BaseOwningPtr() = default;
@@ -53,16 +54,21 @@ namespace mtl {
     };
 
     // Ctors
-    template <class T> BaseOwningPtr<T>::BaseOwningPtr(type* ptr) : ptr_(ptr) {}
+    template <class T>
+    BaseOwningPtr<T>::BaseOwningPtr(type* ptr) : ptr_(ptr) {}
 
-    template <class T> BaseOwningPtr<T>::BaseOwningPtr(BaseOwningPtr<T>&& other) noexcept
-        : ptr_(other.release()) {}
+    template <class T>
+    BaseOwningPtr<T>::BaseOwningPtr(BaseOwningPtr<T>&& other) noexcept : ptr_(other.release()) {}
 
     // Dtor
-    template <class T> BaseOwningPtr<T>::~BaseOwningPtr() { reset(); }
+    template <class T>
+    BaseOwningPtr<T>::~BaseOwningPtr() {
+      reset();
+    }
 
     // Operators
-    template <class T> BaseOwningPtr<T>& BaseOwningPtr<T>::operator=(BaseOwningPtr<T>&& other) {
+    template <class T>
+    BaseOwningPtr<T>& BaseOwningPtr<T>::operator=(BaseOwningPtr<T>&& other) {
       if (this == &other) {
         return *this;
       }
@@ -74,7 +80,8 @@ namespace mtl {
       return *this;
     }
 
-    template <class T> BaseOwningPtr<T>& BaseOwningPtr<T>::operator=(type* other) {
+    template <class T>
+    BaseOwningPtr<T>& BaseOwningPtr<T>::operator=(type* other) {
       // Delete our pointer
       reset();
       // Take the other's
@@ -83,14 +90,16 @@ namespace mtl {
     }
 
     // Modifiers
-    template <class T> void BaseOwningPtr<T>::swap(BaseOwningPtr<T>&& other) {
+    template <class T>
+    void BaseOwningPtr<T>::swap(BaseOwningPtr<T>&& other) {
       const auto ourOldPtr = ptr_;
       ptr_ = other.get();
 
       other.ptr_ = ourOldPtr;
     }
 
-    template <class T> void BaseOwningPtr<T>::reset() {
+    template <class T>
+    void BaseOwningPtr<T>::reset() {
       if (has_value()) {
         if (std::is_array_v<T>) {
           delete[] ptr_;
@@ -101,18 +110,21 @@ namespace mtl {
       ptr_ = nullptr;
     }
 
-    template <class T> void BaseOwningPtr<T>::reset(type* ptr) {
+    template <class T>
+    void BaseOwningPtr<T>::reset(type* ptr) {
       reset();
       ptr_ = ptr;
     }
 
-    template <class T> typename BaseOwningPtr<T>::type* BaseOwningPtr<T>::release() {
+    template <class T>
+    typename BaseOwningPtr<T>::type* BaseOwningPtr<T>::release() {
       return std::exchange(ptr_, nullptr);
     }
 
     // Accessors
 
-    template <class T> Maybe<typename BaseOwningPtr<T>::type*> BaseOwningPtr<T>::maybe_get() {
+    template <class T>
+    Maybe<typename BaseOwningPtr<T>::type*> BaseOwningPtr<T>::maybe_get() {
       if (has_value()) {
         return ptr_;
       }
@@ -131,7 +143,8 @@ namespace mtl {
   /**
    * @brief Move-only pointer, similar to std::unique_ptr
    */
-  template <class T> class OwningPtr : public detail::BaseOwningPtr<T> {
+  template <class T>
+  class OwningPtr : public detail::BaseOwningPtr<T> {
   public:
     OwningPtr() = default;
     explicit OwningPtr(T* ptr);
@@ -155,22 +168,26 @@ namespace mtl {
   };
 
   // Ctors
-  template <class T> OwningPtr<T>::OwningPtr(T* ptr) : detail::BaseOwningPtr<T>(ptr) {}
+  template <class T>
+  OwningPtr<T>::OwningPtr(T* ptr) : detail::BaseOwningPtr<T>(ptr) {}
 
-  template <class T> OwningPtr<T>::OwningPtr(std::nullptr_t) {
+  template <class T>
+  OwningPtr<T>::OwningPtr(std::nullptr_t) {
     detail::BaseOwningPtr<T>::ptr_ = nullptr;
   }
 
-  template <class T> OwningPtr<T>::OwningPtr(OwningPtr<T>&& other)
-      : detail::BaseOwningPtr<T>(std::move(other)) {}
+  template <class T>
+  OwningPtr<T>::OwningPtr(OwningPtr<T>&& other) : detail::BaseOwningPtr<T>(std::move(other)) {}
 
   // move-assign
-  template <class T> OwningPtr<T>& OwningPtr<T>::operator=(OwningPtr<T>&& other) {
+  template <class T>
+  OwningPtr<T>& OwningPtr<T>::operator=(OwningPtr<T>&& other) {
     detail::BaseOwningPtr<T>::operator=(std::move(other));
     return *this;
   }
 
-  template <class T> OwningPtr<T>& OwningPtr<T>::operator=(T* other) {
+  template <class T>
+  OwningPtr<T>& OwningPtr<T>::operator=(T* other) {
     detail::BaseOwningPtr<T>::operator=(other);
     return *this;
   }
@@ -178,7 +195,8 @@ namespace mtl {
   /**
    * @brief Array specialization for OwningPtr
    */
-  template <class T> class OwningPtr<T[]> : public detail::BaseOwningPtr<T[]> {
+  template <class T>
+  class OwningPtr<T[]> : public detail::BaseOwningPtr<T[]> {
   public:
     OwningPtr() = default;
     explicit OwningPtr(T* ptr);
@@ -205,22 +223,27 @@ namespace mtl {
     const T* operator->() const { return detail::BaseOwningPtr<T[]>::ptr_; }
   };
   // Ctors
-  template <class T> OwningPtr<T[]>::OwningPtr(T* ptr) : detail::BaseOwningPtr<T[]>(ptr) {}
+  template <class T>
+  OwningPtr<T[]>::OwningPtr(T* ptr) : detail::BaseOwningPtr<T[]>(ptr) {}
 
-  template <class T> OwningPtr<T[]>::OwningPtr(std::nullptr_t) {
+  template <class T>
+  OwningPtr<T[]>::OwningPtr(std::nullptr_t) {
     detail::BaseOwningPtr<T[]>::ptr_ = nullptr;
   }
 
-  template <class T> OwningPtr<T[]>::OwningPtr(OwningPtr<T[]>&& other)
+  template <class T>
+  OwningPtr<T[]>::OwningPtr(OwningPtr<T[]>&& other)
       : detail::BaseOwningPtr<T[]>(std::move(other)) {}
 
   // move-assign
-  template <class T> OwningPtr<T[]>& OwningPtr<T[]>::operator=(OwningPtr<T[]>&& other) {
+  template <class T>
+  OwningPtr<T[]>& OwningPtr<T[]>::operator=(OwningPtr<T[]>&& other) {
     detail::BaseOwningPtr<T[]>::operator=(std::move(other));
     return *this;
   }
 
-  template <class T> OwningPtr<T[]>& OwningPtr<T[]>::operator=(T* other) {
+  template <class T>
+  OwningPtr<T[]>& OwningPtr<T[]>::operator=(T* other) {
     detail::BaseOwningPtr<T[]>::operator=(other);
     return *this;
   }
@@ -228,7 +251,8 @@ namespace mtl {
   /**
    * @brief Shared free function helpers
    */
-  template <typename T, class... Args> OwningPtr<T> make_owned(Args&&... args) {
+  template <typename T, class... Args>
+  OwningPtr<T> make_owned(Args&&... args) {
     return OwningPtr<T>(new T(std::forward<Args>(args)...));
   }
 

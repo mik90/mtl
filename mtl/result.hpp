@@ -10,7 +10,8 @@ namespace mtl {
 
   struct Ok {};
   struct Err {};
-  template <typename OkType, typename ErrorType> class Result {
+  template <typename OkType, typename ErrorType>
+  class Result {
   private:
     union {
       OkType ok_;
@@ -20,16 +21,18 @@ namespace mtl {
 
   public:
     // Ctors with tags so they know which type to construct in-place
-    template <class... Args> Result(Ok, Args&&... args)
-        : ok_(std::forward<Args>(args)...), tag_(tag::OK) {}
-    template <class... Args> Result(Err, Args&&... args)
-        : err_(std::forward<Args>(args)...), tag_(tag::ERR) {}
+    template <class... Args>
+    Result(Ok, Args&&... args) : ok_(std::forward<Args>(args)...), tag_(tag::OK) {}
+    template <class... Args>
+    Result(Err, Args&&... args) : err_(std::forward<Args>(args)...), tag_(tag::ERR) {}
 
-    template <class... Args> static Result ok(Args&&... args) {
+    template <class... Args>
+    static Result ok(Args&&... args) {
       return Result(Ok{}, std::forward<Args>(args)...);
     }
 
-    template <class... Args> static Result err(Args&&... args) {
+    template <class... Args>
+    static Result err(Args&&... args) {
       return Result(Err{}, std::forward<Args>(args)...);
     }
 

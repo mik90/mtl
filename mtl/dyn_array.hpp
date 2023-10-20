@@ -14,7 +14,8 @@
 
 namespace mtl {
   /// Array that can grow and shrink
-  template <typename ValueType> class DynArray {
+  template <typename ValueType>
+  class DynArray {
   public:
     DynArray();
     static DynArray make_with_capacity(usize capacity);
@@ -28,7 +29,8 @@ namespace mtl {
 
     void set_capacity(usize new_capacity);
 
-    template <class... Args> void emplace_back(Args&&... args);
+    template <class... Args>
+    void emplace_back(Args&&... args);
 
     void push_back(const ValueType& value);
     void push_back(ValueType&& value);
@@ -37,7 +39,8 @@ namespace mtl {
     /// fill entirety of the array with a given value
     void fill_with(const ValueType& value);
     /// Where GeneratorFunc is a callable that returns a value
-    template <typename GeneratorFunc> void fill_with_generator(GeneratorFunc&& func);
+    template <typename GeneratorFunc>
+    void fill_with_generator(GeneratorFunc&& func);
 
     ValueType& operator[](usize idx);
     const ValueType& operator[](usize idx) const noexcept;
@@ -91,13 +94,15 @@ namespace mtl {
 
   // Constructors
 
-  template <typename ValueType> DynArray<ValueType>::DynArray()
-      : size_(0), capacity_(default_capacity_), data_(allocate_new()) {}
+  template <typename ValueType>
+  DynArray<ValueType>::DynArray() : size_(0), capacity_(default_capacity_), data_(allocate_new()) {}
 
-  template <typename ValueType> DynArray<ValueType>::DynArray(usize capacity)
+  template <typename ValueType>
+  DynArray<ValueType>::DynArray(usize capacity)
       : size_(0), capacity_(capacity), data_(allocate_new()) {}
 
-  template <typename ValueType> DynArray<ValueType>::DynArray(std::initializer_list<ValueType> list)
+  template <typename ValueType>
+  DynArray<ValueType>::DynArray(std::initializer_list<ValueType> list)
       : size_(0), capacity_(default_capacity_) {
     data_ = allocate_new();
 
@@ -112,7 +117,8 @@ namespace mtl {
   }
 
   // Copy ctor
-  template <typename ValueType> DynArray<ValueType>::DynArray(const DynArray& other)
+  template <typename ValueType>
+  DynArray<ValueType>::DynArray(const DynArray& other)
       : size_(other.size()), capacity_(other.capacity()), data_(copy_data(other)) {}
 
   template <typename ValueType>
@@ -122,7 +128,8 @@ namespace mtl {
 
   // Private helpers
 
-  template <typename ValueType> void DynArray<ValueType>::increase_capacity() {
+  template <typename ValueType>
+  void DynArray<ValueType>::increase_capacity() {
     set_capacity(capacity_ * 2);
   }
 
@@ -133,13 +140,15 @@ namespace mtl {
     return OwningPtr<ValueType[]>(copy_ptr);
   }
 
-  template <typename ValueType> OwningPtr<ValueType[]> DynArray<ValueType>::allocate_new() {
+  template <typename ValueType>
+  OwningPtr<ValueType[]> DynArray<ValueType>::allocate_new() {
     return OwningPtr<ValueType[]>(new ValueType[capacity_]);
   }
 
   // Public helpers
 
-  template <typename ValueType> DynArray<ValueType> DynArray<ValueType>::copy() const {
+  template <typename ValueType>
+  DynArray<ValueType> DynArray<ValueType>::copy() const {
     return DynArray<ValueType>(*this);
   }
 
@@ -153,7 +162,8 @@ namespace mtl {
   }
 
   // Modifiers
-  template <typename ValueType> void DynArray<ValueType>::set_capacity(usize new_capacity) {
+  template <typename ValueType>
+  void DynArray<ValueType>::set_capacity(usize new_capacity) {
     if (new_capacity == capacity_) {
       // No change
       return;
@@ -169,7 +179,8 @@ namespace mtl {
     std::memmove(data_.get(), temp.get(), size_);
   }
 
-  template <typename ValueType> template <class... Args>
+  template <typename ValueType>
+  template <class... Args>
   void DynArray<ValueType>::emplace_back(Args&&... args) {
     if (size_ >= capacity_) {
       set_capacity(capacity_ * 2);
@@ -178,18 +189,21 @@ namespace mtl {
     ++size_;
   }
 
-  template <typename ValueType> void DynArray<ValueType>::push_back(const ValueType& value) {
+  template <typename ValueType>
+  void DynArray<ValueType>::push_back(const ValueType& value) {
     emplace_back(value);
   }
 
-  template <typename ValueType> void DynArray<ValueType>::push_back(ValueType&& value) {
+  template <typename ValueType>
+  void DynArray<ValueType>::push_back(ValueType&& value) {
     emplace_back(std::move(value));
   }
 
   // TODO Remove these and only allow standard algs
 
   /// @brief fill entirety of the array with a given value
-  template <typename ValueType> void DynArray<ValueType>::fill_with(const ValueType& value) {
+  template <typename ValueType>
+  void DynArray<ValueType>::fill_with(const ValueType& value) {
     size_ = 0;
     while (size_ < capacity_) {
       data_[size_++] = value;
@@ -197,7 +211,8 @@ namespace mtl {
   }
 
   /// @brief Where GeneratorFunc is a callable that returns a value
-  template <typename ValueType> template <typename GeneratorFunc>
+  template <typename ValueType>
+  template <typename GeneratorFunc>
   void DynArray<ValueType>::fill_with_generator(GeneratorFunc&& func) {
     size_ = 0;
     while (size_ < capacity_) {
@@ -222,7 +237,8 @@ namespace mtl {
     return *this;
   }
 
-  template <typename ValueType> ValueType& DynArray<ValueType>::operator[](usize idx) {
+  template <typename ValueType>
+  ValueType& DynArray<ValueType>::operator[](usize idx) {
     return data_[idx];
   }
 
@@ -232,7 +248,8 @@ namespace mtl {
   }
 
   // Iterators
-  template <typename ValueType> Iterator<ValueType> DynArray<ValueType>::iter() {
+  template <typename ValueType>
+  Iterator<ValueType> DynArray<ValueType>::iter() {
     if (size() > 0) {
       return Iterator(data());
     } else {
@@ -240,7 +257,8 @@ namespace mtl {
     }
   }
 
-  template <typename ValueType> ConstIterator<ValueType> DynArray<ValueType>::c_iter() const {
+  template <typename ValueType>
+  ConstIterator<ValueType> DynArray<ValueType>::c_iter() const {
     if (size() > 0) {
       return ConstIterator(data());
     } else {

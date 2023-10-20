@@ -7,7 +7,8 @@
 
 namespace mtl {
 
-  template <class ValueType> class LinkedList {
+  template <class ValueType>
+  class LinkedList {
     struct Node {
       ValueType value;
       OwningPtr<Node> next = nullptr;

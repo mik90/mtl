@@ -6,14 +6,16 @@
 namespace mtl {
   struct None {};
 
-  template <typename T> struct Some {
+  template <typename T>
+  struct Some {
     T value;
   };
 
   /**
    * @brief similar to std::optional
    */
-  template <typename T> class Maybe {
+  template <typename T>
+  class Maybe {
   private:
     // Unions cannot have data members of reference types
     union {
@@ -25,7 +27,8 @@ namespace mtl {
     Maybe(tag tag_override) : none_(None{}), tag_(tag_override) {}
 
     // The tag and values, so forward them
-    template <class... Args> Maybe(tag tag_override, Args&&... args)
+    template <class... Args>
+    Maybe(tag tag_override, Args&&... args)
         : some_(std::forward<Args>(args)...), tag_(tag_override) {}
 
   public:
@@ -37,12 +40,14 @@ namespace mtl {
     Maybe(const Some<T>& some) : some_(some.value), tag_(tag::SOME) {}
     Maybe(Some<T>&& some) : some_(some.value), tag_(tag::SOME) {}
 
-    template <class... Args> static Maybe<T> some(Args&&... args) {
+    template <class... Args>
+    static Maybe<T> some(Args&&... args) {
       return Maybe(tag::SOME, std::forward<Args>(args)...);
     }
     // The member function itself must be templated for it to be a universal reference
     // https://stackoverflow.com/a/30569606/15827495
-    template <typename U> Maybe(U&& value) : some_(std::forward<U>(value)), tag_(tag::SOME) {}
+    template <typename U>
+    Maybe(U&& value) : some_(std::forward<U>(value)), tag_(tag::SOME) {}
 
     /// @todo only define this if T is not trivially destructable
     ~Maybe() {}

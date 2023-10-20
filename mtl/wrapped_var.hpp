@@ -12,7 +12,8 @@ namespace mtl {
    * @tparam MutexType the mutex that protects UnderlyingType
    * @tparam LockType the type used for locking MutexType
    */
-  template <class UnderlyingVarType, class LockType> class VarAccessor {
+  template <class UnderlyingVarType, class LockType>
+  class VarAccessor {
   public:
     // General case
     VarAccessor(UnderlyingVarType& var, LockType&& lock) : var_(var), lock_(std::move(lock)) {}
@@ -33,15 +34,16 @@ namespace mtl {
    * @tparam UnderlyingVarType the variable type protected by the mutex
    * @tparam MutexType the mutex that protects UnderlyingType
    */
-  template <class UnderlyingVarType> class WrappedVar {
+  template <class UnderlyingVarType>
+  class WrappedVar {
   public:
     using MutexType = std::mutex;
     /**
      * @brief Constructs mutex-protected variable in-place. Pass in args like you would for
      *        std::vector::emplace_back.
      */
-    template <class... Args> explicit WrappedVar(Args&&... args)
-        : var_(std::forward<Args>(args)...) {}
+    template <class... Args>
+    explicit WrappedVar(Args&&... args) : var_(std::forward<Args>(args)...) {}
 
     /**
      * @brief Getter that returns a variable accessor helper type
