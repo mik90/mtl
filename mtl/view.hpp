@@ -5,6 +5,7 @@ namespace mtl {
   class View {
   public:
     View() = delete;
+    ~View() = default;
 
     View(T& value) : value_(value) {}
 
@@ -19,11 +20,18 @@ namespace mtl {
     */
     View(View<T>&& other) = delete;
 
+    View<T>& operator=(View<T>&& other) noexcept {
+      value_ = other.value_;
+      return *this;
+    }
     View<T>& operator=(const T& other) {
       value_ = other;
       return *this;
     }
     View<T>& operator=(const View<T>& other) {
+      if (&other == this) {
+        return *this;
+      }
       value_ = other.value_;
       return *this;
     }
@@ -41,6 +49,8 @@ namespace mtl {
     const T* operator->() const { return value_; }
 
   private:
+    // A member as a reference is hard to avoid here
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-const-or-ref-data-members)
     T& value_;
   };
 }  // namespace mtl
