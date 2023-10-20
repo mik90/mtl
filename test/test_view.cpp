@@ -54,6 +54,16 @@ TEST(ViewTest, compare_underlying) {
 
   bool res = a == b;
   EXPECT_TRUE(res);
+
+  a_view = 3;
+  EXPECT_EQ(a_view, 3);
+  EXPECT_EQ(a, 3);
+
+  a = 4;
+  EXPECT_EQ(a_view, 4);
+  EXPECT_EQ(4, a_view);
+  EXPECT_EQ(a, 4);
+  EXPECT_EQ(4, a);
 }
 
 TEST(ViewTest, operator_arrow_overload) {

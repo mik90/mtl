@@ -27,15 +27,17 @@ namespace mtl {
       return *this;
     }
 
-    // This is needed, evidently? https://stackoverflow.com/a/58780963
+    // This == is needed, evidently? https://stackoverflow.com/a/58780963
     auto operator==(const View<T>& other) const { return value_ == other.value_; }
 
     auto operator<=>(const View<T>& other) const { return value_ <=> other.value_; }
 
+    auto operator==(const T& other) const { return value_ == other; }
+
     auto operator<=>(T& other) const { return value_ <=> other; }
 
     T* operator->() { return &value_; }
-    const T& operator->() const { return value_; }
+    const T* operator->() const { return value_; }
 
   private:
     T& value_;
