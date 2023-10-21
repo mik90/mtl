@@ -36,6 +36,12 @@ namespace mtl {
       return *this;
     }
 
+    T operator+(const View<T>& other) noexcept { return value_ + other.value_; }
+    T operator+(const View<const T>& other) noexcept { return value_ + other.value_; }
+    T operator-(const View<T>& other) noexcept { return value_ - other.value_; }
+    T operator/(const View<T>& other) noexcept { return value_ / other.value_; }
+    T operator*(const View<T>& other) noexcept { return value_ * other.value_; }
+
     // This == is needed, evidently? https://stackoverflow.com/a/58780963
     auto operator==(const View<T>& other) const { return value_ == other.value_; }
 

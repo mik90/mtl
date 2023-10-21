@@ -87,3 +87,13 @@ TEST(ViewTest, build_and_copy) {
   mtl::View view_b{view_a};
   EXPECT_EQ(view_a, view_b);
 }
+
+int adder(mtl::View<const int> value) { return value + 1; }
+
+TEST(ViewTest, call) {
+  int my_int = 2;
+  mtl::View view_a{my_int};
+
+  const auto result = adder(view_a);
+  EXPECT_EQ(result, my_int + 1);
+}
