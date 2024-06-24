@@ -1,4 +1,26 @@
-build --action_env=BAZEL_CXXOPTS="-std=c++20"
+build --cxxopt='-std=c++20'
+
+build --cxxopt='-Wall'
+build --cxxopt='-Wextra'
+build --cxxopt='-Wmisleading-indentation'
+build --cxxopt='-Wduplicated-cond'
+build --cxxopt='-Wduplicated-branches'
+build --cxxopt='-Wlogical-op'
+build --cxxopt='-Wuseless-cast'
+build --cxxopt='-Wshadow'
+build --cxxopt='-Wnon-virtual-dtor'
+build --cxxopt='-Wold-style-cast'
+build --cxxopt='-Wcast-align'
+build --cxxopt='-Wunused'
+build --cxxopt='-Woverloaded-virtual'
+build --cxxopt='-Wpedantic'
+build --cxxopt='-Wconversion'
+build --cxxopt='-Wsign-conversion'
+build --cxxopt='-Wnull-dereference'
+build --cxxopt='-Wdouble-promotion'
+build --cxxopt='-Wformat=2'
+build --cxxopt='-Wimplicit-fallthrough'
+build --features=external_include_paths
 
 # https://stackoverflow.com/a/57733619/15827495
 build:asan --strip=never
