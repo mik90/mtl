@@ -4,6 +4,8 @@ A basic C++ template library
 
 For usage, all that's needed is the include/mtl directory
 
+I use this as a playground for C++ and development environments.
+
 ## Features
 
 ### WrappedVar wraps a variable with a mutex
@@ -33,19 +35,19 @@ ASSERT_EQ(*myString, "hello");
 ## Build and run tests
 
 ```bash
-mkdir build && cd build
-cmake .. -DENABLE_TESTING=ON
-cmake --build . --target UnitTest
-./bin/UnitTest
+bazel test //...
 ```
 
 ## Build and run benchmarks
 
 ```bash
-mkdir build && cd build
-cmake .. -DENABLE_BENCHMARKS=ON -DCMAKE_BUILD_TYPE=Release
-cmake --build . --target Benchmark
-./bin/Benchmark
+bazel run -c opt //benchmark:array
+```
+
+## Generate compile_commands.json
+
+```bash
+bazel run @hedron_compile_commands//:refresh_all
 ```
 
 ## Tasklist
