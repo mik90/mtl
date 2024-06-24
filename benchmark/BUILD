@@ -6,7 +6,7 @@ cc_binary(
     srcs = ["algorithm.cpp"],
     deps = [
         "//mtl",
-        "@com_google_benchmark//:benchmark_main",
+        "@google_benchmark//:benchmark_main",
     ],
 )
 
@@ -15,6 +15,6 @@ cc_binary(
     srcs = ["array.cpp"],
     deps = [
         "//mtl",
-        "@com_google_benchmark//:benchmark_main",
+        "@google_benchmark//:benchmark_main",
     ],
 )

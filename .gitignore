@@ -11,3 +11,4 @@ target/
 *.xcodeproj
 node_modules
 compile_commands.json
+MODULE.bazel.lock
