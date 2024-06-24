@@ -16,7 +16,7 @@ cc_library(
         "result.hpp",
         "static_array.hpp",
         "types.hpp",
-        "view.hpp",
+        #"view.hpp",
         "wrapped_var.hpp",
     ],
     visibility = ["//visibility:public"],

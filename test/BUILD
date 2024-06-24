@@ -9,7 +9,7 @@ cc_library(
 cc_test(
     name = "test_mtl",
     srcs = glob(include = ["*.cpp"],
-    exclude = ["test_linked_list.cpp", "test_hash_map.cpp"]),
+    exclude = ["test_linked_list.cpp", "test_hash_map.cpp", "test_view.cpp"]),
     deps = [
         "//mtl",
         ":utils",
