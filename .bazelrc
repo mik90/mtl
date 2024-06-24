@@ -20,9 +20,8 @@ build --cxxopt='-Wnull-dereference'
 build --cxxopt='-Wdouble-promotion'
 build --cxxopt='-Wformat=2'
 build --cxxopt='-Wimplicit-fallthrough'
-build --features=external_include_paths
 
-# https://stackoverflow.com/a/57733619/15827495
+# Enabling sanitizers: https://stackoverflow.com/a/57733619/15827495
 build:asan --strip=never
 build:asan --copt -fsanitize=address
 build:asan --copt -DADDRESS_SANITIZER
@@ -39,7 +38,7 @@ build:ubsan --copt -g
 build:ubsan --copt -fno-omit-frame-pointer
 build:ubsan --linkopt -fsanitize=undefined
 
-
+# Both ubsan and asan
 build:san --strip=never
 build:san --copt -fsanitize=undefined,address
 build:san --copt -O3
